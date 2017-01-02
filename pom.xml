@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+    Maven3 POM definition file
+-->
+
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+    <!--parent/-->
+
+    <groupId>io.github.olyutorskii</groupId>
+    <artifactId>doubdabc</artifactId>
+
+    <version>1.0.1-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
+    <name>DoubDabC</name>
+
+    <description>
+        DoubDabC is a Java library
+        that supports binary integer value to decimal sequence conversion.
+    </description>
+
+    <url>https://github.com/olyutorskii/DoubDabC</url>
+    <inceptionYear>2017</inceptionYear>
+
+    <organization>
+        <name>DoubDabC partners</name>
+        <url>https://github.com/olyutorskii/DoubDabC</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>manual</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>olyutorskii</id>
+            <url>https://github.com/olyutorskii</url>
+            <organization>DoubDabC partners</organization>
+            <organizationUrl>https://github.com/olyutorskii/DoubDabC</organizationUrl>
+            <roles>
+                <role>Project Founder</role>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <contributors/>
+    <mailingLists/>
+
+    <prerequisites>
+        <maven>3.0.1</maven>
+    </prerequisites>
+
+    <modules/>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/olyutorskii/DoubDabC/issues</url>
+    </issueManagement>
+
+    <ciManagement/>
+    <distributionManagement/>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+
+        <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+        <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <site.locales>en</site.locales>
+        <javadoc.locale>en</javadoc.locale>
+    </properties>
+
+    <dependencyManagement/>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <repositories/>
+    <pluginRepositories/>
+
+    <build>
+        <pluginManagement/>
+
+        <plugins>
+
+
+            <!-- clean lifecycle -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${project.basedir}</directory>
+                            <includes>
+                                <include>**/*~</include>
+                                <include>**/*.swp</include>
+                                <include>**/*.DS_Store</include>
+                                <include>**/._*</include>
+                                <include>**/__MACOSX</include>
+                                <include>**/Thumbs.db</include>
+                                <include>**/desktop.ini</include>
+                                <include>**/core</include>
+                                <include>**/hs_err_pid*</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+
+            <!-- default lifecycle -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.4.1</version>
+                <configuration>
+                    <rules>
+                        <requireMavenVersion>
+                            <version>[3.0.1,)</version>
+                        </requireMavenVersion>
+                        <requireJavaVersion>
+                            <version>[1.7,)</version>
+                        </requireJavaVersion>
+                    </rules>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>1.7</source>  <!-- for NetBeans IDE -->
+                    <target>1.7</target>
+                    <compilerArguments>
+                        <Xlint/>
+                    </compilerArguments>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <skipTests>false</skipTests>
+                    <enableAssertions>true</enableAssertions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>
+                                true
+                            </addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Built-By>${project.organization.name}</Built-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <includePom>true</includePom>
+                    <archive>
+                        <manifestEntries>
+                            <Built-By>${project.organization.name}</Built-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
+
+
+            <!-- site lifecycle -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.6</version>
+                <configuration>
+                    <locales>${site.locales}</locales>
+                </configuration>
+            </plugin>
+
+
+            <!-- goals without lifecycle -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/src.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+        <resources>
+        </resources>
+
+    </build>
+
+    <reporting>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <linkOnly>true</linkOnly>
+                    <offline>true</offline>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                            <report>summary</report>
+                            <report>license</report>
+                            <report>dependency-info</report>
+                            <report>dependencies</report>
+                            <report>dependency-convergence</report>
+                            <report>plugins</report>
+                            <report>plugin-management</report>
+                            <report>project-team</report>
+                            <report>issue-tracking</report>
+                            <report>scm</report>
+<!--
+                            <report>dependency-management</report>
+                            <report>distribution-management</report>
+                            <report>cim</report>
+                            <report>mailing-list</report>
+                            <report>modules</report>
+-->
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <author>false</author>
+                    <notimestamp>true</notimestamp>
+                    <quiet>true</quiet>
+                    <show>protected</show>
+                    <locale>${javadoc.locale}</locale>
+                    <version>true</version>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report-only</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+        </plugins>
+
+    </reporting>
+
+    <profiles/>
+
+</project>
+
+<!-- EOF -->
