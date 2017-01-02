@@ -1,4 +1,6 @@
 /*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
  */
 
 package io.github.olyutorskii.doubdabc;
