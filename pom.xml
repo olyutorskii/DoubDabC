@@ -42,6 +42,19 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <id>olyutorskii</id>
+            <url>https://github.com/olyutorskii</url>
+            <organization>DoubDabC partners</organization>
+            <organizationUrl>https://github.com/olyutorskii/DoubDabC</organizationUrl>
+            <roles>
+                <role>Project Founder</role>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
     <prerequisites>
         <maven>3.0.1</maven>
     </prerequisites>
