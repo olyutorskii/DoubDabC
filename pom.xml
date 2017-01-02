@@ -55,9 +55,22 @@
         </developer>
     </developers>
 
+    <contributors/>
+    <mailingLists/>
+
     <prerequisites>
         <maven>3.0.1</maven>
     </prerequisites>
+
+    <modules/>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/olyutorskii/DoubDabC/issues</url>
+    </issueManagement>
+
+    <ciManagement/>
+    <distributionManagement/>
 
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -74,6 +87,8 @@
         <javadoc.locale>en</javadoc.locale>
     </properties>
 
+    <dependencyManagement/>
+
     <dependencies>
 
         <dependency>
@@ -85,9 +100,14 @@
 
     </dependencies>
 
+    <repositories/>
+    <pluginRepositories/>
+
     <build>
+        <pluginManagement/>
 
         <plugins>
+
 
             <!-- clean lifecycle -->
 
@@ -246,6 +266,9 @@
 
         </plugins>
 
+        <resources>
+        </resources>
+
     </build>
 
     <reporting>
@@ -302,6 +325,8 @@
         </plugins>
 
     </reporting>
+
+    <profiles/>
 
 </project>
 
