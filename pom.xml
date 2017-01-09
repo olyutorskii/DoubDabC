@@ -64,6 +64,12 @@
 
     <modules/>
 
+    <scm>
+        <connection>scm:git:git://github.com/olyutorskii/DoubDabC.git</connection>
+        <developerConnection>scm:git:git@github.com:olyutorskii/DoubDabC.git</developerConnection>
+        <url>https://github.com/olyutorskii/DoubDabC</url>
+    </scm>
+
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/olyutorskii/DoubDabC/issues</url>
