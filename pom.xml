@@ -93,6 +93,8 @@
         <javadoc.locale>en</javadoc.locale>
         <findbugs.jvmArgs>-Duser.language=en</findbugs.jvmArgs>
 
+        <jacoco-plugin.version>0.7.8</jacoco-plugin.version>
+
         <findbugs-plugin.version>3.0.4</findbugs-plugin.version>
         <findbugs.effort>Max</findbugs.effort>
         <findbugs.threshold>Low</findbugs.threshold>
@@ -197,6 +199,33 @@
                     <skipTests>false</skipTests>
                     <enableAssertions>true</enableAssertions>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -351,6 +380,19 @@
                 <configuration>
                     <linkXRef>false</linkXRef>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
 
             <plugin>
