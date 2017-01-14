@@ -91,6 +91,14 @@
 
         <site.locales>en</site.locales>
         <javadoc.locale>en</javadoc.locale>
+        <findbugs.jvmArgs>-Duser.language=en</findbugs.jvmArgs>
+
+        <findbugs-plugin.version>3.0.4</findbugs-plugin.version>
+        <findbugs.effort>Max</findbugs.effort>
+        <findbugs.threshold>Low</findbugs.threshold>
+        <!-- for Jenkins -->
+        <findbugs.xmlOutput>true</findbugs.xmlOutput>
+
     </properties>
 
     <dependencyManagement/>
@@ -343,6 +351,12 @@
                 <configuration>
                     <linkXRef>false</linkXRef>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs-plugin.version}</version>
             </plugin>
 
         </plugins>
