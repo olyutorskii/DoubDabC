@@ -141,6 +141,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
+                            <!--artifactId>checkstyle-backport-jre6</artifactId-->
                             <version>${checkstyleruntime.version}</version>
                         </dependency>
                     </dependencies>

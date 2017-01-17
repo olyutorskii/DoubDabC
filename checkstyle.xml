@@ -331,7 +331,9 @@
         <module name="SeparatorWrap" />
         <module name="SingleSpaceSeparator" />
         <module name="TypecastParenPad" />
-        <module name="WhitespaceAfter" />
+        <module name="WhitespaceAfter" >
+            <property name="tokens" value="COMMA, SEMI,"/>
+        </module>
         <module name="WhitespaceAround">
             <property
                 name="tokens"
