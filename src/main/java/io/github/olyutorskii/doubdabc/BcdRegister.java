@@ -73,15 +73,18 @@ public class BcdRegister {
     private static final char CH_OPEN = '[';
     private static final char CH_CLOSE = ']';
 
-    private static final int[] BQTBL;
     private static final char[] HEXCH_TBL = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'A', 'B', 'C', 'D', 'E', 'F',
     };
 
+    private static final int[] BQ_TBL;
+
 
     static{
-        BQTBL = new int[256];
+        // build lookup table for Packed-BCD to Bi-quinary conversion
+        BQ_TBL = new int[256];
+
         int idx = 0;
         for(int highDec = 0; highDec < 16; highDec++){
             int highBq;
@@ -97,19 +100,21 @@ public class BcdRegister {
 
                 int bqNblNbl = (highBq << BCD_BITSIZE) | lowBq;
 
-                BQTBL[idx++] = bqNblNbl;
+                BQ_TBL[idx++] = bqNblNbl;
             }
         }
-        assert idx == BQTBL.length;
+
+        assert idx == BQ_TBL.length;
     }
 
     static{
         assert 0b1 << PRIMIDX_SHIFT == PRIM_SLOTS;
+        assert (-1 & NBLIDX_MASK) == PRIM_SLOTS - 1;
         assert HEXCH_TBL.length == 0b1 << BCD_BITSIZE;
     }
 
 
-    private final int digits;
+    private final int maxDigits;
     private final int[] ibuf;
 
     private int precision;    // negative value if unknown.
@@ -128,8 +133,8 @@ public class BcdRegister {
 
         if(maxDigits <= 0) throw new IllegalArgumentException();
 
-        this.digits = fittingContainer(maxDigits);
-        this.ibuf = new int[this.digits / PRIM_SLOTS];
+        this.maxDigits = fittingContainer(maxDigits);
+        this.ibuf = new int[this.maxDigits / PRIM_SLOTS];
 
         this.precision = 1;   // Zero-value has precision 1
 
@@ -180,20 +185,20 @@ public class BcdRegister {
         int result;
         int bVal;
 
-        bVal = (iVal >>> 24) & BYTE_MASK;
-        result = BQTBL[bVal];
+        bVal = (iVal >>> 24);
+        result = BQ_TBL[bVal];
 
         bVal = (iVal >>> 16) & BYTE_MASK;
         result <<= BYTE_BITSIZE;
-        result |= BQTBL[bVal];
+        result |= BQ_TBL[bVal];
 
         bVal = (iVal >>> 8) & BYTE_MASK;
         result <<= BYTE_BITSIZE;
-        result |= BQTBL[bVal];
+        result |= BQ_TBL[bVal];
 
         bVal = iVal & BYTE_MASK;
         result <<= BYTE_BITSIZE;
-        result |= BQTBL[bVal];
+        result |= BQ_TBL[bVal];
 
         return result;
     }
@@ -221,7 +226,7 @@ public class BcdRegister {
      * @return digits holder width
      */
     public int getMaxDigits(){
-        return this.digits;
+        return this.maxDigits;
     }
 
     /**
@@ -377,7 +382,7 @@ public class BcdRegister {
      * @return decimal precision.
      */
     private int calcPrecision(){
-        int result = this.digits;
+        int result = this.maxDigits;
 
         int idxMax = this.ibuf.length - 1;
         for(int iIdx = idxMax; iIdx >= 0; iIdx--){
@@ -455,7 +460,7 @@ public class BcdRegister {
         int b3 = (nibble >> 3) & LSB_PRIMMASK;
         int b2 = (nibble >> 2) & LSB_PRIMMASK;
         int b1 = (nibble >> 1) & LSB_PRIMMASK;
-        int b0 = (nibble >> 0) & LSB_PRIMMASK;
+        int b0 = (nibble     ) & LSB_PRIMMASK;
 
         char c3 = HEXCH_TBL[b3];
         char c2 = HEXCH_TBL[b2];
