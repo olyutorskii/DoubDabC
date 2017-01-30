@@ -240,7 +240,7 @@ public class BcdRegister {
         int iIdx;
         int iMod;
 
-        iIdx = digitPos >>> PRIMIDX_SHIFT;
+        iIdx = digitPos >> PRIMIDX_SHIFT;  // Arithmetic shift to keep sign
         //   = digitPos / 8;
 
         iMod = digitPos & NBLIDX_MASK;
