@@ -71,6 +71,27 @@ public class BcdRegisterTest {
     @Test
     public void testGetDigit() {
         System.out.println("getDigit");
+
+        BcdRegister bs;
+
+        bs = new BcdRegister(8);
+
+        assertEquals(0, bs.getDigit(0));
+        assertEquals(0, bs.getDigit(1));
+        assertEquals(0, bs.getDigit(7));
+
+        try{
+            bs.getDigit(8);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+        }
+
+        try{
+            bs.getDigit(-1);
+            fail();
+        }catch(IndexOutOfBoundsException e){
+        }
+
         return;
     }
 

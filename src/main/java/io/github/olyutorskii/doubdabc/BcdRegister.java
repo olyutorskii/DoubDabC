@@ -23,13 +23,16 @@ package io.github.olyutorskii.doubdabc;
  *
  * <p>Signed(negative) decimal value is not supported.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Double_dabble">
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Double_dabble">
  * Double dabble (Wikipedia)
  * </a>
- * @see <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
  * Binary-coded decimal (Wikipedia)
  * </a>
- * @see <a href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
  * Bi-quinary coded decimal (Wikipedia)
  * </a>
  */
@@ -40,25 +43,27 @@ public class BcdRegister {
      *
      * <p>(&quot;4294967295&quot;.length)
      */
-    public static final int MAX_COL_UINT32 = 10; //   4294967295
+    public static final int MAX_COL_UINT32 = 10;
 
     /**
      * Max decimal digits for unsigned int64.
      *
      * <p>(&quot;18446744073709551615&quot;.length)
      */
-    public static final int MAX_COL_UINT64 = 20; //   18446744073709551615
-                                                 // ->12345678901234567890<-
+    public static final int MAX_COL_UINT64 = 20;
 
 
     private static final int PRIM_BITSIZE = Integer.SIZE;
+    private static final int BYTE_BITSIZE = Byte.SIZE;
     private static final int BCD_BITSIZE = 4;
     private static final int PRIM_SLOTS = PRIM_BITSIZE / BCD_BITSIZE;
 
     private static final int LSB_PRIMMASK = 0b1;
     private static final int MSB_PRIMMASK = 0b1 << (PRIM_BITSIZE - 1);
-    private static final int NIBBLE_MASK = // 0b1111
+    private static final int NIBBLE_MASK  = // 0b1111
             (0b1 << BCD_BITSIZE) - 1;
+    private static final int BYTE_MASK    = // 0b1111_1111
+            (0b1 << BYTE_BITSIZE) - 1;
 
     private static final int PRIMIDX_SHIFT = 3;    //  [ /  8]  [>>> 3]
     private static final int NBLIDX_MASK =         //  [mod 8]  [& 0b111]
@@ -68,27 +73,48 @@ public class BcdRegister {
     private static final char CH_OPEN = '[';
     private static final char CH_CLOSE = ']';
 
-    private static final int[] NIBBLE_IDX;     // {0,4,8...,24}
     private static final char[] HEXCH_TBL = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'A', 'B', 'C', 'D', 'E', 'F',
     };
 
+    private static final int[] BQ_TBL;
+
+
     static{
-        NIBBLE_IDX = new int[PRIM_SLOTS];
-        for(int ct = 0; ct < PRIM_SLOTS; ct++){
-            NIBBLE_IDX[ct] = BCD_BITSIZE * ct;
+        // build lookup table for Packed-BCD to Bi-quinary conversion
+        BQ_TBL = new int[256];
+
+        int idx = 0;
+        for(int highDec = 0; highDec < 16; highDec++){
+            int highBq;
+            if     (highDec >= 10) highBq = 0x0;
+            else if(highDec >=  5) highBq = highDec + 3;
+            else                   highBq = highDec;
+
+            for(int lowDec = 0; lowDec < 16; lowDec++){
+                int lowBq;
+                if     (lowDec >= 10) lowBq = 0x0;
+                else if(lowDec >=  5) lowBq = lowDec + 3;
+                else                  lowBq = lowDec;
+
+                int bqNblNbl = (highBq << BCD_BITSIZE) | lowBq;
+
+                BQ_TBL[idx++] = bqNblNbl;
+            }
         }
+
+        assert idx == BQ_TBL.length;
     }
 
     static{
         assert 0b1 << PRIMIDX_SHIFT == PRIM_SLOTS;
-        assert NIBBLE_IDX.length == PRIM_SLOTS;
+        assert (-1 & NBLIDX_MASK) == PRIM_SLOTS - 1;
         assert HEXCH_TBL.length == 0b1 << BCD_BITSIZE;
     }
 
 
-    private final int digits;
+    private final int maxDigits;
     private final int[] ibuf;
 
     private int precision;    // negative value if unknown.
@@ -107,8 +133,8 @@ public class BcdRegister {
 
         if(maxDigits <= 0) throw new IllegalArgumentException();
 
-        this.digits = fittingContainer(maxDigits);
-        this.ibuf = new int[this.digits / PRIM_SLOTS];
+        this.maxDigits = fittingContainer(maxDigits);
+        this.ibuf = new int[this.maxDigits / PRIM_SLOTS];
 
         this.precision = 1;   // Zero-value has precision 1
 
@@ -156,15 +182,23 @@ public class BcdRegister {
      * @return modified value
      */
     public static int toBiQuinary(int iVal){
-        int result = iVal;
+        int result;
+        int bVal;
 
-        for(int nibblePos : NIBBLE_IDX){
-            int bcd = (iVal >>> nibblePos) & NIBBLE_MASK;
-            if(bcd > 0x4){
-                int three = 0x3 << nibblePos;
-                result += three;    // never carry over between nibbles
-            }
-        }
+        bVal = (iVal >>> 24);
+        result = BQ_TBL[bVal];
+
+        bVal = (iVal >>> 16) & BYTE_MASK;
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (iVal >>> 8) & BYTE_MASK;
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = iVal & BYTE_MASK;
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
 
         return result;
     }
@@ -192,7 +226,7 @@ public class BcdRegister {
      * @return digits holder width
      */
     public int getMaxDigits(){
-        return this.digits;
+        return this.maxDigits;
     }
 
     /**
@@ -206,14 +240,16 @@ public class BcdRegister {
         int iIdx;
         int iMod;
 
-        iIdx = digitPos >> PRIMIDX_SHIFT;
+        iIdx = digitPos >> PRIMIDX_SHIFT;  // Arithmetic shift to keep sign
         //   = digitPos / 8;
 
         iMod = digitPos & NBLIDX_MASK;
         //   = digitPos % 8;
 
         int iVal = this.ibuf[iIdx];
-        int shiftWidth = NIBBLE_IDX[iMod];
+        int shiftWidth = iMod << 2;
+        //             = iMod * 4;
+
         iVal >>>= shiftWidth;
         iVal &= NIBBLE_MASK;
 
@@ -242,23 +278,19 @@ public class BcdRegister {
         int digitsCt = getPrecision();
         int addPos = digitsCt - 1;
 
-        int buflen = this.ibuf.length;
-        outer:
-        for(int iIdx = 0; iIdx < buflen; iIdx++){
-            int iVal = this.ibuf[iIdx];
+        for(int iVal : this.ibuf){
+            for(int nblIdx = 0; nblIdx < PRIM_SLOTS; nblIdx++){
+                int shPos = nblIdx << 2;
+                //        = nblIdx * 4;
 
-            int lastNblIdx = NIBBLE_IDX.length - 1;
-            for(int nblIdx = 0; nblIdx <= lastNblIdx; nblIdx++){
-                int shPos = NIBBLE_IDX[nblIdx];
-                int shifted = iVal >>> shPos;
-                int maskedValue = shifted & NIBBLE_MASK;
+                dst[offset + addPos] = (iVal >>> shPos) & NIBBLE_MASK;
 
-                int dstPos = offset + addPos;
-                dst[dstPos] = maskedValue;
+                if(addPos <= 0) break;
 
-                if(addPos > 0) addPos--;
-                else           break outer;
+                addPos--;
             }
+
+            if(addPos <= 0) break;
         }
 
         return digitsCt;
@@ -350,32 +382,30 @@ public class BcdRegister {
      * @return decimal precision.
      */
     private int calcPrecision(){
-        int result = this.digits;
+        int result = this.maxDigits;
 
         int idxMax = this.ibuf.length - 1;
-        outer:
         for(int iIdx = idxMax; iIdx >= 0; iIdx--){
             int iVal = this.ibuf[iIdx];
 
             if(iVal == 0){
                 result -= PRIM_SLOTS;
-                continue;
-            }
-
-            int lastNblIdx = NIBBLE_IDX.length - 1;
-            for(int nblIdx = lastNblIdx; nblIdx >= 0; nblIdx--){
-                int shPos = NIBBLE_IDX[nblIdx];
-                int nibbleMask = NIBBLE_MASK << shPos;
-                int maskedValue = iVal & nibbleMask;
-
-                if(maskedValue != 0){
-                    break outer;
+            }else{
+                // Count Leading Zero nibbles(BCD)
+                if((iVal & 0xff_ff_00_00) == 0){
+                    result -= 4;
+                    iVal <<= 16;
+                }
+                if((iVal & 0xff_00_00_00) == 0){
+                    result -= 2;
+                    iVal <<= 8;
+                }
+                if((iVal & 0xf0_00_00_00) == 0){
+                    result -= 1;
                 }
 
-                result--;
+                break;
             }
-
-            assert false;
         }
 
         return result;
@@ -394,15 +424,17 @@ public class BcdRegister {
         boolean dumped = false;
         int validCols = getPrecision();
         for(int colCt = validCols - 1; colCt >= 0; colCt--){
-            int iIdx   = colCt >>> PRIMIDX_SHIFT;   // / PRIM_SLOTS;
-            int nblIdx = colCt & NBLIDX_MASK;       // % PRIM_SLOTS;
+            int iIdx   = colCt >>> PRIMIDX_SHIFT;
+            //         = colCt / 8;
+            int nblIdx = colCt & NBLIDX_MASK;
+            //         = colCt % 8;
 
             int iVal = this.ibuf[iIdx];
-            int shPos = NIBBLE_IDX[nblIdx];
+            int shiftWidth = nblIdx << 2;
+            //             = nblIdx * 4;
 
-            int nibbleMask = NIBBLE_MASK << shPos;
-            int maskedValue = iVal & nibbleMask;
-            int nibble = maskedValue >>> shPos;
+            iVal >>>= shiftWidth;
+            int nibble = iVal & NIBBLE_MASK;
 
             if(dumped){
                 sb.append(SP);
@@ -425,18 +457,24 @@ public class BcdRegister {
      * @param nibble BCD nibble value. (0 =&lt; nibble &lt; 10)
      */
     private void dumpNibble(StringBuilder sb, int nibble){
-        for(int bitIdx = BCD_BITSIZE - 1; bitIdx >= 0; bitIdx--){
-            int bMask = LSB_PRIMMASK << bitIdx;
-            int bool = nibble & bMask;
+        int b3 = (nibble >> 3) & LSB_PRIMMASK;
+        int b2 = (nibble >> 2) & LSB_PRIMMASK;
+        int b1 = (nibble >> 1) & LSB_PRIMMASK;
+        int b0 = (nibble     ) & LSB_PRIMMASK;
 
-            char boolCh;
-            if(bool == 0) boolCh = HEXCH_TBL[0];
-            else          boolCh = HEXCH_TBL[1];
-            sb.append(boolCh);
-        }
+        char c3 = HEXCH_TBL[b3];
+        char c2 = HEXCH_TBL[b2];
+        char c1 = HEXCH_TBL[b1];
+        char c0 = HEXCH_TBL[b0];
 
-        assert nibble < 10;
+        sb.append(c3);
+        sb.append(c2);
+        sb.append(c1);
+        sb.append(c0);
+
+        assert nibble < 16;
         char decCh = HEXCH_TBL[nibble];
+
         sb.append(CH_OPEN);
         sb.append(decCh);
         sb.append(CH_CLOSE);

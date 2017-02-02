@@ -15,13 +15,23 @@
  *
  * <p>So, DoubDabC is Fast and GC-friendly.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Double_dabble">
+ * <p>Project Home : <u>
+ * <a target="_blank"
+ * href="https://github.com/olyutorskii/DoubDabC/wiki" >
+ * DoubDabC GitHub Wiki page
+ * </a>
+ * </u>
+ *
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Double_dabble">
  * Double dabble (Wikipedia)
  * </a>
- * @see <a href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
  * Binary-coded decimal (Wikipedia)
  * </a>
- * @see <a href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
  * Bi-quinary coded decimal (Wikipedia)
  * </a>
  */
