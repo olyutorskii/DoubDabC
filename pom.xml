@@ -16,7 +16,7 @@
     <groupId>io.github.olyutorskii</groupId>
     <artifactId>doubdabc</artifactId>
 
-    <version>1.102.3-SNAPSHOT</version>
+    <version>1.102.4</version>
 
     <packaging>jar</packaging>
     <name>DoubDabC</name>

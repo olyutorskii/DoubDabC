@@ -1,8 +1,8 @@
 DoubDabC Changelog
 ===================
 
-## WIP
-Released on 20XX-XX-XX
+## v1.102.4
+Released on 2017-02-XX
 - Speed-up converting
 - Add static code analysis report plugin. (checkstyle,PMD,FindBugs)
 - Add code coverage report plugin. (Jacoco)
