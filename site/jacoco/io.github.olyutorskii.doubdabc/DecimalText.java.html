@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DecimalText.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc</a> &gt; <span class="el_source">DecimalText.java</span></div><h1>DecimalText.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+import java.nio.CharBuffer;
+
+/**
+ * CharSequence wrapping access to Decimal digits.
+ */
+public class DecimalText implements CharSequence{
+
+<span class="fc" id="L15">    private static final char[] DECCH_TBL = {</span>
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    };
+
+
+    private final BcdRegister decimal;
+    private final int[] intBuf;
+    private final CharBuffer textOut;
+
+
+    /**
+     * Constructor.
+     *
+     * @param decimal BCD register
+     * @throws NullPointerException argument is null
+     */
+    public DecimalText(BcdRegister decimal) throws NullPointerException{
+<span class="fc" id="L32">        super();</span>
+
+<span class="fc" id="L34">        this.decimal = decimal;</span>
+
+<span class="fc" id="L36">        int digits = this.decimal.getMaxDigits();</span>
+<span class="fc" id="L37">        this.intBuf = new int[digits];</span>
+<span class="fc" id="L38">        this.textOut = CharBuffer.allocate(digits);</span>
+
+<span class="fc" id="L40">        return;</span>
+    }
+
+
+    /**
+     * Return digits columns.
+     *
+     * &lt;p&gt;There is no sign character.
+     *
+     * @return digits columns
+     */
+    @Override
+    public int length(){
+<span class="fc" id="L53">        int result = this.decimal.getPrecision();</span>
+<span class="fc" id="L54">        return result;</span>
+    }
+
+    /**
+     * Return each digit character.
+     *
+     * @param index digit position starting 0
+     * @return digit character ('0' to '9')
+     * @throws IndexOutOfBoundsException
+     * Argument is negative, or, not less than &lt;code&gt;length()&lt;/code&gt;
+     */
+    @Override
+    public char charAt(int index) throws IndexOutOfBoundsException{
+<span class="fc" id="L67">        int precision = this.decimal.getPrecision();</span>
+
+<span class="fc bfc" id="L69" title="All 4 branches covered.">        if(index &lt; 0 || precision &lt;= index)</span>
+<span class="fc" id="L70">            throw new IndexOutOfBoundsException();</span>
+
+<span class="fc" id="L72">        int digitPos = precision - index - 1;</span>
+<span class="fc" id="L73">        int digit = this.decimal.getDigit(digitPos);</span>
+
+<span class="fc" id="L75">        char result = DECCH_TBL[digit];</span>
+<span class="fc" id="L76">        return result;</span>
+    }
+
+    /**
+     * Return fixed-ranged subsequence.
+     *
+     * @param start start index
+     * @param end end index
+     * @return ranged sub-sequence
+     * @throws IndexOutOfBoundsException
+     *     &lt;code&gt;start&lt;/code&gt; is negative,
+     *     &lt;code&gt;end&lt;/code&gt; is less than &lt;code&gt;start&lt;/code&gt;,
+     *     or &lt;code&gt;end&lt;/code&gt; is greater than length()
+     */
+    @Override
+    public CharSequence subSequence(int start, int end)
+            throws IndexOutOfBoundsException{
+<span class="fc bfc" id="L93" title="All 4 branches covered.">        if(start &lt; 0 || end &lt; start) throw new IndexOutOfBoundsException();</span>
+
+<span class="fc" id="L95">        int precision = this.decimal.getPrecision();</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if(end &gt; precision) throw new IndexOutOfBoundsException();</span>
+
+<span class="fc" id="L98">        String result = encodeText(start, end);</span>
+<span class="fc" id="L99">        return result;</span>
+    }
+
+    /**
+     * Return fixed string text.
+     *
+     * @return fixed string
+     */
+    @Override
+    public String toString(){
+<span class="fc" id="L109">        int precision = this.decimal.getPrecision();</span>
+<span class="fc" id="L110">        String result = encodeText(0, precision);</span>
+<span class="fc" id="L111">        return result;</span>
+    }
+
+    /**
+     * Encode int array to text string.
+     *
+     * @param start start position
+     * @param end end position
+     * @return text
+     */
+    private String encodeText(int start, int end){
+<span class="fc" id="L122">        this.decimal.toIntArray(this.intBuf, 0);</span>
+
+<span class="fc" id="L124">        this.textOut.clear();</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        for(int idx = start; idx &lt; end; idx++){</span>
+<span class="fc" id="L126">            int digit = this.intBuf[idx];</span>
+<span class="fc" id="L127">            char decimalCh = DECCH_TBL[digit];</span>
+<span class="fc" id="L128">            this.textOut.put(decimalCh);</span>
+        }
+
+<span class="fc" id="L131">        this.textOut.flip();</span>
+<span class="fc" id="L132">        String result = this.textOut.toString();</span>
+
+<span class="fc" id="L134">        return result;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

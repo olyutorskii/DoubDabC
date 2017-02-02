@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BitFeeder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc</a> &gt; <span class="el_source">BitFeeder.java</span></div><h1>BitFeeder.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+import java.math.BigInteger;
+import java.util.BitSet;
+
+/**
+ * Bit-stream feeder from any integer to BCD register.
+ *
+ * &lt;p&gt;Any value on register was cleared before feeding.
+ */
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">public final class BitFeeder {</span>
+
+    private static final int  MSB_INTMASK  = 0b1  &lt;&lt; (Integer.SIZE - 1);
+    private static final long MSB_LONGMASK = 0b1L &lt;&lt; (Long.SIZE    - 1);
+
+
+    /**
+     * Hidden constructor.
+     */
+<span class="nc" id="L25">    private BitFeeder(){</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        assert false;</span>
+<span class="nc" id="L27">    }</span>
+
+
+    /**
+     * Feed 32bit integer
+     * from higher to lower bit with double-dabble left shift.
+     *
+     * &lt;p&gt;sign-bit is treated as unsigned.
+     *
+     * @param bs BCD register
+     * @param iVal 32bit integer
+     * @return true if MSB overflow
+     */
+    public static boolean feedUInt32(BcdRegister bs, int iVal){
+<span class="fc" id="L41">        bs.clear();</span>
+
+<span class="fc" id="L43">        boolean skipping = true;</span>
+<span class="fc" id="L44">        boolean result = false;</span>
+
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for (int ct = 0; ct &lt; Integer.SIZE; ct++) {</span>
+<span class="fc" id="L47">            int scanMask = MSB_INTMASK &gt;&gt;&gt; ct;</span>
+<span class="fc" id="L48">            int bitScanned = iVal &amp; scanMask;</span>
+
+<span class="fc bfc" id="L50" title="All 2 branches covered.">            if (skipping) {</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">                if (bitScanned == 0b0) continue;</span>
+<span class="fc" id="L52">                skipping = false;</span>
+            }
+
+<span class="fc" id="L55">            result |= bs.pushLsb(bitScanned);</span>
+        }
+<span class="fc" id="L57">        return result;</span>
+    }
+
+    /**
+     * Feed unsigned 64bit integer
+     * from higher to lower bit with double-dabble left shift.
+     *
+     * &lt;p&gt;sign-bit is treated as unsigned.
+     *
+     * @param bs BCD register
+     * @param lVal 64bit integer
+     * @return true if MSB overflow
+     */
+    public static boolean feedUInt64(BcdRegister bs, long lVal){
+<span class="fc" id="L71">        bs.clear();</span>
+
+<span class="fc" id="L73">        boolean skipping = true;</span>
+<span class="fc" id="L74">        boolean result = false;</span>
+
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        for(int ct = 0; ct &lt; Long.SIZE; ct++){</span>
+<span class="fc" id="L77">            long scanMask = MSB_LONGMASK &gt;&gt;&gt; ct;</span>
+<span class="fc" id="L78">            long bitScanned = lVal &amp; scanMask;</span>
+
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if(skipping){</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">                if(bitScanned == 0b0L) continue;</span>
+<span class="fc" id="L82">                skipping = false;</span>
+            }
+
+            int newLsbInt;
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            if(bitScanned == 0L){</span>
+<span class="fc" id="L87">                newLsbInt = 0;</span>
+            }else{
+<span class="fc" id="L89">                newLsbInt = 1;</span>
+            }
+
+<span class="fc" id="L92">            result |= bs.pushLsb(newLsbInt);</span>
+        }
+
+<span class="fc" id="L95">        return result;</span>
+    }
+
+    /**
+     * Feed BitInteger
+     * from higher to lower bit with double-dabble left shift.
+     *
+     * &lt;p&gt;sign-bit is treated as unsigned.
+     *
+     * @param bs BCD register
+     * @param bigInt big integer
+     * @return true if MSB overflow
+     */
+    public static boolean feedBigInteger(BcdRegister bs, BigInteger bigInt){
+<span class="fc" id="L109">        bs.clear();</span>
+
+<span class="fc" id="L111">        boolean result = false;</span>
+
+<span class="fc" id="L113">        int sign = bigInt.signum();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if(sign &lt; 0) result |= bs.pushLsb(true);</span>
+
+<span class="fc" id="L116">        int msbPos = bigInt.bitLength() - 1;</span>
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        for(int bitIndex = msbPos; bitIndex &gt;= 0; bitIndex--){</span>
+<span class="fc" id="L119">            boolean newLsb = bigInt.testBit(bitIndex);</span>
+<span class="fc" id="L120">            result |= bs.pushLsb(newLsb);</span>
+        }
+
+<span class="fc" id="L123">        return result;</span>
+    }
+
+    /**
+     * Feed BitSet
+     * from higher to lower bit with double-dabble left shift.
+     *
+     * @param bs BCD register
+     * @param bitSet bit set
+     * @return true if MSB overflow
+     */
+    public static boolean feedBitSet(BcdRegister bs, BitSet bitSet){
+<span class="fc" id="L135">        bs.clear();</span>
+
+<span class="fc" id="L137">        int msbPos = bitSet.length() - 1;</span>
+
+<span class="fc" id="L139">        boolean result = false;</span>
+
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        for(int bitIndex = msbPos; bitIndex &gt;= 0; bitIndex--){</span>
+<span class="fc" id="L142">            boolean newLsb = bitSet.get(bitIndex);</span>
+<span class="fc" id="L143">            result |= bs.pushLsb(newLsb);</span>
+        }
+
+<span class="fc" id="L146">        return result;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

@@ -1,0 +1,5 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+DoubDabC,io.github.olyutorskii.doubdabc,BitFeeder,11,154,3,21,3,42,3,15,1,5
+DoubDabC,io.github.olyutorskii.doubdabc,DecimalText,0,178,0,12,0,33,0,13,0,7
+DoubDabC,io.github.olyutorskii.doubdabc,BcdRegister,14,614,8,56,0,136,8,39,0,15
+DoubDabC,io.github.olyutorskii.doubdabc,DecimalOut,0,170,0,4,0,33,0,11,0,9

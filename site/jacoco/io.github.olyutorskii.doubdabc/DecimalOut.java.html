@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DecimalOut.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc</a> &gt; <span class="el_source">DecimalOut.java</span></div><h1>DecimalOut.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.BufferOverflowException;
+import java.nio.CharBuffer;
+import java.nio.ReadOnlyBufferException;
+
+/**
+ * Output decimal number characters.
+ *
+ * &lt;p&gt;Negative value is not supported.
+ */
+public class DecimalOut {
+
+<span class="fc" id="L21">    private static final char[] DECCH_TBL = {</span>
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    };
+
+
+    private final BcdRegister decimal;
+
+    private final int[] intBuf;
+    private final char[] charBuf;
+
+
+    /**
+     * Constructor.
+     *
+     * @param decimal BCD register
+     * @throws NullPointerException argument is null
+     */
+    public DecimalOut(BcdRegister decimal) throws NullPointerException{
+<span class="fc" id="L39">        super();</span>
+
+<span class="fc" id="L41">        this.decimal = decimal;</span>
+
+<span class="fc" id="L43">        int digits = this.decimal.getMaxDigits();</span>
+<span class="fc" id="L44">        this.intBuf = new int[digits];</span>
+<span class="fc" id="L45">        this.charBuf = new char[digits];</span>
+
+<span class="fc" id="L47">        return;</span>
+    }
+
+
+    /**
+     * Return digits length.
+     *
+     * &lt;p&gt;Letters of length will be written to the output.
+     *
+     * @return digits length
+     */
+    public int getDigitsLength(){
+<span class="fc" id="L59">        int result = this.decimal.getPrecision();</span>
+<span class="fc" id="L60">        return result;</span>
+    }
+
+    /**
+     * Build char array data.
+     * @return digits length
+     */
+    private int buildChar(){
+<span class="fc" id="L68">        int precision = this.decimal.getPrecision();</span>
+<span class="fc" id="L69">        this.decimal.toIntArray(this.intBuf, 0);</span>
+
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for(int idx = 0; idx &lt; precision; idx++){</span>
+<span class="fc" id="L72">            int digit = this.intBuf[idx];</span>
+<span class="fc" id="L73">            char decimalCh = DECCH_TBL[digit];</span>
+<span class="fc" id="L74">            this.charBuf[idx] = decimalCh;</span>
+        }
+
+<span class="fc" id="L77">        return precision;</span>
+    }
+
+    /**
+     * Write digits to Appendable.
+     *
+     * @param app output
+     * @return digits length
+     * @throws IOException If an I/O error occurs
+     */
+    public int writeDigits(Appendable app) throws IOException{
+<span class="fc" id="L88">        int precision = buildChar();</span>
+
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for(int idx = 0; idx &lt; precision; idx++){</span>
+<span class="fc" id="L91">            char decimalCh = this.charBuf[idx];</span>
+<span class="fc" id="L92">            app.append(decimalCh);</span>
+        }
+
+<span class="fc" id="L95">        return precision;</span>
+    }
+
+    /**
+     * Write digits to CharBuffer.
+     *
+     * @param cBuf output
+     * @return digits length
+     * @throws BufferOverflowException
+     * If buffer's current position is not smaller than its limit
+     * @throws ReadOnlyBufferException
+     * If buffer is read-only
+     */
+    public int writeDigits(CharBuffer cBuf)
+            throws BufferOverflowException, ReadOnlyBufferException{
+<span class="fc" id="L110">        int precision = buildChar();</span>
+<span class="fc" id="L111">        cBuf.put(this.charBuf, 0, precision);</span>
+<span class="fc" id="L112">        return precision;</span>
+    }
+
+    /**
+     * Write digits to Writer.
+     *
+     * @param writer output
+     * @return digits length
+     * @throws IOException If an I/O error occurs
+     */
+    public int writeDigits(Writer writer) throws IOException{
+<span class="fc" id="L123">        int precision = buildChar();</span>
+<span class="fc" id="L124">        writer.write(this.charBuf, 0, precision);</span>
+<span class="fc" id="L125">        return precision;</span>
+    }
+
+    /**
+     * Write digits to StringBuffer.
+     *
+     * @param buf output
+     * @return digits length
+     */
+    public int writeDigits(StringBuffer buf){
+<span class="fc" id="L135">        int precision = buildChar();</span>
+<span class="fc" id="L136">        buf.append(this.charBuf, 0, precision);</span>
+<span class="fc" id="L137">        return precision;</span>
+    }
+
+    /**
+     * Write digits to StringBuilder.
+     *
+     * @param buf output
+     * @return digits length
+     */
+    public int writeDigits(StringBuilder buf){
+<span class="fc" id="L147">        int precision = buildChar();</span>
+<span class="fc" id="L148">        buf.append(this.charBuf, 0, precision);</span>
+<span class="fc" id="L149">        return precision;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

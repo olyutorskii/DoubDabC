@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BcdRegister.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc</a> &gt; <span class="el_source">BcdRegister.java</span></div><h1>BcdRegister.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+/**
+ * BCD register with Double-Dabble algorithm operation.
+ *
+ * &lt;p&gt;BCD register is flexible pseudo register of you specified size.
+ * BCD register is layouted on int array.
+ *
+ * &lt;p&gt;Each decimal columns are layouted 4bit nibble width on BCD register.
+ * &lt;ul&gt;
+ * &lt;li&gt;Lower decimal digit is layouted on lower int bits.
+ * &lt;li&gt;Lower decimal digit is layouted on younger int array element.
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;There is 1bit binary input stream from LSB.
+ *
+ * &lt;p&gt;Each decimal digit overlaps Packed-BCD and Bi-quinary coded decimal.
+ *
+ * &lt;p&gt;Signed(negative) decimal value is not supported.
+ *
+ * @see &lt;a target=&quot;_blank&quot;
+ * href=&quot;https://en.wikipedia.org/wiki/Double_dabble&quot;&gt;
+ * Double dabble (Wikipedia)
+ * &lt;/a&gt;
+ * @see &lt;a target=&quot;_blank&quot;
+ * href=&quot;https://en.wikipedia.org/wiki/Binary-coded_decimal&quot;&gt;
+ * Binary-coded decimal (Wikipedia)
+ * &lt;/a&gt;
+ * @see &lt;a target=&quot;_blank&quot;
+ * href=&quot;https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal&quot;&gt;
+ * Bi-quinary coded decimal (Wikipedia)
+ * &lt;/a&gt;
+ */
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">public class BcdRegister {</span>
+
+    /**
+     * Max decimal digits for unsigned int32.
+     *
+     * &lt;p&gt;(&amp;quot;4294967295&amp;quot;.length)
+     */
+    public static final int MAX_COL_UINT32 = 10;
+
+    /**
+     * Max decimal digits for unsigned int64.
+     *
+     * &lt;p&gt;(&amp;quot;18446744073709551615&amp;quot;.length)
+     */
+    public static final int MAX_COL_UINT64 = 20;
+
+
+    private static final int PRIM_BITSIZE = Integer.SIZE;
+    private static final int BYTE_BITSIZE = Byte.SIZE;
+    private static final int BCD_BITSIZE = 4;
+    private static final int PRIM_SLOTS = PRIM_BITSIZE / BCD_BITSIZE;
+
+    private static final int LSB_PRIMMASK = 0b1;
+    private static final int MSB_PRIMMASK = 0b1 &lt;&lt; (PRIM_BITSIZE - 1);
+    private static final int NIBBLE_MASK  = // 0b1111
+            (0b1 &lt;&lt; BCD_BITSIZE) - 1;
+    private static final int BYTE_MASK    = // 0b1111_1111
+            (0b1 &lt;&lt; BYTE_BITSIZE) - 1;
+
+    private static final int PRIMIDX_SHIFT = 3;    //  [ /  8]  [&gt;&gt;&gt; 3]
+    private static final int NBLIDX_MASK =         //  [mod 8]  [&amp; 0b111]
+            (0b1 &lt;&lt; PRIMIDX_SHIFT) - 1;
+
+    private static final char SP = '\u0020';
+    private static final char CH_OPEN = '[';
+    private static final char CH_CLOSE = ']';
+
+<span class="fc" id="L76">    private static final char[] HEXCH_TBL = {</span>
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'A', 'B', 'C', 'D', 'E', 'F',
+    };
+
+    private static final int[] BQ_TBL;
+
+
+    static{
+        // build lookup table for Packed-BCD to Bi-quinary conversion
+<span class="fc" id="L86">        BQ_TBL = new int[256];</span>
+
+<span class="fc" id="L88">        int idx = 0;</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for(int highDec = 0; highDec &lt; 16; highDec++){</span>
+            int highBq;
+<span class="fc bfc" id="L91" title="All 2 branches covered.">            if     (highDec &gt;= 10) highBq = 0x0;</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            else if(highDec &gt;=  5) highBq = highDec + 3;</span>
+<span class="fc" id="L93">            else                   highBq = highDec;</span>
+
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            for(int lowDec = 0; lowDec &lt; 16; lowDec++){</span>
+                int lowBq;
+<span class="fc bfc" id="L97" title="All 2 branches covered.">                if     (lowDec &gt;= 10) lowBq = 0x0;</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">                else if(lowDec &gt;=  5) lowBq = lowDec + 3;</span>
+<span class="fc" id="L99">                else                  lowBq = lowDec;</span>
+
+<span class="fc" id="L101">                int bqNblNbl = (highBq &lt;&lt; BCD_BITSIZE) | lowBq;</span>
+
+<span class="fc" id="L103">                BQ_TBL[idx++] = bqNblNbl;</span>
+            }
+        }
+
+<span class="pc bpc" id="L107" title="2 of 4 branches missed.">        assert idx == BQ_TBL.length;</span>
+    }
+
+    static{
+        assert 0b1 &lt;&lt; PRIMIDX_SHIFT == PRIM_SLOTS;
+        assert (-1 &amp; NBLIDX_MASK) == PRIM_SLOTS - 1;
+<span class="pc bpc" id="L113" title="2 of 4 branches missed.">        assert HEXCH_TBL.length == 0b1 &lt;&lt; BCD_BITSIZE;</span>
+<span class="fc" id="L114">    }</span>
+
+
+    private final int maxDigits;
+    private final int[] ibuf;
+
+    private int precision;    // negative value if unknown.
+
+
+    /**
+     * Constructor.
+     *
+     * &lt;p&gt;Decimal digits are round-uped to int array fitting size.
+     *
+     * @param maxDigits decimal digits to store result.
+     * @throws IllegalArgumentException not positive digits.
+     */
+    public BcdRegister(int maxDigits) throws IllegalArgumentException{
+<span class="fc" id="L132">        super();</span>
+
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if(maxDigits &lt;= 0) throw new IllegalArgumentException();</span>
+
+<span class="fc" id="L136">        this.maxDigits = fittingContainer(maxDigits);</span>
+<span class="fc" id="L137">        this.ibuf = new int[this.maxDigits / PRIM_SLOTS];</span>
+
+<span class="fc" id="L139">        this.precision = 1;   // Zero-value has precision 1</span>
+
+<span class="fc" id="L141">        return;</span>
+    }
+
+    /**
+     * Constructor for decimals with unsigned int32.
+     */
+    public BcdRegister(){
+<span class="fc" id="L148">        this(MAX_COL_UINT32);</span>
+<span class="fc" id="L149">        return;</span>
+    }
+
+
+    /**
+     * Round-up to int array fitting size.
+     *
+     * @param digits decimal digits
+     * @return rounded value
+     */
+    private static int fittingContainer(int digits){
+        int result;
+
+<span class="fc" id="L162">        result = digits;</span>
+<span class="fc" id="L163">        result += PRIM_SLOTS - 1;</span>
+<span class="fc" id="L164">        result /= PRIM_SLOTS;</span>
+<span class="fc" id="L165">        result *= PRIM_SLOTS;</span>
+
+<span class="fc" id="L167">        return result;</span>
+    }
+
+    /**
+     * Convert each 4bit width PackedBCD to Bi-quinary coded decimal.
+     *
+     * &lt;p&gt;If each nibble(PackedBCD) in int is greater than 4,
+     * add 3 to nibble.
+     *
+     * &lt;p&gt;&quot;nibble overflow&quot; doesn't occur if valid PackedBCD before.
+     * Undefined result if invalid PackedBCD value before.
+     *
+     * &lt;p&gt;[0,1,2,3,4,5,6,7,8,9] → [0,1,2,3,4,8,9,A,B,C]
+     *
+     * @param iVal int value
+     * @return modified value
+     */
+    public static int toBiQuinary(int iVal){
+        int result;
+        int bVal;
+
+<span class="fc" id="L188">        bVal = (iVal &gt;&gt;&gt; 24);</span>
+<span class="fc" id="L189">        result = BQ_TBL[bVal];</span>
+
+<span class="fc" id="L191">        bVal = (iVal &gt;&gt;&gt; 16) &amp; BYTE_MASK;</span>
+<span class="fc" id="L192">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L193">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L195">        bVal = (iVal &gt;&gt;&gt; 8) &amp; BYTE_MASK;</span>
+<span class="fc" id="L196">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L197">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L199">        bVal = iVal &amp; BYTE_MASK;</span>
+<span class="fc" id="L200">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L201">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L203">        return result;</span>
+    }
+
+
+    /**
+     * Clear all decimal digits to Zero.
+     */
+    public void clear(){
+<span class="fc" id="L211">        int buflen = this.ibuf.length;</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">        for(int idx = 0; idx &lt; buflen; idx++){</span>
+<span class="fc" id="L213">            this.ibuf[idx] = 0;</span>
+        }
+
+<span class="fc" id="L216">        this.precision = 1;</span>
+
+<span class="fc" id="L218">        return;</span>
+    }
+
+    /**
+     * Return total decimal digits holder width on register.
+     *
+     * &lt;p&gt;Digits holder width include leading zero spaces.
+     *
+     * @return digits holder width
+     */
+    public int getMaxDigits(){
+<span class="fc" id="L229">        return this.maxDigits;</span>
+    }
+
+    /**
+     * Get each decimal column value as int.
+     *
+     * @param digitPos digit column position. 0 is lowest column.
+     * @return decimal value from 0 to 9
+     * @throws IndexOutOfBoundsException invalid position.
+     */
+    public int getDigit(int digitPos) throws IndexOutOfBoundsException{
+        int iIdx;
+        int iMod;
+
+<span class="fc" id="L243">        iIdx = digitPos &gt;&gt; PRIMIDX_SHIFT;  // Arithmetic shift to keep sign</span>
+        //   = digitPos / 8;
+
+<span class="fc" id="L246">        iMod = digitPos &amp; NBLIDX_MASK;</span>
+        //   = digitPos % 8;
+
+<span class="fc" id="L249">        int iVal = this.ibuf[iIdx];</span>
+<span class="fc" id="L250">        int shiftWidth = iMod &lt;&lt; 2;</span>
+        //             = iMod * 4;
+
+<span class="fc" id="L253">        iVal &gt;&gt;&gt;= shiftWidth;</span>
+<span class="fc" id="L254">        iVal &amp;= NIBBLE_MASK;</span>
+
+<span class="fc" id="L256">        return iVal;</span>
+    }
+
+    /**
+     * Store decimal result to int array.
+     *
+     * &lt;p&gt;Each decimal number stored to
+     * each int array element. (non-packing BCD)
+     *
+     * &lt;p&gt;Leading zeros aren't transfered.
+     * You need at least precision-size elements space to store.
+     *
+     * &lt;p&gt;Higher decimal number stored to lower array element.
+     * If decimal result is '36', [0] is 3 and [1] is 6.
+     *
+     * @param dst destination array
+     * @param offset start offset
+     * @return Stored element size. ( = precision)
+     * @throws IndexOutOfBoundsException too small array or negative offset.
+     */
+    public int toIntArray(int[] dst, int offset)
+            throws IndexOutOfBoundsException{
+<span class="fc" id="L278">        int digitsCt = getPrecision();</span>
+<span class="fc" id="L279">        int addPos = digitsCt - 1;</span>
+
+<span class="pc bpc" id="L281" title="1 of 2 branches missed.">        for(int iVal : this.ibuf){</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">            for(int nblIdx = 0; nblIdx &lt; PRIM_SLOTS; nblIdx++){</span>
+<span class="fc" id="L283">                int shPos = nblIdx &lt;&lt; 2;</span>
+                //        = nblIdx * 4;
+
+<span class="fc" id="L286">                dst[offset + addPos] = (iVal &gt;&gt;&gt; shPos) &amp; NIBBLE_MASK;</span>
+
+<span class="fc bfc" id="L288" title="All 2 branches covered.">                if(addPos &lt;= 0) break;</span>
+
+<span class="fc" id="L290">                addPos--;</span>
+            }
+
+<span class="fc bfc" id="L293" title="All 2 branches covered.">            if(addPos &lt;= 0) break;</span>
+        }
+
+<span class="fc" id="L296">        return digitsCt;</span>
+    }
+
+    /**
+     * Push 1bit LSB and double-dabble left shift.
+     *
+     * &lt;p&gt;If decimal overflow happens, just losing higher digits.
+     *
+     * @param carryOver LSB is 1 if true.
+     * @return true if MSB overflow
+     */
+    public boolean pushLsb(boolean carryOver){
+        int pushInt;
+<span class="fc bfc" id="L309" title="All 2 branches covered.">        if(carryOver) pushInt = MSB_PRIMMASK;</span>
+<span class="fc" id="L310">        else          pushInt = 0;</span>
+
+<span class="fc" id="L312">        boolean result = pushLsb(pushInt);</span>
+
+<span class="fc" id="L314">        return result;</span>
+    }
+
+    /**
+     * Push 1bit LSB and double-dabble left shift.
+     *
+     * &lt;p&gt;If decimal overflow happens, just losing higher digits.
+     *
+     * @param carryOver LSB is 1 if non-zero.
+     * @return true if MSB overflow
+     */
+    public boolean pushLsb(int carryOver){
+<span class="fc" id="L326">        int lastMsbTest = carryOver;</span>
+
+<span class="fc" id="L328">        int buflen = this.ibuf.length;</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        for(int idx = 0; idx &lt; buflen; idx++){</span>
+<span class="fc" id="L330">            int oldVal = this.ibuf[idx];</span>
+
+<span class="fc" id="L332">            int fixVal = toBiQuinary(oldVal);</span>
+<span class="fc" id="L333">            int newVal = fixVal &lt;&lt; 1;</span>
+<span class="fc bfc" id="L334" title="All 2 branches covered.">            if(lastMsbTest != 0) newVal |= LSB_PRIMMASK;</span>
+
+<span class="fc" id="L336">            this.ibuf[idx] = newVal;</span>
+<span class="fc" id="L337">            lastMsbTest = fixVal &amp; MSB_PRIMMASK;</span>
+        }
+
+<span class="fc" id="L340">        this.precision = -1;   // unknown precision</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">        boolean result =</span>
+                lastMsbTest != 0;
+
+<span class="fc" id="L344">        return result;</span>
+    }
+
+    /**
+     * Return decimal precision.
+     *
+     * &lt;p&gt;Precision is a valid decimal digits width without leading zero.
+     *
+     * &lt;p&gt;Precision is less or equal than max digits size always.
+     *
+     * &lt;p&gt;Precision of '40560' is 5.
+     *
+     * &lt;p&gt;Precision of '0' is 1.
+     *
+     * @return decimal precision.
+     */
+    public int getPrecision(){
+<span class="fc bfc" id="L361" title="All 2 branches covered.">        if(this.precision &gt; 0){</span>
+<span class="fc" id="L362">            return this.precision;</span>
+        }
+
+<span class="fc" id="L365">        int result = calcPrecision();</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        if(result == 0) result = 1;</span>
+
+<span class="fc" id="L368">        this.precision = result;</span>
+
+<span class="fc" id="L370">        return result;</span>
+    }
+
+    /**
+     * Calculate decimal precision.
+     *
+     * &lt;p&gt;Precision is valid decimal digits without leading zero.
+     *
+     * &lt;p&gt;Precision of 40560 is 5.
+     *
+     * &lt;p&gt;Precision of 0 is 1 but return 0.
+     *
+     * @return decimal precision.
+     */
+    private int calcPrecision(){
+<span class="fc" id="L385">        int result = this.maxDigits;</span>
+
+<span class="fc" id="L387">        int idxMax = this.ibuf.length - 1;</span>
+<span class="fc bfc" id="L388" title="All 2 branches covered.">        for(int iIdx = idxMax; iIdx &gt;= 0; iIdx--){</span>
+<span class="fc" id="L389">            int iVal = this.ibuf[iIdx];</span>
+
+<span class="fc bfc" id="L391" title="All 2 branches covered.">            if(iVal == 0){</span>
+<span class="fc" id="L392">                result -= PRIM_SLOTS;</span>
+            }else{
+                // Count Leading Zero nibbles(BCD)
+<span class="fc bfc" id="L395" title="All 2 branches covered.">                if((iVal &amp; 0xff_ff_00_00) == 0){</span>
+<span class="fc" id="L396">                    result -= 4;</span>
+<span class="fc" id="L397">                    iVal &lt;&lt;= 16;</span>
+                }
+<span class="fc bfc" id="L399" title="All 2 branches covered.">                if((iVal &amp; 0xff_00_00_00) == 0){</span>
+<span class="fc" id="L400">                    result -= 2;</span>
+<span class="fc" id="L401">                    iVal &lt;&lt;= 8;</span>
+                }
+<span class="fc bfc" id="L403" title="All 2 branches covered.">                if((iVal &amp; 0xf0_00_00_00) == 0){</span>
+<span class="fc" id="L404">                    result -= 1;</span>
+                }
+
+                break;
+            }
+        }
+
+<span class="fc" id="L411">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * Return text for debug usage.
+     *
+     * @return {@inheritDoc}
+     */
+    @Override
+    public String toString(){
+<span class="fc" id="L422">        StringBuilder sb = new StringBuilder();</span>
+
+<span class="fc" id="L424">        boolean dumped = false;</span>
+<span class="fc" id="L425">        int validCols = getPrecision();</span>
+<span class="fc bfc" id="L426" title="All 2 branches covered.">        for(int colCt = validCols - 1; colCt &gt;= 0; colCt--){</span>
+<span class="fc" id="L427">            int iIdx   = colCt &gt;&gt;&gt; PRIMIDX_SHIFT;</span>
+            //         = colCt / 8;
+<span class="fc" id="L429">            int nblIdx = colCt &amp; NBLIDX_MASK;</span>
+            //         = colCt % 8;
+
+<span class="fc" id="L432">            int iVal = this.ibuf[iIdx];</span>
+<span class="fc" id="L433">            int shiftWidth = nblIdx &lt;&lt; 2;</span>
+            //             = nblIdx * 4;
+
+<span class="fc" id="L436">            iVal &gt;&gt;&gt;= shiftWidth;</span>
+<span class="fc" id="L437">            int nibble = iVal &amp; NIBBLE_MASK;</span>
+
+<span class="fc bfc" id="L439" title="All 2 branches covered.">            if(dumped){</span>
+<span class="fc" id="L440">                sb.append(SP);</span>
+            }
+
+<span class="fc" id="L443">            dumpNibble(sb, nibble);</span>
+<span class="fc" id="L444">            dumped = true;</span>
+        }
+
+<span class="fc" id="L447">        String result = sb.toString();</span>
+<span class="fc" id="L448">        return result;</span>
+    }
+
+    /**
+     * Dump nibble.
+     *
+     * &lt;p&gt;nibble 5 -&gt; 0101[5]
+     *
+     * @param sb output
+     * @param nibble BCD nibble value. (0 =&amp;lt; nibble &amp;lt; 10)
+     */
+    private void dumpNibble(StringBuilder sb, int nibble){
+<span class="fc" id="L460">        int b3 = (nibble &gt;&gt; 3) &amp; LSB_PRIMMASK;</span>
+<span class="fc" id="L461">        int b2 = (nibble &gt;&gt; 2) &amp; LSB_PRIMMASK;</span>
+<span class="fc" id="L462">        int b1 = (nibble &gt;&gt; 1) &amp; LSB_PRIMMASK;</span>
+<span class="fc" id="L463">        int b0 = (nibble     ) &amp; LSB_PRIMMASK;</span>
+
+<span class="fc" id="L465">        char c3 = HEXCH_TBL[b3];</span>
+<span class="fc" id="L466">        char c2 = HEXCH_TBL[b2];</span>
+<span class="fc" id="L467">        char c1 = HEXCH_TBL[b1];</span>
+<span class="fc" id="L468">        char c0 = HEXCH_TBL[b0];</span>
+
+<span class="fc" id="L470">        sb.append(c3);</span>
+<span class="fc" id="L471">        sb.append(c2);</span>
+<span class="fc" id="L472">        sb.append(c1);</span>
+<span class="fc" id="L473">        sb.append(c0);</span>
+
+<span class="pc bpc" id="L475" title="2 of 4 branches missed.">        assert nibble &lt; 16;</span>
+<span class="fc" id="L476">        char decCh = HEXCH_TBL[nibble];</span>
+
+<span class="fc" id="L478">        sb.append(CH_OPEN);</span>
+<span class="fc" id="L479">        sb.append(decCh);</span>
+<span class="fc" id="L480">        sb.append(CH_CLOSE);</span>
+
+<span class="fc" id="L482">        return;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
