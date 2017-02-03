@@ -411,6 +411,7 @@
                     <quiet>true</quiet>
                     <show>protected</show>
                     <locale>${javadoc.locale}</locale>
+                    <header>${project.name} ${project.version} API</header>
                     <version>true</version>
                 </configuration>
                 <reportSets>
