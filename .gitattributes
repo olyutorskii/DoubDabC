@@ -9,6 +9,7 @@
 
 *.txt text
 *.md text
+*.yml text
 
 *.html text
 *.css text

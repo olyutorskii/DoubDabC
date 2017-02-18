@@ -18,11 +18,6 @@ import java.nio.ReadOnlyBufferException;
  */
 public class DecimalOut {
 
-    private static final char[] DECCH_TBL = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    };
-
-
     private final BcdRegister decimal;
 
     private final int[] intBuf;
@@ -70,7 +65,10 @@ public class DecimalOut {
 
         for(int idx = 0; idx < precision; idx++){
             int digit = this.intBuf[idx];
-            char decimalCh = DECCH_TBL[digit];
+
+            // map [0 - 9](int) to ['0' - '9'](char)
+            char decimalCh = (char)( digit | 0b0011_0000 );
+
             this.charBuf[idx] = decimalCh;
         }
 

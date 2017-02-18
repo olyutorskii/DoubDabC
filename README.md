@@ -1,5 +1,8 @@
 # DoubDabC #
 
+[![Build Status](https://travis-ci.org/olyutorskii/DoubDabC.svg?branch=master)]
+(https://travis-ci.org/olyutorskii/DoubDabC)
+
 -----------------------------------------------------------------------
 
 ## What is DoubDabC ? ##
