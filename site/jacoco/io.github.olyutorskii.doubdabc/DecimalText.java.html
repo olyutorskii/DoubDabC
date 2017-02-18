@@ -12,11 +12,6 @@ import java.nio.CharBuffer;
  */
 public class DecimalText implements CharSequence{
 
-<span class="fc" id="L15">    private static final char[] DECCH_TBL = {</span>
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    };
-
-
     private final BcdRegister decimal;
     private final int[] intBuf;
     private final CharBuffer textOut;
@@ -29,15 +24,15 @@ public class DecimalText implements CharSequence{
      * @throws NullPointerException argument is null
      */
     public DecimalText(BcdRegister decimal) throws NullPointerException{
-<span class="fc" id="L32">        super();</span>
+<span class="fc" id="L27">        super();</span>
 
-<span class="fc" id="L34">        this.decimal = decimal;</span>
+<span class="fc" id="L29">        this.decimal = decimal;</span>
 
-<span class="fc" id="L36">        int digits = this.decimal.getMaxDigits();</span>
-<span class="fc" id="L37">        this.intBuf = new int[digits];</span>
-<span class="fc" id="L38">        this.textOut = CharBuffer.allocate(digits);</span>
+<span class="fc" id="L31">        int digits = this.decimal.getMaxDigits();</span>
+<span class="fc" id="L32">        this.intBuf = new int[digits];</span>
+<span class="fc" id="L33">        this.textOut = CharBuffer.allocate(digits);</span>
 
-<span class="fc" id="L40">        return;</span>
+<span class="fc" id="L35">        return;</span>
     }
 
 
@@ -50,8 +45,8 @@ public class DecimalText implements CharSequence{
      */
     @Override
     public int length(){
-<span class="fc" id="L53">        int result = this.decimal.getPrecision();</span>
-<span class="fc" id="L54">        return result;</span>
+<span class="fc" id="L48">        int result = this.decimal.getPrecision();</span>
+<span class="fc" id="L49">        return result;</span>
     }
 
     /**
@@ -64,16 +59,18 @@ public class DecimalText implements CharSequence{
      */
     @Override
     public char charAt(int index) throws IndexOutOfBoundsException{
-<span class="fc" id="L67">        int precision = this.decimal.getPrecision();</span>
+<span class="fc" id="L62">        int precision = this.decimal.getPrecision();</span>
 
-<span class="fc bfc" id="L69" title="All 4 branches covered.">        if(index &lt; 0 || precision &lt;= index)</span>
-<span class="fc" id="L70">            throw new IndexOutOfBoundsException();</span>
+<span class="fc bfc" id="L64" title="All 4 branches covered.">        if(index &lt; 0 || precision &lt;= index)</span>
+<span class="fc" id="L65">            throw new IndexOutOfBoundsException();</span>
 
-<span class="fc" id="L72">        int digitPos = precision - index - 1;</span>
-<span class="fc" id="L73">        int digit = this.decimal.getDigit(digitPos);</span>
+<span class="fc" id="L67">        int digitPos = precision - index - 1;</span>
+<span class="fc" id="L68">        int digit = this.decimal.getDigit(digitPos);</span>
 
-<span class="fc" id="L75">        char result = DECCH_TBL[digit];</span>
-<span class="fc" id="L76">        return result;</span>
+        // map [0 - 9](int) to ['0' - '9'](char)
+<span class="fc" id="L71">        char result = (char)( digit | 0b0011_0000 );</span>
+
+<span class="fc" id="L73">        return result;</span>
     }
 
     /**
@@ -90,13 +87,13 @@ public class DecimalText implements CharSequence{
     @Override
     public CharSequence subSequence(int start, int end)
             throws IndexOutOfBoundsException{
-<span class="fc bfc" id="L93" title="All 4 branches covered.">        if(start &lt; 0 || end &lt; start) throw new IndexOutOfBoundsException();</span>
+<span class="fc bfc" id="L90" title="All 4 branches covered.">        if(start &lt; 0 || end &lt; start) throw new IndexOutOfBoundsException();</span>
 
-<span class="fc" id="L95">        int precision = this.decimal.getPrecision();</span>
-<span class="fc bfc" id="L96" title="All 2 branches covered.">        if(end &gt; precision) throw new IndexOutOfBoundsException();</span>
+<span class="fc" id="L92">        int precision = this.decimal.getPrecision();</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if(end &gt; precision) throw new IndexOutOfBoundsException();</span>
 
-<span class="fc" id="L98">        String result = encodeText(start, end);</span>
-<span class="fc" id="L99">        return result;</span>
+<span class="fc" id="L95">        String result = encodeText(start, end);</span>
+<span class="fc" id="L96">        return result;</span>
     }
 
     /**
@@ -106,9 +103,9 @@ public class DecimalText implements CharSequence{
      */
     @Override
     public String toString(){
-<span class="fc" id="L109">        int precision = this.decimal.getPrecision();</span>
-<span class="fc" id="L110">        String result = encodeText(0, precision);</span>
-<span class="fc" id="L111">        return result;</span>
+<span class="fc" id="L106">        int precision = this.decimal.getPrecision();</span>
+<span class="fc" id="L107">        String result = encodeText(0, precision);</span>
+<span class="fc" id="L108">        return result;</span>
     }
 
     /**
@@ -119,12 +116,15 @@ public class DecimalText implements CharSequence{
      * @return text
      */
     private String encodeText(int start, int end){
-<span class="fc" id="L122">        this.decimal.toIntArray(this.intBuf, 0);</span>
+<span class="fc" id="L119">        this.decimal.toIntArray(this.intBuf, 0);</span>
 
-<span class="fc" id="L124">        this.textOut.clear();</span>
-<span class="fc bfc" id="L125" title="All 2 branches covered.">        for(int idx = start; idx &lt; end; idx++){</span>
-<span class="fc" id="L126">            int digit = this.intBuf[idx];</span>
-<span class="fc" id="L127">            char decimalCh = DECCH_TBL[digit];</span>
+<span class="fc" id="L121">        this.textOut.clear();</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for(int idx = start; idx &lt; end; idx++){</span>
+<span class="fc" id="L123">            int digit = this.intBuf[idx];</span>
+
+            // map [0 - 9](int) to ['0' - '9'](char)
+<span class="fc" id="L126">            char decimalCh = (char)( digit | 0b0011_0000 );</span>
+
 <span class="fc" id="L128">            this.textOut.put(decimalCh);</span>
         }
 
@@ -135,4 +135,4 @@ public class DecimalText implements CharSequence{
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

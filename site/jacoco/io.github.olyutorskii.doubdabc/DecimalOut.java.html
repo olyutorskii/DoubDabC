@@ -18,11 +18,6 @@ import java.nio.ReadOnlyBufferException;
  */
 public class DecimalOut {
 
-<span class="fc" id="L21">    private static final char[] DECCH_TBL = {</span>
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    };
-
-
     private final BcdRegister decimal;
 
     private final int[] intBuf;
@@ -36,15 +31,15 @@ public class DecimalOut {
      * @throws NullPointerException argument is null
      */
     public DecimalOut(BcdRegister decimal) throws NullPointerException{
-<span class="fc" id="L39">        super();</span>
+<span class="fc" id="L34">        super();</span>
 
-<span class="fc" id="L41">        this.decimal = decimal;</span>
+<span class="fc" id="L36">        this.decimal = decimal;</span>
 
-<span class="fc" id="L43">        int digits = this.decimal.getMaxDigits();</span>
-<span class="fc" id="L44">        this.intBuf = new int[digits];</span>
-<span class="fc" id="L45">        this.charBuf = new char[digits];</span>
+<span class="fc" id="L38">        int digits = this.decimal.getMaxDigits();</span>
+<span class="fc" id="L39">        this.intBuf = new int[digits];</span>
+<span class="fc" id="L40">        this.charBuf = new char[digits];</span>
 
-<span class="fc" id="L47">        return;</span>
+<span class="fc" id="L42">        return;</span>
     }
 
 
@@ -56,8 +51,8 @@ public class DecimalOut {
      * @return digits length
      */
     public int getDigitsLength(){
-<span class="fc" id="L59">        int result = this.decimal.getPrecision();</span>
-<span class="fc" id="L60">        return result;</span>
+<span class="fc" id="L54">        int result = this.decimal.getPrecision();</span>
+<span class="fc" id="L55">        return result;</span>
     }
 
     /**
@@ -65,16 +60,19 @@ public class DecimalOut {
      * @return digits length
      */
     private int buildChar(){
-<span class="fc" id="L68">        int precision = this.decimal.getPrecision();</span>
-<span class="fc" id="L69">        this.decimal.toIntArray(this.intBuf, 0);</span>
+<span class="fc" id="L63">        int precision = this.decimal.getPrecision();</span>
+<span class="fc" id="L64">        this.decimal.toIntArray(this.intBuf, 0);</span>
 
-<span class="fc bfc" id="L71" title="All 2 branches covered.">        for(int idx = 0; idx &lt; precision; idx++){</span>
-<span class="fc" id="L72">            int digit = this.intBuf[idx];</span>
-<span class="fc" id="L73">            char decimalCh = DECCH_TBL[digit];</span>
-<span class="fc" id="L74">            this.charBuf[idx] = decimalCh;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        for(int idx = 0; idx &lt; precision; idx++){</span>
+<span class="fc" id="L67">            int digit = this.intBuf[idx];</span>
+
+            // map [0 - 9](int) to ['0' - '9'](char)
+<span class="fc" id="L70">            char decimalCh = (char)( digit | 0b0011_0000 );</span>
+
+<span class="fc" id="L72">            this.charBuf[idx] = decimalCh;</span>
         }
 
-<span class="fc" id="L77">        return precision;</span>
+<span class="fc" id="L75">        return precision;</span>
     }
 
     /**
@@ -85,14 +83,14 @@ public class DecimalOut {
      * @throws IOException If an I/O error occurs
      */
     public int writeDigits(Appendable app) throws IOException{
-<span class="fc" id="L88">        int precision = buildChar();</span>
+<span class="fc" id="L86">        int precision = buildChar();</span>
 
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        for(int idx = 0; idx &lt; precision; idx++){</span>
-<span class="fc" id="L91">            char decimalCh = this.charBuf[idx];</span>
-<span class="fc" id="L92">            app.append(decimalCh);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        for(int idx = 0; idx &lt; precision; idx++){</span>
+<span class="fc" id="L89">            char decimalCh = this.charBuf[idx];</span>
+<span class="fc" id="L90">            app.append(decimalCh);</span>
         }
 
-<span class="fc" id="L95">        return precision;</span>
+<span class="fc" id="L93">        return precision;</span>
     }
 
     /**
@@ -107,9 +105,9 @@ public class DecimalOut {
      */
     public int writeDigits(CharBuffer cBuf)
             throws BufferOverflowException, ReadOnlyBufferException{
-<span class="fc" id="L110">        int precision = buildChar();</span>
-<span class="fc" id="L111">        cBuf.put(this.charBuf, 0, precision);</span>
-<span class="fc" id="L112">        return precision;</span>
+<span class="fc" id="L108">        int precision = buildChar();</span>
+<span class="fc" id="L109">        cBuf.put(this.charBuf, 0, precision);</span>
+<span class="fc" id="L110">        return precision;</span>
     }
 
     /**
@@ -120,9 +118,9 @@ public class DecimalOut {
      * @throws IOException If an I/O error occurs
      */
     public int writeDigits(Writer writer) throws IOException{
-<span class="fc" id="L123">        int precision = buildChar();</span>
-<span class="fc" id="L124">        writer.write(this.charBuf, 0, precision);</span>
-<span class="fc" id="L125">        return precision;</span>
+<span class="fc" id="L121">        int precision = buildChar();</span>
+<span class="fc" id="L122">        writer.write(this.charBuf, 0, precision);</span>
+<span class="fc" id="L123">        return precision;</span>
     }
 
     /**
@@ -132,9 +130,9 @@ public class DecimalOut {
      * @return digits length
      */
     public int writeDigits(StringBuffer buf){
-<span class="fc" id="L135">        int precision = buildChar();</span>
-<span class="fc" id="L136">        buf.append(this.charBuf, 0, precision);</span>
-<span class="fc" id="L137">        return precision;</span>
+<span class="fc" id="L133">        int precision = buildChar();</span>
+<span class="fc" id="L134">        buf.append(this.charBuf, 0, precision);</span>
+<span class="fc" id="L135">        return precision;</span>
     }
 
     /**
@@ -144,10 +142,10 @@ public class DecimalOut {
      * @return digits length
      */
     public int writeDigits(StringBuilder buf){
-<span class="fc" id="L147">        int precision = buildChar();</span>
-<span class="fc" id="L148">        buf.append(this.charBuf, 0, precision);</span>
-<span class="fc" id="L149">        return precision;</span>
+<span class="fc" id="L145">        int precision = buildChar();</span>
+<span class="fc" id="L146">        buf.append(this.charBuf, 0, precision);</span>
+<span class="fc" id="L147">        return precision;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
