@@ -225,7 +225,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <skipTests>false</skipTests>
                     <enableAssertions>true</enableAssertions>
                 </configuration>
             </plugin>
