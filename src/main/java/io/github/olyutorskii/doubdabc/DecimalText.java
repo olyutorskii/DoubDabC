@@ -12,11 +12,6 @@ import java.nio.CharBuffer;
  */
 public class DecimalText implements CharSequence{
 
-    private static final char[] DECCH_TBL = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    };
-
-
     private final BcdRegister decimal;
     private final int[] intBuf;
     private final CharBuffer textOut;
@@ -72,7 +67,9 @@ public class DecimalText implements CharSequence{
         int digitPos = precision - index - 1;
         int digit = this.decimal.getDigit(digitPos);
 
-        char result = DECCH_TBL[digit];
+        // map [0 - 9](int) to ['0' - '9'](char)
+        char result = (char)( digit | 0b0011_0000 );
+
         return result;
     }
 
@@ -124,7 +121,10 @@ public class DecimalText implements CharSequence{
         this.textOut.clear();
         for(int idx = start; idx < end; idx++){
             int digit = this.intBuf[idx];
-            char decimalCh = DECCH_TBL[digit];
+
+            // map [0 - 9](int) to ['0' - '9'](char)
+            char decimalCh = (char)( digit | 0b0011_0000 );
+
             this.textOut.put(decimalCh);
         }
 
