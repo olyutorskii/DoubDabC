@@ -1,0 +1,5 @@
+# Travis CI
+
+language: java
+
+# EOF
