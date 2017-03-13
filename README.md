@@ -47,10 +47,15 @@ as Arabic numeral characters\(0-9\) output.
 
 * `CharSequence` wrapper class is provided.
 
+* Extended `Writer` class is provided
+which supports `print(int)` & `print(long)` methods
+like `PrintWriter` but fast.
+
 
 ## Limitations ##
 
-* DoubDabC does not support negative values.
+* DoubDabC does not support negative values
+with the exception of DecimalWriter.
 Signed-values are treated as Unsigned-value
 like `Integer.toUnsignedString(int)`.
 Let's convert absolute value that follows minus\(-\) sign.
@@ -72,7 +77,7 @@ Just compile Java sources under `src/main/java/` if you don't use Maven.
 
 ## Project founder ##
 
-* By [Olyutorskii](https://github.com/olyutorskii) at 2017
+* By [olyutorskii](https://github.com/olyutorskii) at 2017
 
 
 ## Key technology ##
