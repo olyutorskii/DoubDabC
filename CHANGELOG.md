@@ -4,6 +4,7 @@ DoubDabC Changelog
 ## WIP
 Released on 20XX-XX-XX
 - Add DecimalWriter which supports print(int) #16
+- Remove overblown terms on perfomance #20 
 
 ## v1.102.6
 Released on 2017-02-19
