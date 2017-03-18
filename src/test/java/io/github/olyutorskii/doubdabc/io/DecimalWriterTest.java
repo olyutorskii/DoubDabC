@@ -68,8 +68,20 @@ public class DecimalWriterTest {
         assertEquals("999", out.toString());
 
         out.reset();
+        writer.print(-999);
+        assertEquals("-999", out.toString());
+
+        out.reset();
+        writer.print(1_234_567_890);
+        assertEquals("1234567890", out.toString());
+
+        out.reset();
         writer.print(-1_234_567_890);
         assertEquals("-1234567890", out.toString());
+
+        out.reset();
+        writer.print(Integer.MAX_VALUE - 1);
+        assertEquals("2147483646", out.toString());
 
         out.reset();
         writer.print(Integer.MAX_VALUE);
@@ -78,6 +90,10 @@ public class DecimalWriterTest {
         out.reset();
         writer.print(Integer.MIN_VALUE);
         assertEquals("-2147483648", out.toString());
+
+        out.reset();
+        writer.print(Integer.MIN_VALUE + 1);
+        assertEquals("-2147483647", out.toString());
 
         return;
     }
@@ -112,8 +128,36 @@ public class DecimalWriterTest {
         assertEquals("999", out.toString());
 
         out.reset();
+        writer.print(-999L);
+        assertEquals("-999", out.toString());
+
+        out.reset();
+        writer.print(1_234_567_890L);
+        assertEquals("1234567890", out.toString());
+
+        out.reset();
         writer.print(-1_234_567_890L);
         assertEquals("-1234567890", out.toString());
+
+        out.reset();
+        writer.print((long)Integer.MAX_VALUE);
+        assertEquals("2147483647", out.toString());
+
+        out.reset();
+        writer.print((long)Integer.MAX_VALUE + 1L);
+        assertEquals("2147483648", out.toString());
+
+        out.reset();
+        writer.print((long)Integer.MIN_VALUE);
+        assertEquals("-2147483648", out.toString());
+
+        out.reset();
+        writer.print((long)Integer.MIN_VALUE - 1L);
+        assertEquals("-2147483649", out.toString());
+
+        out.reset();
+        writer.print(Long.MAX_VALUE - 1L);
+        assertEquals("9223372036854775806", out.toString());
 
         out.reset();
         writer.print(Long.MAX_VALUE);
@@ -122,6 +166,10 @@ public class DecimalWriterTest {
         out.reset();
         writer.print(Long.MIN_VALUE);
         assertEquals("-9223372036854775808", out.toString());
+
+        out.reset();
+        writer.print(Long.MIN_VALUE + 1L);
+        assertEquals("-9223372036854775807", out.toString());
 
         return;
     }

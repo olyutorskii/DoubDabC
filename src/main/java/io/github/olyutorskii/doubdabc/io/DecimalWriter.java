@@ -55,6 +55,7 @@ public class DecimalWriter extends FilterWriter{
         if(iVal < 0){
             negSign = true;
             absVal = -iVal;
+            // -2147483648 does not change. OK, NP.
         }else{
             negSign = false;
             absVal =  iVal;
@@ -88,6 +89,7 @@ public class DecimalWriter extends FilterWriter{
         if(lVal < 0){
             negSign = true;
             absVal = -lVal;
+            // -9223372036854775808 does not change. OK, NP.
         }else{
             negSign = false;
             absVal =  lVal;
