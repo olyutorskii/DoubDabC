@@ -12,8 +12,7 @@
  * but there is no division(/) nor remainder(%) operation.
  *
  * <p>There is no String constructor during conversion.
- *
- * <p>So, DoubDabC is Fast and GC-friendly.
+ * So, DoubDabC is a GC-friendly.
  *
  * <p>Project Home : <u>
  * <a target="_blank"

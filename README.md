@@ -20,7 +20,7 @@ that supports **binary integer value to decimal sequence conversion**.
 aka **Shift-and-add-3**.
 Double-Dabble is a radix-conversion algorithm
 but there is no division\(/\) nor remainder\(%\) operation.
-That means, **Fast !**
+It's a bit fast.
 
 * There is no String constructor during conversion.
 That means, **GC-friendry !**
@@ -43,14 +43,19 @@ Just losing higher decimals over you specified.
 
 * You can assign
 `Appendable`, `Writer`, `StringBuffer`, `StringBuilder`, or `CharBuffer`
-as Arabic numeral characters\(0-9\) output.
+as Arabic numeral characters\(0-9\) sequence output.
 
 * `CharSequence` wrapper class is provided.
+
+* Extended `Writer` class is provided
+which supports `print(int)` & `print(long)` methods
+like `PrintWriter`.
 
 
 ## Limitations ##
 
-* DoubDabC does not support negative values.
+* DoubDabC does not support negative values
+with the exception of `DecimalWriter`.
 Signed-values are treated as Unsigned-value
 like `Integer.toUnsignedString(int)`.
 Let's convert absolute value that follows minus\(-\) sign.
@@ -72,7 +77,7 @@ Just compile Java sources under `src/main/java/` if you don't use Maven.
 
 ## Project founder ##
 
-* By [Olyutorskii](https://github.com/olyutorskii) at 2017
+* By [olyutorskii](https://github.com/olyutorskii) at 2017
 
 
 ## Key technology ##
