@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DecimalWriter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc.io</a> &gt; <span class="el_source">DecimalWriter.java</span></div><h1>DecimalWriter.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc.io;
+
+import io.github.olyutorskii.doubdabc.BcdRegister;
+import io.github.olyutorskii.doubdabc.BitFeeder;
+import io.github.olyutorskii.doubdabc.DecimalOut;
+import java.io.FilterWriter;
+import java.io.IOException;
+import java.io.Writer;
+
+/**
+ * Decimal-form-integer writer with Double-Dabble algorithm.
+ *
+ * &lt;p&gt;It's similar to {@link java.io.PrintWriter}
+ *
+ * @see java.io.PrintWriter
+ */
+public class DecimalWriter extends FilterWriter{
+
+    private final BcdRegister bcd;
+    private final DecimalOut decOut;
+
+
+    /**
+     * Constructor.
+     * @param out char output stream
+     */
+    public DecimalWriter(Writer out){
+<span class="fc" id="L33">        super(out);</span>
+
+<span class="fc" id="L35">        this.bcd = new BcdRegister(BcdRegister.MAX_COL_UINT64);</span>
+<span class="fc" id="L36">        this.decOut = new DecimalOut(this.bcd);</span>
+
+<span class="fc" id="L38">        return;</span>
+    }
+
+
+    /**
+     * Print signed int value.
+     *
+     * &lt;p&gt;It's similar to {@link java.io.PrintWriter#print(int)}.
+     *
+     * @param iVal int value
+     * @throws IOException output error
+     * @see java.io.PrintWriter#print(int)
+     */
+    public void print(int iVal) throws IOException{
+        boolean negSign;
+        int absVal;
+
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if(iVal &lt; 0){</span>
+<span class="fc" id="L56">            negSign = true;</span>
+<span class="fc" id="L57">            absVal = -iVal;</span>
+            // -2147483648 does not change. OK, NP.
+        }else{
+<span class="fc" id="L60">            negSign = false;</span>
+<span class="fc" id="L61">            absVal =  iVal;</span>
+        }
+
+<span class="fc" id="L64">        synchronized(this.bcd){</span>
+<span class="fc" id="L65">            BitFeeder.feedUInt32(this.bcd, absVal);</span>
+
+<span class="fc" id="L67">            synchronized(this.lock){</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                if(negSign) append('-');</span>
+<span class="fc" id="L69">                this.decOut.writeDigits(this);</span>
+<span class="pc" id="L70">            }</span>
+<span class="pc" id="L71">        }</span>
+
+<span class="fc" id="L73">        return;</span>
+    }
+
+    /**
+     * Print signed long value.
+     *
+     * &lt;p&gt;It's similar to {@link java.io.PrintWriter#print(long)}.
+     *
+     * @param lVal long value
+     * @throws IOException output error
+     * @see java.io.PrintWriter#print(long)
+     */
+    public void print(long lVal) throws IOException{
+        boolean negSign;
+        long absVal;
+
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if(lVal &lt; 0){</span>
+<span class="fc" id="L90">            negSign = true;</span>
+<span class="fc" id="L91">            absVal = -lVal;</span>
+            // -9223372036854775808 does not change. OK, NP.
+        }else{
+<span class="fc" id="L94">            negSign = false;</span>
+<span class="fc" id="L95">            absVal =  lVal;</span>
+        }
+
+<span class="fc" id="L98">        synchronized(this.bcd){</span>
+<span class="fc" id="L99">            BitFeeder.feedUInt64(this.bcd, absVal);</span>
+
+<span class="fc" id="L101">            synchronized(this.lock){</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">                if(negSign) append('-');</span>
+<span class="fc" id="L103">                this.decOut.writeDigits(this);</span>
+<span class="pc" id="L104">            }</span>
+<span class="pc" id="L105">        }</span>
+
+<span class="fc" id="L107">        return;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
