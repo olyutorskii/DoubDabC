@@ -328,7 +328,7 @@ public class BcdRegisterTest {
      * Test of getMaxDigits method, of class BcdRegister.
      */
     @Test
-    public void testGetDigitsHolder() {
+    public void testGetMaxDigits() {
         System.out.println("getMaxDigits");
 
         BcdRegister bs;
@@ -520,6 +520,34 @@ public class BcdRegisterTest {
         assertEquals(9, bs.getDigit(5));
         assertEquals(3, bs.getDigit(6));
         assertEquals(5, bs.getDigit(7));
+
+        return;
+    }
+
+    /**
+     * Test of clzNibble method, of class BcdRegister.
+     */
+    @Test
+    public void testClzNibble() {
+        System.out.println("clzNibble");
+
+        assertEquals(8, BcdRegister.clzNibble(0x00000000));
+        assertEquals(7, BcdRegister.clzNibble(0x0000000f));
+        assertEquals(6, BcdRegister.clzNibble(0x000000ff));
+        assertEquals(5, BcdRegister.clzNibble(0x00000fff));
+        assertEquals(4, BcdRegister.clzNibble(0x0000ffff));
+        assertEquals(3, BcdRegister.clzNibble(0x000fffff));
+        assertEquals(2, BcdRegister.clzNibble(0x00ffffff));
+        assertEquals(1, BcdRegister.clzNibble(0x0fffffff));
+        assertEquals(0, BcdRegister.clzNibble(0xffffffff));
+
+        assertEquals(7, BcdRegister.clzNibble(0x00000001));
+        assertEquals(6, BcdRegister.clzNibble(0x00000010));
+        assertEquals(1, BcdRegister.clzNibble(0x01000000));
+        assertEquals(0, BcdRegister.clzNibble(0x10000000));
+
+        assertEquals(6, BcdRegister.clzNibble(0x0000001f));
+        assertEquals(0, BcdRegister.clzNibble(0x1fffffff));
 
         return;
     }

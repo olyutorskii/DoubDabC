@@ -203,6 +203,53 @@ public class BcdRegister {
         return result;
     }
 
+    /**
+     * Count Leading Zero nibbles.
+     *
+     * <ul>
+     * <li>Return 0 if 0xffffffff.
+     * <li>Return 0 if 0x1fffffff.
+     * <li>Return 3 if 0x000fffff.
+     * <li>Return 5 if 0x00000100.
+     * <li>Return 7 if 0x0000000f.
+     * <li>Return 7 if 0x00000001.
+     * <li>Return 8 if 0x00000000.
+     * </ul>
+     *
+     * @param iVal int value
+     * @return Zero nibbles
+     */
+    public static int clzNibble(int iVal){
+        if(iVal == 0){
+            return PRIM_SLOTS;
+        }
+
+        int b2;
+        if((iVal & 0xff_ff_00_00) == 0){
+            b2 = 0b0100;
+            iVal <<= 16;
+        }else{
+            b2 = 0b0000;
+        }
+
+        int b1;
+        if((iVal & 0xff_00_00_00) == 0){
+            b1 = 0b0010;
+            iVal <<= 8;
+        }else{
+            b1 = 0b0000;
+        }
+
+        int b0;
+        if((iVal & 0xf0_00_00_00) == 0){
+            b0 = 0b0001;
+        }else{
+            b0 = 0b0000;
+        }
+
+        return b2 | b1 | b0;
+    }
+
 
     /**
      * Clear all decimal digits to Zero.
@@ -388,22 +435,10 @@ public class BcdRegister {
         for(int iIdx = idxMax; iIdx >= 0; iIdx--){
             int iVal = this.ibuf[iIdx];
 
-            if(iVal == 0){
-                result -= PRIM_SLOTS;
-            }else{
-                // Count Leading Zero nibbles(BCD)
-                if((iVal & 0xff_ff_00_00) == 0){
-                    result -= 4;
-                    iVal <<= 16;
-                }
-                if((iVal & 0xff_00_00_00) == 0){
-                    result -= 2;
-                    iVal <<= 8;
-                }
-                if((iVal & 0xf0_00_00_00) == 0){
-                    result -= 1;
-                }
+            int clz = clzNibble(iVal);
+            result -= clz;
 
+            if(clz != PRIM_SLOTS){
                 break;
             }
         }
