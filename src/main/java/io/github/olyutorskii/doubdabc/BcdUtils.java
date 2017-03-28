@@ -1,0 +1,268 @@
+/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+/**
+ * Utilities for Packed BCD layouted on primitive value.
+ *
+ * <p>Each decimal columns are layouted 4bit nibble width
+ * on primitive value.
+ *
+ * <p>Lower decimal digit is layouted on lower bits.
+ *
+ * <p>Each decimal digit overlaps Packed-BCD and Bi-quinary coded decimal.
+ *
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
+ * Binary-coded decimal (Wikipedia)
+ * </a>
+ * @see <a target="_blank"
+ * href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
+ * Bi-quinary coded decimal (Wikipedia)
+ * </a>
+ */
+public final class BcdUtils {
+
+    /** bit-size of BCD(nibble). */
+    public static final int BCD_BITSIZE = 4;
+
+    private static final int BYTE_BITSIZE = Byte.SIZE;
+    private static final int BYTE_MASK    = // 0b1111_1111
+            (0b1 << BYTE_BITSIZE) - 1;
+
+    private static final int INT_SLOTS  = Integer.SIZE / BCD_BITSIZE;
+    private static final int LONG_SLOTS = Long.SIZE    / BCD_BITSIZE;
+
+    private static final int[] BQ_TBL;
+
+    static{
+        // build lookup table for Packed-BCD to Bi-quinary conversion
+        BQ_TBL = new int[256];
+
+        int idx = 0;
+        for(int highDec = 0; highDec < 16; highDec++){
+            int highBq;
+            if     (highDec >= 10) highBq = 0x0;
+            else if(highDec >=  5) highBq = highDec + 3;
+            else                   highBq = highDec;
+
+            for(int lowDec = 0; lowDec < 16; lowDec++){
+                int lowBq;
+                if     (lowDec >= 10) lowBq = 0x0;
+                else if(lowDec >=  5) lowBq = lowDec + 3;
+                else                  lowBq = lowDec;
+
+                int bqNblNbl = (highBq << BCD_BITSIZE) | lowBq;
+
+                BQ_TBL[idx++] = bqNblNbl;
+            }
+        }
+
+        assert idx == BQ_TBL.length;
+    }
+
+
+    /**
+     * Hiden constructor.
+     */
+    private BcdUtils(){
+        assert false;
+    }
+
+
+    /**
+     * Convert each 4bit width PackedBCD to Bi-quinary coded decimal.
+     *
+     * <p>If each nibble(PackedBCD) in int is greater than 4,
+     * add 3 to nibble.
+     *
+     * <p>"nibble overflow" doesn't occur if valid PackedBCD before.
+     * Undefined result if invalid PackedBCD value before.
+     *
+     * <p>[0,1,2,3,4,5,6,7,8,9] → [0,1,2,3,4,8,9,A,B,C]
+     *
+     * @param iVal int value
+     * @return modified value
+     */
+    public static int toBiQuinary(int iVal) {
+        int result;
+
+        int bVal;
+
+        bVal = iVal >>> 24;
+        result = BQ_TBL[bVal];
+
+        bVal = (iVal >>> 16) & BYTE_MASK;
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (iVal >>> 8) & BYTE_MASK;
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = iVal & BYTE_MASK;
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        return result;
+    }
+
+    /**
+     * Convert each 4bit width PackedBCD to Bi-quinary coded decimal.
+     *
+     * <p>If each nibble(PackedBCD) in long is greater than 4,
+     * add 3 to nibble.
+     *
+     * <p>"nibble overflow" doesn't occur if valid PackedBCD before.
+     * Undefined result if invalid PackedBCD value before.
+     *
+     * <p>[0,1,2,3,4,5,6,7,8,9] → [0,1,2,3,4,8,9,A,B,C]
+     *
+     * @param lVal long value
+     * @return modified value
+     */
+    public static long toBiQuinary(long lVal) {
+        long result;
+
+        int bVal;
+
+        bVal = (int) (lVal >>> 56);
+        result = BQ_TBL[bVal];
+
+        bVal = (int) ((lVal >>> 48) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int) ((lVal >>> 40) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int) ((lVal >>> 32) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int) ((lVal >>> 24) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int) ((lVal >>> 16) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int) ((lVal >>> 8) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int) (lVal & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        return result;
+    }
+
+    /**
+     * Count Leading Zero nibbles.
+     *
+     * <ul>
+     * <li>Return 0 if 0xffffffff.
+     * <li>Return 0 if 0x1fffffff.
+     * <li>Return 3 if 0x000fffff.
+     * <li>Return 5 if 0x00000100.
+     * <li>Return 7 if 0x0000000f.
+     * <li>Return 7 if 0x00000001.
+     * <li>Return 8 if 0x00000000.
+     * </ul>
+     *
+     * @param iVal int value
+     * @return Zero nibbles
+     */
+    public static int clzNibble(int iVal){
+        if(iVal == 0){
+            return INT_SLOTS;
+        }
+
+        int b2;
+        if((iVal & 0xff_ff_00_00) == 0){
+            b2 = 0b0100;
+            iVal <<= 16;
+        }else{
+            b2 = 0b0000;
+        }
+
+        int b1;
+        if((iVal & 0xff_00_00_00) == 0){
+            b1 = 0b0010;
+            iVal <<= 8;
+        }else{
+            b1 = 0b0000;
+        }
+
+        int b0;
+        if((iVal & 0xf0_00_00_00) == 0){
+            b0 = 0b0001;
+        }else{
+            b0 = 0b0000;
+        }
+
+        return b2 | b1 | b0;
+    }
+
+    /**
+     * Count Leading Zero nibbles.
+     *
+     * <ul>
+     * <li>Return  0 if 0xffffffffffffffff.
+     * <li>Return  0 if 0x1fffffffffffffff.
+     * <li>Return  3 if 0x000fffffffffffff.
+     * <li>Return  5 if 0x0000010000000000.
+     * <li>Return 15 if 0x000000000000000f.
+     * <li>Return 15 if 0x0000000000000001.
+     * <li>Return 16 if 0x0000000000000000.
+     * </ul>
+     *
+     * @param lVal long value
+     * @return Zero nibbles
+     */
+    public static int clzNibble(long lVal){
+        if(lVal == 0){
+            return LONG_SLOTS;
+        }
+
+        int b3;
+        if((lVal & 0xff_ff_ff_ff_00_00_00_00L) == 0){
+            b3 = 0b1000;
+            lVal <<= 32;
+        }else{
+            b3 = 0b0000;
+        }
+
+        int b2;
+        if((lVal & 0xff_ff_00_00_00_00_00_00L) == 0){
+            b2 = 0b0100;
+            lVal <<= 16;
+        }else{
+            b2 = 0b0000;
+        }
+
+        int b1;
+        if((lVal & 0xff_00_00_00_00_00_00_00L) == 0){
+            b1 = 0b0010;
+            lVal <<= 8;
+        }else{
+            b1 = 0b0000;
+        }
+
+        int b0;
+        if((lVal & 0xf0_00_00_00_00_00_00_00L) == 0){
+            b0 = 0b0001;
+        }else{
+            b0 = 0b0000;
+        }
+
+        return b3 | b2 | b1 | b0;
+    }
+
+}
