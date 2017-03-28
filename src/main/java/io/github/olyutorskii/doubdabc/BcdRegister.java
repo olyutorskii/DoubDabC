@@ -57,6 +57,7 @@ public class BcdRegister {
     private static final int BYTE_BITSIZE = Byte.SIZE;
     private static final int BCD_BITSIZE = 4;
     private static final int PRIM_SLOTS = PRIM_BITSIZE / BCD_BITSIZE;
+    private static final int LONG_SLOTS = Long.SIZE / BCD_BITSIZE;
 
     private static final int LSB_PRIMMASK = 0b1;
     private static final int MSB_PRIMMASK = 0b1 << (PRIM_BITSIZE - 1);
@@ -185,7 +186,7 @@ public class BcdRegister {
         int result;
         int bVal;
 
-        bVal = (iVal >>> 24);
+        bVal = iVal >>> 24;
         result = BQ_TBL[bVal];
 
         bVal = (iVal >>> 16) & BYTE_MASK;
@@ -197,6 +198,58 @@ public class BcdRegister {
         result |= BQ_TBL[bVal];
 
         bVal = iVal & BYTE_MASK;
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        return result;
+    }
+
+    /**
+     * Convert each 4bit width PackedBCD to Bi-quinary coded decimal.
+     *
+     * <p>If each nibble(PackedBCD) in long is greater than 4,
+     * add 3 to nibble.
+     *
+     * <p>"nibble overflow" doesn't occur if valid PackedBCD before.
+     * Undefined result if invalid PackedBCD value before.
+     *
+     * <p>[0,1,2,3,4,5,6,7,8,9] → [0,1,2,3,4,8,9,A,B,C]
+     *
+     * @param lVal long value
+     * @return modified value
+     */
+    public static long toBiQuinary(long lVal){
+        long result;
+        int bVal;
+
+        bVal = (int)(lVal >>> 56);
+        result = BQ_TBL[bVal];
+
+        bVal = (int)((lVal >>> 48) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int)((lVal >>> 40) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int)((lVal >>> 32) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int)((lVal >>> 24) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int)((lVal >>> 16) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int)((lVal >>> 8) & BYTE_MASK);
+        result <<= BYTE_BITSIZE;
+        result |= BQ_TBL[bVal];
+
+        bVal = (int)(lVal & BYTE_MASK);
         result <<= BYTE_BITSIZE;
         result |= BQ_TBL[bVal];
 
@@ -248,6 +301,61 @@ public class BcdRegister {
         }
 
         return b2 | b1 | b0;
+    }
+
+    /**
+     * Count Leading Zero nibbles.
+     *
+     * <ul>
+     * <li>Return  0 if 0xffffffffffffffff.
+     * <li>Return  0 if 0x1fffffffffffffff.
+     * <li>Return  3 if 0x000fffffffffffff.
+     * <li>Return  5 if 0x0000010000000000.
+     * <li>Return 15 if 0x000000000000000f.
+     * <li>Return 15 if 0x0000000000000001.
+     * <li>Return 16 if 0x0000000000000000.
+     * </ul>
+     *
+     * @param lVal long value
+     * @return Zero nibbles
+     */
+    public static int clzNibble(long lVal){
+        if(lVal == 0){
+            return LONG_SLOTS;
+        }
+
+        int b3;
+        if((lVal & 0xff_ff_ff_ff_00_00_00_00L) == 0){
+            b3 = 0b1000;
+            lVal <<= 32;
+        }else{
+            b3 = 0b0000;
+        }
+
+        int b2;
+        if((lVal & 0xff_ff_00_00_00_00_00_00L) == 0){
+            b2 = 0b0100;
+            lVal <<= 16;
+        }else{
+            b2 = 0b0000;
+        }
+
+        int b1;
+        if((lVal & 0xff_00_00_00_00_00_00_00L) == 0){
+            b1 = 0b0010;
+            lVal <<= 8;
+        }else{
+            b1 = 0b0000;
+        }
+
+        int b0;
+        if((lVal & 0xf0_00_00_00_00_00_00_00L) == 0){
+            b0 = 0b0001;
+        }else{
+            b0 = 0b0000;
+        }
+
+        return b3 | b2 | b1 | b0;
     }
 
 

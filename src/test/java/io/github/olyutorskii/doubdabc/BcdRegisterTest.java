@@ -99,7 +99,7 @@ public class BcdRegisterTest {
      * Test of toBiQuinary method, of class BcdRegister.
      */
     @Test
-    public void testToBiQuinary() {
+    public void testToBiQuinary_int() {
         System.out.println("toBiQuinary");
 
         int result;
@@ -163,6 +163,82 @@ public class BcdRegisterTest {
 
         result = BcdRegister.toBiQuinary(0x90_00_00_00);
         assertEquals(0xc0_00_00_00, result);
+
+        return;
+    }
+
+    /**
+     * Test of toBiQuinary method, of class BcdRegister.
+     */
+    @Test
+    public void testToBiQuinary_long() {
+        System.out.println("toBiQuinary");
+        long result;
+
+        result = BcdRegister.toBiQuinary(0x00L);
+        assertEquals(0x00L, result);
+        result = BcdRegister.toBiQuinary(0x01L);
+        assertEquals(0x01L, result);
+        result = BcdRegister.toBiQuinary(0x02L);
+        assertEquals(0x02L, result);
+        result = BcdRegister.toBiQuinary(0x03L);
+        assertEquals(0x03L, result);
+        result = BcdRegister.toBiQuinary(0x04L);
+        assertEquals(0x04L, result);
+        result = BcdRegister.toBiQuinary(0x05L);
+        assertEquals(0x08L, result);
+        result = BcdRegister.toBiQuinary(0x06L);
+        assertEquals(0x09L, result);
+        result = BcdRegister.toBiQuinary(0x07L);
+        assertEquals(0x0aL, result);
+        result = BcdRegister.toBiQuinary(0x08L);
+        assertEquals(0x0bL, result);
+        result = BcdRegister.toBiQuinary(0x09L);
+        assertEquals(0x0cL, result);
+
+        result = BcdRegister.toBiQuinary(0x9999L);
+        assertEquals(0xccccL, result);
+
+        result = BcdRegister.toBiQuinary(0x1234567890L);
+        assertEquals(0x123489abc0L, result);
+
+        result = BcdRegister.toBiQuinary(0x40L);
+        assertEquals(0x40L, result);
+        result = BcdRegister.toBiQuinary(0x50L);
+        assertEquals(0x80L, result);
+
+        result = BcdRegister.toBiQuinary(0x400L);
+        assertEquals(0x400L, result);
+        result = BcdRegister.toBiQuinary(0x500L);
+        assertEquals(0x800L, result);
+
+        result = BcdRegister.toBiQuinary(0x4000L);
+        assertEquals(0x4000L, result);
+        result = BcdRegister.toBiQuinary(0x5000L);
+        assertEquals(0x8000L, result);
+
+        result = BcdRegister.toBiQuinary(0x4444444444444444L);
+        assertEquals(0x4444444444444444L, result);
+        result = BcdRegister.toBiQuinary(0x5555555555555555L);
+        assertEquals(0x8888888888888888L, result);
+
+        result = BcdRegister.toBiQuinary(0x4000000000000000L);
+        assertEquals(0x4000000000000000L, result);
+
+        result = BcdRegister.toBiQuinary(0x5000000000000000L);
+        assertEquals(0x8000000000000000L, result);
+
+        result = BcdRegister.toBiQuinary(0x6000000000000000L);
+        assertEquals(0x9000000000000000L, result);
+
+        result = BcdRegister.toBiQuinary(0x7000000000000000L);
+        assertEquals(0xa000000000000000L, result);
+
+        result = BcdRegister.toBiQuinary(0x8000000000000000L);
+        assertEquals(0xb000000000000000L, result);
+
+        result = BcdRegister.toBiQuinary(0x9000000000000000L);
+        assertEquals(0xc000000000000000L, result);
 
         return;
     }
@@ -528,7 +604,7 @@ public class BcdRegisterTest {
      * Test of clzNibble method, of class BcdRegister.
      */
     @Test
-    public void testClzNibble() {
+    public void testClzNibble_int() {
         System.out.println("clzNibble");
 
         assertEquals(8, BcdRegister.clzNibble(0x00000000));
@@ -548,6 +624,42 @@ public class BcdRegisterTest {
 
         assertEquals(6, BcdRegister.clzNibble(0x0000001f));
         assertEquals(0, BcdRegister.clzNibble(0x1fffffff));
+
+        return;
+    }
+
+    /**
+     * Test of clzNibble method, of class BcdRegister.
+     */
+    @Test
+    public void testClzNibble_long() {
+        System.out.println("clzNibble");
+
+        assertEquals(16, BcdRegister.clzNibble(0x0000000000000000L));
+        assertEquals(15, BcdRegister.clzNibble(0x000000000000000fL));
+        assertEquals(14, BcdRegister.clzNibble(0x00000000000000ffL));
+        assertEquals(13, BcdRegister.clzNibble(0x0000000000000fffL));
+        assertEquals(12, BcdRegister.clzNibble(0x000000000000ffffL));
+        assertEquals(11, BcdRegister.clzNibble(0x00000000000fffffL));
+        assertEquals(10, BcdRegister.clzNibble(0x0000000000ffffffL));
+        assertEquals( 9, BcdRegister.clzNibble(0x000000000fffffffL));
+        assertEquals( 8, BcdRegister.clzNibble(0x00000000ffffffffL));
+        assertEquals( 7, BcdRegister.clzNibble(0x0000000fffffffffL));
+        assertEquals( 6, BcdRegister.clzNibble(0x000000ffffffffffL));
+        assertEquals( 5, BcdRegister.clzNibble(0x00000fffffffffffL));
+        assertEquals( 4, BcdRegister.clzNibble(0x0000ffffffffffffL));
+        assertEquals( 3, BcdRegister.clzNibble(0x000fffffffffffffL));
+        assertEquals( 2, BcdRegister.clzNibble(0x00ffffffffffffffL));
+        assertEquals( 1, BcdRegister.clzNibble(0x0fffffffffffffffL));
+        assertEquals( 0, BcdRegister.clzNibble(0xffffffffffffffffL));
+
+        assertEquals(15, BcdRegister.clzNibble(0x0000000000000001L));
+        assertEquals(14, BcdRegister.clzNibble(0x0000000000000010L));
+        assertEquals( 1, BcdRegister.clzNibble(0x0100000000000000L));
+        assertEquals( 0, BcdRegister.clzNibble(0x1000000000000000L));
+
+        assertEquals(14, BcdRegister.clzNibble(0x000000000000001fL));
+        assertEquals( 0, BcdRegister.clzNibble(0x1fffffffffffffffL));
 
         return;
     }
