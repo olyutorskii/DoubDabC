@@ -87,25 +87,20 @@ public final class BcdUtils {
      * @param iVal int value
      * @return modified value
      */
-    public static int toBiQuinary(int iVal) {
-        int result;
+    public static int toBiQuinary(int iVal){
+        int idx3 = iVal >>> 24;
+        int idx2 = iVal >>> 16 & BYTE_MASK;
+        int idx1 = iVal >>>  8 & BYTE_MASK;
+        int idx0 = iVal        & BYTE_MASK;
 
-        int bVal;
+        int b3 = BQ_TBL[idx3];
+        int b2 = BQ_TBL[idx2];
+        int b1 = BQ_TBL[idx1];
+        int b0 = BQ_TBL[idx0];
 
-        bVal = iVal >>> 24;
-        result = BQ_TBL[bVal];
-
-        bVal = (iVal >>> 16) & BYTE_MASK;
-        result <<= BYTE_BITSIZE;
-        result |= BQ_TBL[bVal];
-
-        bVal = (iVal >>> 8) & BYTE_MASK;
-        result <<= BYTE_BITSIZE;
-        result |= BQ_TBL[bVal];
-
-        bVal = iVal & BYTE_MASK;
-        result <<= BYTE_BITSIZE;
-        result |= BQ_TBL[bVal];
+        int result =
+                  ((b3 << BYTE_BITSIZE) | b2) << 16
+                | ((b1 << BYTE_BITSIZE) | b0);
 
         return result;
     }
