@@ -48,28 +48,40 @@ public final class BcdArrays {
         int iLow  = 0b0;
 
         boolean skipLeading = true;
+        boolean noHalfCarry = true;
+        int sig = 0;
 
-        for(int bitPos = 0; bitPos < Integer.SIZE; bitPos++){
-            final int scanMask = MSB_INTMASK >>> bitPos;
+        for(int bitCt = 0; bitCt < Integer.SIZE; bitCt++){
+            final int scanMask = MSB_INTMASK >>> bitCt;
             final int bitAppear = iVal & scanMask;
 
             if(skipLeading){
                 if(bitAppear == 0b0) continue;
                 skipLeading = false;
             }
+            sig++;
 
             int bqVal;
-            int halfCarry;
             int shiftedBcd;
 
             bqVal = BcdUtils.toBiQuinary(iLow);
-            halfCarry = bqVal & MSB_INTMASK;
             shiftedBcd = bqVal << 1;
 
             if(bitAppear == 0b0){
                 iLow = shiftedBcd;
             }else{
                 iLow = shiftedBcd | LSB_INTMASK;
+            }
+
+            // through iHigh
+            // if iLow has 8-bcd "67108863"(2^26-1) or lower
+            if(sig < 27) continue;
+
+            int halfCarry = bqVal & MSB_INTMASK;
+
+            if(noHalfCarry){
+                if(halfCarry == 0b0) continue;
+                noHalfCarry = false;
             }
 
             bqVal = BcdUtils.toBiQuinary(iHigh);

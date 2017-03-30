@@ -65,6 +65,14 @@ public class BcdArraysTest {
         assertEquals(result, 9);
         assertEquals("100000000", new String(buf, 0, result));
 
+        result = BcdArrays.int2ArabicArray(67_108_863, buf, 0);
+        assertEquals(result, 8);
+        assertEquals("67108863", new String(buf, 0, result));
+
+        result = BcdArrays.int2ArabicArray(67_108_864, buf, 0);
+        assertEquals(result, 8);
+        assertEquals("67108864", new String(buf, 0, result));
+
         result = BcdArrays.int2ArabicArray(0, buf, 0);
         assertEquals(result, 0);
         assertEquals("", new String(buf, 0, result));
