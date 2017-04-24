@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BcdSequence.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc</a> &gt; <span class="el_source">BcdSequence.java</span></div><h1>BcdSequence.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.BufferOverflowException;
+import java.nio.CharBuffer;
+import java.nio.ReadOnlyBufferException;
+
+/**
+ * BCD Character sequence holder.
+ *
+ * &lt;p&gt;It has {@link java.lang.CharSequence} API.
+ *
+ * &lt;p&gt;There is some API for character-output classes.
+ */
+public class BcdSequence implements CharSequence{
+
+    private static final int ARABIC_UC_MASK = 0b0011_0000;
+
+
+    private final BcdRegister decimal;
+    private final int[] intBuf;
+    private final char[] charBuf;
+
+
+    /**
+     * Constructor.
+     *
+     * @param decimal BCD register
+     * @throws NullPointerException argument is null
+     */
+    public BcdSequence(BcdRegister decimal) throws NullPointerException{
+<span class="fc" id="L38">        super();</span>
+
+<span class="fc" id="L40">        this.decimal = decimal;</span>
+
+<span class="fc" id="L42">        int digits = this.decimal.getMaxDigits();</span>
+<span class="fc" id="L43">        this.intBuf = new int[digits];</span>
+<span class="fc" id="L44">        this.charBuf = new char[digits];</span>
+
+<span class="fc" id="L46">        return;</span>
+    }
+
+
+    /**
+     * Write digits to Appendable.
+     *
+     * @param app output
+     * @return digits length
+     * @throws IOException If an I/O error occurs
+     */
+    public int flushDigitTo(Appendable app) throws IOException{
+<span class="fc" id="L58">        int length = buildChar();</span>
+
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        for(int idx = 0; idx &lt; length; idx++){</span>
+<span class="fc" id="L61">            char decimalCh = this.charBuf[idx];</span>
+<span class="fc" id="L62">            app.append(decimalCh);</span>
+        }
+
+<span class="fc" id="L65">        return length;</span>
+    }
+
+    /**
+     * Write digits to CharBuffer.
+     *
+     * @param cBuf output
+     * @return digits length
+     * @throws BufferOverflowException
+     * If buffer's current position is not smaller than its limit
+     * @throws ReadOnlyBufferException
+     * If buffer is read-only
+     */
+    public int flushDigitTo(CharBuffer cBuf)
+            throws BufferOverflowException, ReadOnlyBufferException{
+<span class="fc" id="L80">        int length = buildChar();</span>
+<span class="fc" id="L81">        cBuf.put(this.charBuf, 0, length);</span>
+<span class="fc" id="L82">        return length;</span>
+    }
+
+    /**
+     * Write digits to Writer.
+     *
+     * @param writer output
+     * @return digits length
+     * @throws IOException If an I/O error occurs
+     */
+    public int flushDigitTo(Writer writer) throws IOException{
+<span class="fc" id="L93">        int length = buildChar();</span>
+<span class="fc" id="L94">        writer.write(this.charBuf, 0, length);</span>
+<span class="fc" id="L95">        return length;</span>
+    }
+
+    /**
+     * Write digits to StringBuffer.
+     *
+     * @param buf output
+     * @return digits length
+     */
+    public int flushDigitTo(StringBuffer buf){
+<span class="fc" id="L105">        int length = buildChar();</span>
+<span class="fc" id="L106">        buf.append(this.charBuf, 0, length);</span>
+<span class="fc" id="L107">        return length;</span>
+    }
+
+    /**
+     * Write digits to StringBuilder.
+     *
+     * @param buf output
+     * @return digits length
+     */
+    public int flushDigitTo(StringBuilder buf){
+<span class="fc" id="L117">        int length = buildChar();</span>
+<span class="fc" id="L118">        buf.append(this.charBuf, 0, length);</span>
+<span class="fc" id="L119">        return length;</span>
+    }
+
+    /**
+     * Return digits columns.
+     *
+     * &lt;p&gt;There is no sign character.
+     *
+     * @return digits columns
+     */
+    @Override
+    public int length(){
+<span class="fc" id="L131">        int result = this.decimal.getPrecision();</span>
+<span class="fc" id="L132">        return result;</span>
+    }
+
+    /**
+     * Return each digit character.
+     *
+     * @param index digit position starting 0
+     * @return digit character ('0' to '9')
+     * @throws IndexOutOfBoundsException
+     * Argument is negative, or, not less than &lt;code&gt;length()&lt;/code&gt;
+     */
+    @Override
+    public char charAt(int index) throws IndexOutOfBoundsException{
+<span class="fc" id="L145">        int precision = this.decimal.getPrecision();</span>
+
+<span class="fc bfc" id="L147" title="All 4 branches covered.">        if(index &lt; 0 || precision &lt;= index)</span>
+<span class="fc" id="L148">            throw new IndexOutOfBoundsException();</span>
+
+<span class="fc" id="L150">        int digitPos = precision - index - 1;</span>
+<span class="fc" id="L151">        int digit = this.decimal.getDigit(digitPos);</span>
+
+        // map [0 - 9](int) to ['0' - '9'](char)
+<span class="fc" id="L154">        char result = (char)( digit | ARABIC_UC_MASK );</span>
+
+<span class="fc" id="L156">        return result;</span>
+    }
+
+    /**
+     * Return fixed-ranged subsequence.
+     *
+     * @param start start index
+     * @param end end index
+     * @return ranged sub-sequence
+     * @throws IndexOutOfBoundsException
+     *     &lt;code&gt;start&lt;/code&gt; is negative,
+     *     &lt;code&gt;end&lt;/code&gt; is less than &lt;code&gt;start&lt;/code&gt;,
+     *     or &lt;code&gt;end&lt;/code&gt; is greater than length()
+     */
+    @Override
+    public CharSequence subSequence(int start, int end)
+            throws IndexOutOfBoundsException{
+<span class="fc bfc" id="L173" title="All 4 branches covered.">        if(start &lt; 0 || end &lt; start) throw new IndexOutOfBoundsException();</span>
+
+<span class="fc" id="L175">        int precision = this.decimal.getPrecision();</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if(end &gt; precision) throw new IndexOutOfBoundsException();</span>
+
+<span class="fc" id="L178">        copyChar(start, end);</span>
+<span class="fc" id="L179">        String result =new String(this.charBuf, start, end - start);</span>
+
+<span class="fc" id="L181">        return result;</span>
+    }
+
+    /**
+     * Return fixed string text.
+     *
+     * @return fixed string
+     */
+    @Override
+    public String toString(){
+<span class="fc" id="L191">        int precision = this.decimal.getPrecision();</span>
+<span class="fc" id="L192">        buildChar();</span>
+<span class="fc" id="L193">        String result =new String(this.charBuf, 0, precision);</span>
+<span class="fc" id="L194">        return result;</span>
+    }
+
+    /**
+     * Build char array data.
+     * @return digits length
+     */
+    private int buildChar(){
+<span class="fc" id="L202">        int precision = this.decimal.getPrecision();</span>
+<span class="fc" id="L203">        int result = copyChar(0, precision);</span>
+<span class="fc" id="L204">        return result;</span>
+    }
+
+    /**
+     * Build ranged char array data.
+     * @param start start
+     * @param end end
+     * @return digits length
+     */
+    private int copyChar(int start, int end){
+<span class="fc" id="L214">        int length = end - start;</span>
+<span class="fc" id="L215">        this.decimal.toIntArray(this.intBuf, 0);</span>
+
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        for(int idx = start; idx &lt; end; idx++){</span>
+<span class="fc" id="L218">            int digit = this.intBuf[idx];</span>
+
+            // map [0 - 9](int) to ['0' - '9'](char)
+<span class="fc" id="L221">            char decimalCh = (char)( digit | ARABIC_UC_MASK );</span>
+
+<span class="fc" id="L223">            this.charBuf[idx] = decimalCh;</span>
+        }
+
+<span class="fc" id="L226">        return length;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

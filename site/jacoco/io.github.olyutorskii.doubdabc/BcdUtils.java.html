@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BcdUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc</a> &gt; <span class="el_source">BcdUtils.java</span></div><h1>BcdUtils.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+/**
+ * Utilities for Packed BCD layouted on primitive value.
+ *
+ * &lt;p&gt;Each decimal columns are layouted 4bit nibble width
+ * on primitive value.
+ *
+ * &lt;p&gt;Lower decimal digit is layouted on lower bits.
+ *
+ * &lt;p&gt;Each decimal digit overlaps Packed-BCD and Bi-quinary coded decimal.
+ *
+ * @see &lt;a target=&quot;_blank&quot;
+ * href=&quot;https://en.wikipedia.org/wiki/Binary-coded_decimal&quot;&gt;
+ * Binary-coded decimal (Wikipedia)
+ * &lt;/a&gt;
+ * @see &lt;a target=&quot;_blank&quot;
+ * href=&quot;https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal&quot;&gt;
+ * Bi-quinary coded decimal (Wikipedia)
+ * &lt;/a&gt;
+ */
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">public final class BcdUtils {</span>
+
+    /** bit-size of BCD(nibble). */
+    public static final int BCD_BITSIZE = 4;
+
+    private static final int BYTE_BITSIZE = Byte.SIZE;
+    private static final int BYTE_MASK    = // 0b1111_1111
+            (0b1 &lt;&lt; BYTE_BITSIZE) - 1;
+
+    private static final int INT_SLOTS  = Integer.SIZE / BCD_BITSIZE;
+    private static final int LONG_SLOTS = Long.SIZE    / BCD_BITSIZE;
+
+    private static final int[] BQ_TBL;
+
+    static{
+        // build lookup table for Packed-BCD to Bi-quinary conversion
+<span class="fc" id="L43">        BQ_TBL = new int[256];</span>
+
+<span class="fc" id="L45">        int idx = 0;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        for(int highDec = 0; highDec &lt; 16; highDec++){</span>
+            int highBq;
+<span class="fc bfc" id="L48" title="All 2 branches covered.">            if     (highDec &gt;= 10) highBq = 0x0;</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">            else if(highDec &gt;=  5) highBq = highDec + 3;</span>
+<span class="fc" id="L50">            else                   highBq = highDec;</span>
+
+<span class="fc bfc" id="L52" title="All 2 branches covered.">            for(int lowDec = 0; lowDec &lt; 16; lowDec++){</span>
+                int lowBq;
+<span class="fc bfc" id="L54" title="All 2 branches covered.">                if     (lowDec &gt;= 10) lowBq = 0x0;</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">                else if(lowDec &gt;=  5) lowBq = lowDec + 3;</span>
+<span class="fc" id="L56">                else                  lowBq = lowDec;</span>
+
+<span class="fc" id="L58">                int bqNblNbl = (highBq &lt;&lt; BCD_BITSIZE) | lowBq;</span>
+
+<span class="fc" id="L60">                BQ_TBL[idx++] = bqNblNbl;</span>
+            }
+        }
+
+<span class="pc bpc" id="L64" title="2 of 4 branches missed.">        assert idx == BQ_TBL.length;</span>
+<span class="fc" id="L65">    }</span>
+
+
+    /**
+     * Hiden constructor.
+     */
+<span class="nc" id="L71">    private BcdUtils(){</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        assert false;</span>
+<span class="nc" id="L73">    }</span>
+
+
+    /**
+     * Convert each 4bit width PackedBCD to Bi-quinary coded decimal.
+     *
+     * &lt;p&gt;If each nibble(PackedBCD) in int is greater than 4,
+     * add 3 to nibble.
+     *
+     * &lt;p&gt;&quot;nibble overflow&quot; doesn't occur if valid PackedBCD before.
+     * Undefined result if invalid PackedBCD value before.
+     *
+     * &lt;p&gt;[0,1,2,3,4,5,6,7,8,9] → [0,1,2,3,4,8,9,A,B,C]
+     *
+     * @param iVal int value
+     * @return modified value
+     */
+    public static int toBiQuinary(int iVal){
+<span class="fc" id="L91">        int idx3 = iVal &gt;&gt;&gt; 24;</span>
+<span class="fc" id="L92">        int idx2 = iVal &gt;&gt;&gt; 16 &amp; BYTE_MASK;</span>
+<span class="fc" id="L93">        int idx1 = iVal &gt;&gt;&gt;  8 &amp; BYTE_MASK;</span>
+<span class="fc" id="L94">        int idx0 = iVal        &amp; BYTE_MASK;</span>
+
+<span class="fc" id="L96">        int b3 = BQ_TBL[idx3];</span>
+<span class="fc" id="L97">        int b2 = BQ_TBL[idx2];</span>
+<span class="fc" id="L98">        int b1 = BQ_TBL[idx1];</span>
+<span class="fc" id="L99">        int b0 = BQ_TBL[idx0];</span>
+
+<span class="fc" id="L101">        int result =</span>
+                  ((b3 &lt;&lt; BYTE_BITSIZE) | b2) &lt;&lt; 16
+                | ((b1 &lt;&lt; BYTE_BITSIZE) | b0);
+
+<span class="fc" id="L105">        return result;</span>
+    }
+
+    /**
+     * Convert each 4bit width PackedBCD to Bi-quinary coded decimal.
+     *
+     * &lt;p&gt;If each nibble(PackedBCD) in long is greater than 4,
+     * add 3 to nibble.
+     *
+     * &lt;p&gt;&quot;nibble overflow&quot; doesn't occur if valid PackedBCD before.
+     * Undefined result if invalid PackedBCD value before.
+     *
+     * &lt;p&gt;[0,1,2,3,4,5,6,7,8,9] → [0,1,2,3,4,8,9,A,B,C]
+     *
+     * @param lVal long value
+     * @return modified value
+     */
+    public static long toBiQuinary(long lVal) {
+        long result;
+
+        int bVal;
+
+<span class="fc" id="L127">        bVal = (int) (lVal &gt;&gt;&gt; 56);</span>
+<span class="fc" id="L128">        result = BQ_TBL[bVal];</span>
+
+<span class="fc" id="L130">        bVal = (int) ((lVal &gt;&gt;&gt; 48) &amp; BYTE_MASK);</span>
+<span class="fc" id="L131">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L132">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L134">        bVal = (int) ((lVal &gt;&gt;&gt; 40) &amp; BYTE_MASK);</span>
+<span class="fc" id="L135">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L136">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L138">        bVal = (int) ((lVal &gt;&gt;&gt; 32) &amp; BYTE_MASK);</span>
+<span class="fc" id="L139">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L140">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L142">        bVal = (int) ((lVal &gt;&gt;&gt; 24) &amp; BYTE_MASK);</span>
+<span class="fc" id="L143">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L144">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L146">        bVal = (int) ((lVal &gt;&gt;&gt; 16) &amp; BYTE_MASK);</span>
+<span class="fc" id="L147">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L148">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L150">        bVal = (int) ((lVal &gt;&gt;&gt; 8) &amp; BYTE_MASK);</span>
+<span class="fc" id="L151">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L152">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L154">        bVal = (int) (lVal &amp; BYTE_MASK);</span>
+<span class="fc" id="L155">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L156">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L158">        return result;</span>
+    }
+
+    /**
+     * Count Leading Zero nibbles.
+     *
+     * &lt;ul&gt;
+     * &lt;li&gt;Return 0 if 0xffffffff.
+     * &lt;li&gt;Return 0 if 0x1fffffff.
+     * &lt;li&gt;Return 3 if 0x000fffff.
+     * &lt;li&gt;Return 5 if 0x00000100.
+     * &lt;li&gt;Return 7 if 0x0000000f.
+     * &lt;li&gt;Return 7 if 0x00000001.
+     * &lt;li&gt;Return 8 if 0x00000000.
+     * &lt;/ul&gt;
+     *
+     * @param iVal int value
+     * @return Zero nibbles
+     */
+    public static int clzNibble(int iVal){
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if(iVal == 0){</span>
+<span class="fc" id="L179">            return INT_SLOTS;</span>
+        }
+
+        int b2;
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if((iVal &amp; 0xff_ff_00_00) == 0){</span>
+<span class="fc" id="L184">            b2 = 0b0100;</span>
+<span class="fc" id="L185">            iVal &lt;&lt;= 16;</span>
+        }else{
+<span class="fc" id="L187">            b2 = 0b0000;</span>
+        }
+
+        int b1;
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        if((iVal &amp; 0xff_00_00_00) == 0){</span>
+<span class="fc" id="L192">            b1 = 0b0010;</span>
+<span class="fc" id="L193">            iVal &lt;&lt;= 8;</span>
+        }else{
+<span class="fc" id="L195">            b1 = 0b0000;</span>
+        }
+
+        int b0;
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        if((iVal &amp; 0xf0_00_00_00) == 0){</span>
+<span class="fc" id="L200">            b0 = 0b0001;</span>
+        }else{
+<span class="fc" id="L202">            b0 = 0b0000;</span>
+        }
+
+<span class="fc" id="L205">        return b2 | b1 | b0;</span>
+    }
+
+    /**
+     * Count Leading Zero nibbles.
+     *
+     * &lt;ul&gt;
+     * &lt;li&gt;Return  0 if 0xffffffffffffffff.
+     * &lt;li&gt;Return  0 if 0x1fffffffffffffff.
+     * &lt;li&gt;Return  3 if 0x000fffffffffffff.
+     * &lt;li&gt;Return  5 if 0x0000010000000000.
+     * &lt;li&gt;Return 15 if 0x000000000000000f.
+     * &lt;li&gt;Return 15 if 0x0000000000000001.
+     * &lt;li&gt;Return 16 if 0x0000000000000000.
+     * &lt;/ul&gt;
+     *
+     * @param lVal long value
+     * @return Zero nibbles
+     */
+    public static int clzNibble(long lVal){
+<span class="fc bfc" id="L225" title="All 2 branches covered.">        if(lVal == 0){</span>
+<span class="fc" id="L226">            return LONG_SLOTS;</span>
+        }
+
+        int b3;
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if((lVal &amp; 0xff_ff_ff_ff_00_00_00_00L) == 0){</span>
+<span class="fc" id="L231">            b3 = 0b1000;</span>
+<span class="fc" id="L232">            lVal &lt;&lt;= 32;</span>
+        }else{
+<span class="fc" id="L234">            b3 = 0b0000;</span>
+        }
+
+        int b2;
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if((lVal &amp; 0xff_ff_00_00_00_00_00_00L) == 0){</span>
+<span class="fc" id="L239">            b2 = 0b0100;</span>
+<span class="fc" id="L240">            lVal &lt;&lt;= 16;</span>
+        }else{
+<span class="fc" id="L242">            b2 = 0b0000;</span>
+        }
+
+        int b1;
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        if((lVal &amp; 0xff_00_00_00_00_00_00_00L) == 0){</span>
+<span class="fc" id="L247">            b1 = 0b0010;</span>
+<span class="fc" id="L248">            lVal &lt;&lt;= 8;</span>
+        }else{
+<span class="fc" id="L250">            b1 = 0b0000;</span>
+        }
+
+        int b0;
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        if((lVal &amp; 0xf0_00_00_00_00_00_00_00L) == 0){</span>
+<span class="fc" id="L255">            b0 = 0b0001;</span>
+        }else{
+<span class="fc" id="L257">            b0 = 0b0000;</span>
+        }
+
+<span class="fc" id="L260">        return (b3 | b2) | (b1 | b0);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

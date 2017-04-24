@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BcdArrays.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoubDabC</a> &gt; <a href="index.source.html" class="el_package">io.github.olyutorskii.doubdabc</a> &gt; <span class="el_source">BcdArrays.java</span></div><h1>BcdArrays.java</h1><pre class="source lang-java linenums">/*
+ * License : The MIT License
+ * Copyright(c) 2017 olyutorskii
+ */
+
+package io.github.olyutorskii.doubdabc;
+
+/**
+ * BCD array utilities but experimental.
+ */
+<span class="pc bpc" id="L11" title="1 of 2 branches missed.">public final class BcdArrays {</span>
+
+    private static final int INT_SLOTS =
+            Integer.SIZE / BcdUtils.BCD_BITSIZE;
+
+    private static final int MSB_INTMASK = 0b1  &lt;&lt; (Integer.SIZE - 1);
+    private static final int LSB_INTMASK = 0b1;
+
+    private static final int BCD_MASK =
+            (0b1 &lt;&lt; BcdUtils.BCD_BITSIZE) - 1;
+    private static final int ARABICUC_MASK = 0b0011_0000;
+
+
+    /**
+     * Hidden constructor.
+     */
+<span class="nc" id="L27">    private BcdArrays(){</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        assert false;</span>
+<span class="nc" id="L29">    }</span>
+
+
+    /**
+     * Convert int value to Arabic-decimal character sequence.
+     *
+     * &lt;p&gt;Output nothing if value 0.
+     *
+     * &lt;p&gt;sign-bit is treated as unsigned.
+     * There is no minus-sign output.
+     *
+     * &lt;p&gt;DDA implementations without any instance field.
+     *
+     * @param iVal int value
+     * @param cbuf char output
+     * @param offset output start offset
+     * @return output length
+     */
+    public static int int2ArabicArray(final int iVal,
+                                        final char[] cbuf, final int offset){
+<span class="fc" id="L49">        int iHigh = 0b0;</span>
+<span class="fc" id="L50">        int iLow  = 0b0;</span>
+
+<span class="fc" id="L52">        boolean skipLeading = true;</span>
+<span class="fc" id="L53">        boolean noHalfCarry = true;</span>
+<span class="fc" id="L54">        int sig = 0;</span>
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        for(int bitCt = 0; bitCt &lt; Integer.SIZE; bitCt++){</span>
+<span class="fc" id="L57">            final int scanMask = MSB_INTMASK &gt;&gt;&gt; bitCt;</span>
+<span class="fc" id="L58">            final int bitAppear = iVal &amp; scanMask;</span>
+
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            if(skipLeading){</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                if(bitAppear == 0b0) continue;</span>
+<span class="fc" id="L62">                skipLeading = false;</span>
+            }
+<span class="fc" id="L64">            sig++;</span>
+
+            int bqVal;
+            int shiftedBcd;
+
+<span class="fc" id="L69">            bqVal = BcdUtils.toBiQuinary(iLow);</span>
+<span class="fc" id="L70">            shiftedBcd = bqVal &lt;&lt; 1;</span>
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if(bitAppear == 0b0){</span>
+<span class="fc" id="L73">                iLow = shiftedBcd;</span>
+            }else{
+<span class="fc" id="L75">                iLow = shiftedBcd | LSB_INTMASK;</span>
+            }
+
+            // through iHigh
+            // if iLow has 8-bcd &quot;67108863&quot;(2^26-1) or lower
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            if(sig &lt; 27) continue;</span>
+
+<span class="fc" id="L82">            int halfCarry = bqVal &amp; MSB_INTMASK;</span>
+
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if(noHalfCarry){</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">                if(halfCarry == 0b0) continue;</span>
+<span class="fc" id="L86">                noHalfCarry = false;</span>
+            }
+
+<span class="fc" id="L89">            bqVal = BcdUtils.toBiQuinary(iHigh);</span>
+<span class="fc" id="L90">            shiftedBcd = bqVal &lt;&lt; 1;</span>
+
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            if(halfCarry == 0b0){</span>
+<span class="fc" id="L93">                iHigh = shiftedBcd;</span>
+            }else{
+<span class="fc" id="L95">                iHigh = shiftedBcd | LSB_INTMASK;</span>
+            }
+        }
+
+<span class="fc" id="L99">        int cidx = offset;</span>
+        final int clzLow;
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if(iHigh == 0b0){</span>
+<span class="fc" id="L103">            clzLow = BcdUtils.clzNibble(iLow);</span>
+        }else{
+<span class="fc" id="L105">            clzLow = 0;</span>
+
+<span class="fc" id="L107">            final int clzHigh = BcdUtils.clzNibble(iHigh);</span>
+
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            for(int bcdCt = clzHigh; bcdCt &lt; INT_SLOTS; bcdCt++){</span>
+<span class="fc" id="L110">                final int nibble = (iHigh &gt;&gt;&gt; ((7 - bcdCt) &lt;&lt; 2)) &amp; BCD_MASK;</span>
+<span class="fc" id="L111">                final char decimalCh = (char)(nibble | ARABICUC_MASK);</span>
+<span class="fc" id="L112">                cbuf[cidx++] = decimalCh;</span>
+            }
+        }
+
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        for(int bcdCt = clzLow; bcdCt &lt; INT_SLOTS; bcdCt++){</span>
+<span class="fc" id="L117">            final int nibble = (iLow &gt;&gt;&gt; ((7 - bcdCt) &lt;&lt; 2)) &amp; BCD_MASK;</span>
+<span class="fc" id="L118">            final char decimalCh = (char)(nibble | ARABICUC_MASK);</span>
+<span class="fc" id="L119">            cbuf[cidx++] = decimalCh;</span>
+        }
+
+<span class="fc" id="L122">        return cidx - offset;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
