@@ -5,10 +5,23 @@
 
 package io.github.olyutorskii.doubdabc;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.BufferOverflowException;
+import java.nio.CharBuffer;
+import java.nio.ReadOnlyBufferException;
+
 /**
- * CharSequence wrapping access to Decimal digits.
+ * BCD Character sequence holder.
+ *
+ * <p>It has {@link java.lang.CharSequence} API.
+ *
+ * <p>There is some API for character-output classes.
  */
 public class BcdSequence implements CharSequence{
+
+    private static final int ARABIC_UC_MASK = 0b0011_0000;
+
 
     private final BcdRegister decimal;
     private final int[] intBuf;
@@ -33,6 +46,78 @@ public class BcdSequence implements CharSequence{
         return;
     }
 
+
+    /**
+     * Write digits to Appendable.
+     *
+     * @param app output
+     * @return digits length
+     * @throws IOException If an I/O error occurs
+     */
+    public int flushDigitTo(Appendable app) throws IOException{
+        int length = buildChar();
+
+        for(int idx = 0; idx < length; idx++){
+            char decimalCh = this.charBuf[idx];
+            app.append(decimalCh);
+        }
+
+        return length;
+    }
+
+    /**
+     * Write digits to CharBuffer.
+     *
+     * @param cBuf output
+     * @return digits length
+     * @throws BufferOverflowException
+     * If buffer's current position is not smaller than its limit
+     * @throws ReadOnlyBufferException
+     * If buffer is read-only
+     */
+    public int flushDigitTo(CharBuffer cBuf)
+            throws BufferOverflowException, ReadOnlyBufferException{
+        int length = buildChar();
+        cBuf.put(this.charBuf, 0, length);
+        return length;
+    }
+
+    /**
+     * Write digits to Writer.
+     *
+     * @param writer output
+     * @return digits length
+     * @throws IOException If an I/O error occurs
+     */
+    public int flushDigitTo(Writer writer) throws IOException{
+        int length = buildChar();
+        writer.write(this.charBuf, 0, length);
+        return length;
+    }
+
+    /**
+     * Write digits to StringBuffer.
+     *
+     * @param buf output
+     * @return digits length
+     */
+    public int flushDigitTo(StringBuffer buf){
+        int length = buildChar();
+        buf.append(this.charBuf, 0, length);
+        return length;
+    }
+
+    /**
+     * Write digits to StringBuilder.
+     *
+     * @param buf output
+     * @return digits length
+     */
+    public int flushDigitTo(StringBuilder buf){
+        int length = buildChar();
+        buf.append(this.charBuf, 0, length);
+        return length;
+    }
 
     /**
      * Return digits columns.
@@ -66,7 +151,7 @@ public class BcdSequence implements CharSequence{
         int digit = this.decimal.getDigit(digitPos);
 
         // map [0 - 9](int) to ['0' - '9'](char)
-        char result = (char)( digit | 0b0011_0000 );
+        char result = (char)( digit | ARABIC_UC_MASK );
 
         return result;
     }
@@ -133,7 +218,7 @@ public class BcdSequence implements CharSequence{
             int digit = this.intBuf[idx];
 
             // map [0 - 9](int) to ['0' - '9'](char)
-            char decimalCh = (char)( digit | 0b0011_0000 );
+            char decimalCh = (char)( digit | ARABIC_UC_MASK );
 
             this.charBuf[idx] = decimalCh;
         }

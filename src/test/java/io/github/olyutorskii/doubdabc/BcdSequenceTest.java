@@ -6,6 +6,14 @@
 
 package io.github.olyutorskii.doubdabc;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.BufferOverflowException;
+import java.nio.CharBuffer;
+import java.nio.ReadOnlyBufferException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,7 +47,162 @@ public class BcdSequenceTest {
     }
 
     /**
-     * Test of length method, of class DecimalText.
+     * Test of flushDigitTo method, of class BcdSequence.
+     * @throws IOException io error
+     */
+    @Test
+    public void testFlushDigitTo_Appendable() throws IOException {
+        System.out.println("flushDigitTo");
+
+        BcdRegister bs;
+        BcdSequence ba;
+        ByteArrayOutputStream os;
+        Appendable app;
+
+        bs = new BcdRegister(10);
+        ba = new BcdSequence(bs);
+
+        TestValue.push9876543210(bs);
+
+        os = new ByteArrayOutputStream();
+        app = new PrintStream(os, true, "UTF-8");
+        ba.flushDigitTo(app);
+
+        assertEquals(10, os.size());
+        byte[] result = os.toByteArray();
+
+        assertEquals((byte)'9', result[0]);
+        assertEquals((byte)'8', result[1]);
+        assertEquals((byte)'7', result[2]);
+        assertEquals((byte)'6', result[3]);
+        assertEquals((byte)'5', result[4]);
+        assertEquals((byte)'4', result[5]);
+        assertEquals((byte)'3', result[6]);
+        assertEquals((byte)'2', result[7]);
+        assertEquals((byte)'1', result[8]);
+        assertEquals((byte)'0', result[9]);
+
+        return;
+    }
+
+    /**
+     * Test of flushDigitTo method, of class BcdSequence.
+     */
+    @Test
+    public void testFlushDigitTo_CharBuffer() {
+        System.out.println("flushDigitTo");
+
+        BcdRegister bs;
+        BcdSequence ba;
+        CharBuffer cbuf;
+
+        bs = new BcdRegister(10);
+        ba = new BcdSequence(bs);
+
+        TestValue.push9876543210(bs);
+
+        cbuf = CharBuffer.allocate(10);
+        ba.flushDigitTo(cbuf);
+
+        cbuf.flip();
+
+        assertEquals("9876543210", cbuf.toString());
+
+        cbuf.clear();
+        cbuf = cbuf.asReadOnlyBuffer();
+        try{
+            ba.flushDigitTo(cbuf);
+            fail();
+        }catch(ReadOnlyBufferException e){
+            // GOOD
+        }
+
+        cbuf = CharBuffer.allocate(9);
+        try{
+            ba.flushDigitTo(cbuf);
+            fail();
+        }catch(BufferOverflowException e){
+            // GOOD
+        }
+
+        return;
+    }
+
+    /**
+     * Test of flushDigitTo method, of class BcdSequence.
+     * @throws IOException
+     */
+    @Test
+    public void testFlushDigitTo_Writer() throws IOException {
+        System.out.println("flushDigitTo");
+
+        BcdRegister bs;
+        BcdSequence ba;
+        Writer writer;
+
+        bs = new BcdRegister(10);
+        ba = new BcdSequence(bs);
+
+        TestValue.push9876543210(bs);
+
+        writer = new StringWriter();
+        ba.flushDigitTo(writer);
+
+        assertEquals("9876543210", writer.toString());
+
+        return;
+    }
+
+    /**
+     * Test of flushDigitTo method, of class BcdSequence.
+     */
+    @Test
+    public void testFlushDigitTo_StringBuffer() {
+        System.out.println("flushDigitTo");
+
+        BcdRegister bs;
+        BcdSequence ba;
+        StringBuffer text;
+
+        bs = new BcdRegister(10);
+        ba = new BcdSequence(bs);
+
+        TestValue.push9876543210(bs);
+
+        text = new StringBuffer();
+        ba.flushDigitTo(text);
+
+        assertEquals("9876543210", text.toString());
+
+        return;
+    }
+
+    /**
+     * Test of flushDigitTo method, of class BcdSequence.
+     */
+    @Test
+    public void testFlushDigitTo_StringBuilder() {
+        System.out.println("flushDigitTo");
+
+        BcdRegister bs;
+        BcdSequence ba;
+        StringBuilder text;
+
+        bs = new BcdRegister(10);
+        ba = new BcdSequence(bs);
+
+        TestValue.push9876543210(bs);
+
+        text = new StringBuilder();
+        ba.flushDigitTo(text);
+
+        assertEquals("9876543210", text.toString());
+
+        return;
+    }
+
+    /**
+     * Test of length method, of class BcdSequence.
      */
     @Test
     public void testLength() {
@@ -61,7 +224,7 @@ public class BcdSequenceTest {
     }
 
     /**
-     * Test of charAt method, of class DecimalText.
+     * Test of charAt method, of class BcdSequence.
      */
     @Test
     public void testCharAt() {
@@ -101,7 +264,7 @@ public class BcdSequenceTest {
     }
 
     /**
-     * Test of subSequence method, of class DecimalText.
+     * Test of subSequence method, of class BcdSequence.
      */
     @Test
     public void testSubSequence() {
@@ -152,7 +315,7 @@ public class BcdSequenceTest {
     }
 
     /**
-     * Test of toString method, of class DecimalText.
+     * Test of toString method, of class BcdSequence.
      */
     @Test
     public void testToString() {
