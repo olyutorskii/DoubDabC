@@ -257,7 +257,7 @@ public final class BcdUtils {
             b0 = 0b0000;
         }
 
-        return b3 | b2 | b1 | b0;
+        return (b3 | b2) | (b1 | b0);
     }
 
 }

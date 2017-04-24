@@ -6,10 +6,7 @@
 package io.github.olyutorskii.doubdabc;
 
 /**
- * BCD array utilities.
- *
- * <p>DDA implementations without any instance field
- * but int input only supported.
+ * BCD array utilities but experimental.
  */
 public final class BcdArrays {
 
@@ -39,6 +36,8 @@ public final class BcdArrays {
      *
      * <p>sign-bit is treated as unsigned.
      * There is no minus-sign output.
+     *
+     * <p>DDA implementations without any instance field.
      *
      * @param iVal int value
      * @param cbuf char output

@@ -6,10 +6,10 @@ Released on 20XX-XX-XX
 
 ## v2.101.2
 Released on 2017-XX-XX
-- Split BcdUtils class
-- Add BcdArrays
+- Merge DecimalText and DecimalOut to BcdSequence
 - Extended Writer class removed. See JarabraDix new project.
-- Merge DecimalText & DecimalOut to BcdSequence
+- Split BcdUtils class from BcdRegister
+- Add BcdArrays
 
 ## v1.103.2
 Released on 2017-03-22
