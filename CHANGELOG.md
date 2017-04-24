@@ -5,7 +5,7 @@ DoubDabC Changelog
 Released on 20XX-XX-XX
 
 ## v2.101.2
-Released on 2017-XX-XX
+Released on 2017-04-24
 - Merge DecimalText and DecimalOut to BcdSequence
 - Extended Writer class removed. See JarabraDix new project.
 - Split BcdUtils class from BcdRegister
