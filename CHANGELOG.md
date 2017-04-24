@@ -4,6 +4,13 @@ DoubDabC Changelog
 ## WIP
 Released on 20XX-XX-XX
 
+## v2.101.2
+Released on 2017-XX-XX
+- Merge DecimalText and DecimalOut to BcdSequence
+- Extended Writer class removed. See JarabraDix new project.
+- Split BcdUtils class from BcdRegister
+- Add BcdArrays
+
 ## v1.103.2
 Released on 2017-03-22
 - Add DecimalWriter which supports print(int) #16
