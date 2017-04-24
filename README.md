@@ -8,7 +8,8 @@
 ## What is DoubDabC ? ##
 
 * **DoubDabC** is a Java library
-that supports **binary integer value to decimal sequence conversion**.
+that supports **binary integer value to decimal sequence conversion**
+with alternative algorithm.
 
 * Yes, it will substitute implementations such as
 `Integer.toString(int)` and so on.

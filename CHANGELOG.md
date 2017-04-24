@@ -9,6 +9,7 @@ Released on 2017-XX-XX
 - Extended Writer class removed. SeeJarabraDix new project.
 - Split BcdUtils class
 - Add BcdArrays
+- Merge DecimalText to BcdSequence
 
 ## v1.103.2
 Released on 2017-03-22

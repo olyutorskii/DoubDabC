@@ -1,6 +1,7 @@
 /*
- * License : The MIT License
- * Copyright(c) 2017 olyutorskii
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package io.github.olyutorskii.doubdabc;
@@ -16,9 +17,9 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class DecimalTextTest {
+public class BcdSequenceTest {
 
-    public DecimalTextTest() {
+    public BcdSequenceTest() {
     }
 
     @BeforeClass
@@ -45,10 +46,10 @@ public class DecimalTextTest {
         System.out.println("length");
 
         BcdRegister bs;
-        DecimalText chseq;
+        BcdSequence chseq;
 
         bs = new BcdRegister(3);
-        chseq = new DecimalText(bs);
+        chseq = new BcdSequence(bs);
 
         assertEquals(1, chseq.length());
 
@@ -67,10 +68,10 @@ public class DecimalTextTest {
         System.out.println("charAt");
 
         BcdRegister bs;
-        DecimalText chseq;
+        BcdSequence chseq;
 
         bs = new BcdRegister(3);
-        chseq = new DecimalText(bs);
+        chseq = new BcdSequence(bs);
 
         assertEquals('0', chseq.charAt(0));
 
@@ -107,10 +108,10 @@ public class DecimalTextTest {
         System.out.println("subSequence");
 
         BcdRegister bs;
-        DecimalText chseq;
+        BcdSequence chseq;
 
         bs = new BcdRegister(3);
-        chseq = new DecimalText(bs);
+        chseq = new BcdSequence(bs);
 
         assertEquals("0", chseq.subSequence(0, 1).toString());
         assertEquals("", chseq.subSequence(0, 0).toString());
@@ -158,11 +159,11 @@ public class DecimalTextTest {
         System.out.println("toString");
 
         BcdRegister bs;
-        DecimalText chseq;
+        BcdSequence chseq;
         String result;
 
         bs = new BcdRegister(10);
-        chseq = new DecimalText(bs);
+        chseq = new BcdSequence(bs);
 
         result = chseq.toString();
         assertEquals("0", result);

@@ -5,16 +5,14 @@
 
 package io.github.olyutorskii.doubdabc;
 
-import java.nio.CharBuffer;
-
 /**
  * CharSequence wrapping access to Decimal digits.
  */
-public class DecimalText implements CharSequence{
+public class BcdSequence implements CharSequence{
 
     private final BcdRegister decimal;
     private final int[] intBuf;
-    private final CharBuffer textOut;
+    private final char[] charBuf;
 
 
     /**
@@ -23,14 +21,14 @@ public class DecimalText implements CharSequence{
      * @param decimal BCD register
      * @throws NullPointerException argument is null
      */
-    public DecimalText(BcdRegister decimal) throws NullPointerException{
+    public BcdSequence(BcdRegister decimal) throws NullPointerException{
         super();
 
         this.decimal = decimal;
 
         int digits = this.decimal.getMaxDigits();
         this.intBuf = new int[digits];
-        this.textOut = CharBuffer.allocate(digits);
+        this.charBuf = new char[digits];
 
         return;
     }
@@ -92,7 +90,9 @@ public class DecimalText implements CharSequence{
         int precision = this.decimal.getPrecision();
         if(end > precision) throw new IndexOutOfBoundsException();
 
-        String result = encodeText(start, end);
+        copyChar(start, end);
+        String result =new String(this.charBuf, start, end - start);
+
         return result;
     }
 
@@ -104,34 +104,41 @@ public class DecimalText implements CharSequence{
     @Override
     public String toString(){
         int precision = this.decimal.getPrecision();
-        String result = encodeText(0, precision);
+        buildChar();
+        String result =new String(this.charBuf, 0, precision);
         return result;
     }
 
     /**
-     * Encode int array to text string.
-     *
-     * @param start start position
-     * @param end end position
-     * @return text
+     * Build char array data.
+     * @return digits length
      */
-    private String encodeText(int start, int end){
+    private int buildChar(){
+        int precision = this.decimal.getPrecision();
+        int result = copyChar(0, precision);
+        return result;
+    }
+
+    /**
+     * Build ranged char array data.
+     * @param start start
+     * @param end end
+     * @return digits length
+     */
+    private int copyChar(int start, int end){
+        int length = end - start;
         this.decimal.toIntArray(this.intBuf, 0);
 
-        this.textOut.clear();
         for(int idx = start; idx < end; idx++){
             int digit = this.intBuf[idx];
 
             // map [0 - 9](int) to ['0' - '9'](char)
             char decimalCh = (char)( digit | 0b0011_0000 );
 
-            this.textOut.put(decimalCh);
+            this.charBuf[idx] = decimalCh;
         }
 
-        this.textOut.flip();
-        String result = this.textOut.toString();
-
-        return result;
+        return length;
     }
 
 }

@@ -7,6 +7,9 @@ package io.github.olyutorskii.doubdabc;
 
 /**
  * BCD array utilities.
+ *
+ * <p>DDA implementations without any instance field
+ * but int input only supported.
  */
 public final class BcdArrays {
 
