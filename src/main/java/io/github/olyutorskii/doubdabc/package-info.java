@@ -5,7 +5,8 @@
 
 /**
  * DoubDabC is a Java library that supports
- * binary integer value to decimal sequence conversion.
+ * binary integer value to decimal sequence conversion
+ * with alternative algorithm.
  *
  * <p>DoubDabC implements Double-Dabble algorithm.
  * Double-Dabble is a radix-conversion algorithm

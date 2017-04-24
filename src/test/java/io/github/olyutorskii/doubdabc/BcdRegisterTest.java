@@ -96,78 +96,6 @@ public class BcdRegisterTest {
     }
 
     /**
-     * Test of toBiQuinary method, of class BcdRegister.
-     */
-    @Test
-    public void testToBiQuinary() {
-        System.out.println("toBiQuinary");
-
-        int result;
-
-        result = BcdRegister.toBiQuinary(0x00);
-        assertEquals(0x00, result);
-        result = BcdRegister.toBiQuinary(0x01);
-        assertEquals(0x01, result);
-        result = BcdRegister.toBiQuinary(0x02);
-        assertEquals(0x02, result);
-        result = BcdRegister.toBiQuinary(0x03);
-        assertEquals(0x03, result);
-        result = BcdRegister.toBiQuinary(0x04);
-        assertEquals(0x04, result);
-        result = BcdRegister.toBiQuinary(0x05);
-        assertEquals(0x08, result);
-        result = BcdRegister.toBiQuinary(0x06);
-        assertEquals(0x09, result);
-        result = BcdRegister.toBiQuinary(0x07);
-        assertEquals(0x0a, result);
-        result = BcdRegister.toBiQuinary(0x08);
-        assertEquals(0x0b, result);
-        result = BcdRegister.toBiQuinary(0x09);
-        assertEquals(0x0c, result);
-
-        result = BcdRegister.toBiQuinary(0x40);
-        assertEquals(0x40, result);
-        result = BcdRegister.toBiQuinary(0x50);
-        assertEquals(0x80, result);
-
-        result = BcdRegister.toBiQuinary(0x400);
-        assertEquals(0x400, result);
-        result = BcdRegister.toBiQuinary(0x500);
-        assertEquals(0x800, result);
-
-        result = BcdRegister.toBiQuinary(0x4000);
-        assertEquals(0x4000, result);
-        result = BcdRegister.toBiQuinary(0x5000);
-        assertEquals(0x8000, result);
-
-        result = BcdRegister.toBiQuinary(0x9999);
-        assertEquals(0xcccc, result);
-
-        result = BcdRegister.toBiQuinary(0x3456);
-        assertEquals(0x3489, result);
-
-        result = BcdRegister.toBiQuinary(0x40_00_00_00);
-        assertEquals(0x40_00_00_00, result);
-
-        result = BcdRegister.toBiQuinary(0x50_00_00_00);
-        assertEquals(0x80_00_00_00, result);
-
-        result = BcdRegister.toBiQuinary(0x60_00_00_00);
-        assertEquals(0x90_00_00_00, result);
-
-        result = BcdRegister.toBiQuinary(0x70_00_00_00);
-        assertEquals(0xa0_00_00_00, result);
-
-        result = BcdRegister.toBiQuinary(0x80_00_00_00);
-        assertEquals(0xb0_00_00_00, result);
-
-        result = BcdRegister.toBiQuinary(0x90_00_00_00);
-        assertEquals(0xc0_00_00_00, result);
-
-        return;
-    }
-
-    /**
      * Test of toString method, of class BcdRegister.
      */
     @Test
@@ -328,7 +256,7 @@ public class BcdRegisterTest {
      * Test of getMaxDigits method, of class BcdRegister.
      */
     @Test
-    public void testGetDigitsHolder() {
+    public void testGetMaxDigits() {
         System.out.println("getMaxDigits");
 
         BcdRegister bs;

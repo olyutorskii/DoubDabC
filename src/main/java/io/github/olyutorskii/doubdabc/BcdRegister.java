@@ -54,16 +54,13 @@ public class BcdRegister {
 
 
     private static final int PRIM_BITSIZE = Integer.SIZE;
-    private static final int BYTE_BITSIZE = Byte.SIZE;
-    private static final int BCD_BITSIZE = 4;
-    private static final int PRIM_SLOTS = PRIM_BITSIZE / BCD_BITSIZE;
+    private static final int PRIM_SLOTS =
+            PRIM_BITSIZE / BcdUtils.BCD_BITSIZE;
 
     private static final int LSB_PRIMMASK = 0b1;
     private static final int MSB_PRIMMASK = 0b1 << (PRIM_BITSIZE - 1);
     private static final int NIBBLE_MASK  = // 0b1111
-            (0b1 << BCD_BITSIZE) - 1;
-    private static final int BYTE_MASK    = // 0b1111_1111
-            (0b1 << BYTE_BITSIZE) - 1;
+            (0b1 << BcdUtils.BCD_BITSIZE) - 1;
 
     private static final int PRIMIDX_SHIFT = 3;    //  [ /  8]  [>>> 3]
     private static final int NBLIDX_MASK =         //  [mod 8]  [& 0b111]
@@ -78,39 +75,10 @@ public class BcdRegister {
         'A', 'B', 'C', 'D', 'E', 'F',
     };
 
-    private static final int[] BQ_TBL;
-
-
-    static{
-        // build lookup table for Packed-BCD to Bi-quinary conversion
-        BQ_TBL = new int[256];
-
-        int idx = 0;
-        for(int highDec = 0; highDec < 16; highDec++){
-            int highBq;
-            if     (highDec >= 10) highBq = 0x0;
-            else if(highDec >=  5) highBq = highDec + 3;
-            else                   highBq = highDec;
-
-            for(int lowDec = 0; lowDec < 16; lowDec++){
-                int lowBq;
-                if     (lowDec >= 10) lowBq = 0x0;
-                else if(lowDec >=  5) lowBq = lowDec + 3;
-                else                  lowBq = lowDec;
-
-                int bqNblNbl = (highBq << BCD_BITSIZE) | lowBq;
-
-                BQ_TBL[idx++] = bqNblNbl;
-            }
-        }
-
-        assert idx == BQ_TBL.length;
-    }
-
     static{
         assert 0b1 << PRIMIDX_SHIFT == PRIM_SLOTS;
         assert (-1 & NBLIDX_MASK) == PRIM_SLOTS - 1;
-        assert HEXCH_TBL.length == 0b1 << BCD_BITSIZE;
+        assert HEXCH_TBL.length == 0b1 << BcdUtils.BCD_BITSIZE;
     }
 
 
@@ -163,42 +131,6 @@ public class BcdRegister {
         result += PRIM_SLOTS - 1;
         result /= PRIM_SLOTS;
         result *= PRIM_SLOTS;
-
-        return result;
-    }
-
-    /**
-     * Convert each 4bit width PackedBCD to Bi-quinary coded decimal.
-     *
-     * <p>If each nibble(PackedBCD) in int is greater than 4,
-     * add 3 to nibble.
-     *
-     * <p>"nibble overflow" doesn't occur if valid PackedBCD before.
-     * Undefined result if invalid PackedBCD value before.
-     *
-     * <p>[0,1,2,3,4,5,6,7,8,9] → [0,1,2,3,4,8,9,A,B,C]
-     *
-     * @param iVal int value
-     * @return modified value
-     */
-    public static int toBiQuinary(int iVal){
-        int result;
-        int bVal;
-
-        bVal = (iVal >>> 24);
-        result = BQ_TBL[bVal];
-
-        bVal = (iVal >>> 16) & BYTE_MASK;
-        result <<= BYTE_BITSIZE;
-        result |= BQ_TBL[bVal];
-
-        bVal = (iVal >>> 8) & BYTE_MASK;
-        result <<= BYTE_BITSIZE;
-        result |= BQ_TBL[bVal];
-
-        bVal = iVal & BYTE_MASK;
-        result <<= BYTE_BITSIZE;
-        result |= BQ_TBL[bVal];
 
         return result;
     }
@@ -329,7 +261,7 @@ public class BcdRegister {
         for(int idx = 0; idx < buflen; idx++){
             int oldVal = this.ibuf[idx];
 
-            int fixVal = toBiQuinary(oldVal);
+            int fixVal = BcdUtils.toBiQuinary(oldVal);
             int newVal = fixVal << 1;
             if(lastMsbTest != 0) newVal |= LSB_PRIMMASK;
 
@@ -388,22 +320,10 @@ public class BcdRegister {
         for(int iIdx = idxMax; iIdx >= 0; iIdx--){
             int iVal = this.ibuf[iIdx];
 
-            if(iVal == 0){
-                result -= PRIM_SLOTS;
-            }else{
-                // Count Leading Zero nibbles(BCD)
-                if((iVal & 0xff_ff_00_00) == 0){
-                    result -= 4;
-                    iVal <<= 16;
-                }
-                if((iVal & 0xff_00_00_00) == 0){
-                    result -= 2;
-                    iVal <<= 8;
-                }
-                if((iVal & 0xf0_00_00_00) == 0){
-                    result -= 1;
-                }
+            int clz = BcdUtils.clzNibble(iVal);
+            result -= clz;
 
+            if(clz != PRIM_SLOTS){
                 break;
             }
         }
@@ -460,7 +380,7 @@ public class BcdRegister {
         int b3 = (nibble >> 3) & LSB_PRIMMASK;
         int b2 = (nibble >> 2) & LSB_PRIMMASK;
         int b1 = (nibble >> 1) & LSB_PRIMMASK;
-        int b0 = (nibble     ) & LSB_PRIMMASK;
+        int b0 =  nibble       & LSB_PRIMMASK;
 
         char c3 = HEXCH_TBL[b3];
         char c2 = HEXCH_TBL[b2];
