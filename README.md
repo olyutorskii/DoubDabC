@@ -11,7 +11,7 @@
 that supports **binary integer value to decimal sequence conversion**.
 
 * Yes, it will substitute implementations such as
-`Integer.toString(int)`, `System.out(=PrintStream).println(int)` and so on.
+`Integer.toString(int)` and so on.
 
 
 ## DoubDabC implementation ##
@@ -47,15 +47,10 @@ as Arabic numeral characters\(0-9\) sequence output.
 
 * `CharSequence` wrapper class is provided.
 
-* Extended `Writer` class is provided
-which supports `print(int)` & `print(long)` methods
-like `PrintWriter`.
-
 
 ## Limitations ##
 
-* DoubDabC does not support negative values
-with the exception of `DecimalWriter`.
+* DoubDabC does not support negative values.
 Signed-values are treated as Unsigned-value
 like `Integer.toUnsignedString(int)`.
 Let's convert absolute value that follows minus\(-\) sign.
