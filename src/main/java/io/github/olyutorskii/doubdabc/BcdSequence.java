@@ -176,7 +176,7 @@ public class BcdSequence implements CharSequence{
         if(end > precision) throw new IndexOutOfBoundsException();
 
         copyChar(start, end);
-        String result =new String(this.charBuf, start, end - start);
+        String result = new String(this.charBuf, start, end - start);
 
         return result;
     }
@@ -190,7 +190,7 @@ public class BcdSequence implements CharSequence{
     public String toString(){
         int precision = this.decimal.getPrecision();
         buildChar();
-        String result =new String(this.charBuf, 0, precision);
+        String result = new String(this.charBuf, 0, precision);
         return result;
     }
 
