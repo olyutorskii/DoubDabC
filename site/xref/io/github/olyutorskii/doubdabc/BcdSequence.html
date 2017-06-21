@@ -184,7 +184,7 @@
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>         <strong class="jxr_keyword">if</strong>(end &gt; precision) <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IndexOutOfBoundsException();
 <a class="jxr_linenumber" name="L177" href="#L177">177</a> 
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>         copyChar(start, end);
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>         String result =<strong class="jxr_keyword">new</strong> String(<strong class="jxr_keyword">this</strong>.charBuf, start, end - start);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         String result = <strong class="jxr_keyword">new</strong> String(<strong class="jxr_keyword">this</strong>.charBuf, start, end - start);
 <a class="jxr_linenumber" name="L180" href="#L180">180</a> 
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>         <strong class="jxr_keyword">return</strong> result;
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>     }
@@ -198,7 +198,7 @@
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>     <strong class="jxr_keyword">public</strong> String toString(){
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>         <strong class="jxr_keyword">int</strong> precision = <strong class="jxr_keyword">this</strong>.decimal.getPrecision();
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>         buildChar();
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>         String result =<strong class="jxr_keyword">new</strong> String(<strong class="jxr_keyword">this</strong>.charBuf, 0, precision);
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         String result = <strong class="jxr_keyword">new</strong> String(<strong class="jxr_keyword">this</strong>.charBuf, 0, precision);
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>         <strong class="jxr_keyword">return</strong> result;
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>     }
 <a class="jxr_linenumber" name="L196" href="#L196">196</a> 

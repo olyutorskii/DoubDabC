@@ -176,7 +176,7 @@ public class BcdSequence implements CharSequence{
 <span class="fc bfc" id="L176" title="All 2 branches covered.">        if(end &gt; precision) throw new IndexOutOfBoundsException();</span>
 
 <span class="fc" id="L178">        copyChar(start, end);</span>
-<span class="fc" id="L179">        String result =new String(this.charBuf, start, end - start);</span>
+<span class="fc" id="L179">        String result = new String(this.charBuf, start, end - start);</span>
 
 <span class="fc" id="L181">        return result;</span>
     }
@@ -190,7 +190,7 @@ public class BcdSequence implements CharSequence{
     public String toString(){
 <span class="fc" id="L191">        int precision = this.decimal.getPrecision();</span>
 <span class="fc" id="L192">        buildChar();</span>
-<span class="fc" id="L193">        String result =new String(this.charBuf, 0, precision);</span>
+<span class="fc" id="L193">        String result = new String(this.charBuf, 0, precision);</span>
 <span class="fc" id="L194">        return result;</span>
     }
 
