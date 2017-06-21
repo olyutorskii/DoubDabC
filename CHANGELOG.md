@@ -4,6 +4,11 @@ DoubDabC Changelog
 ## WIP
 Released on 20XX-XX-XX
 
+## v2.101.4
+Released on 2017-06-22
+- Correspond to Maven 3.5
+- add JarabraDix info to README
+
 ## v2.101.2
 Released on 2017-04-24
 - Merge DecimalText and DecimalOut to BcdSequence

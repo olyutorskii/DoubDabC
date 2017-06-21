@@ -56,6 +56,13 @@ like `Integer.toUnsignedString(int)`.
 Let's convert absolute value that follows minus\(-\) sign.
 
 
+## What is the difference with [**JarabraDix**][JDX] ? ##
+
+* If you use binary integer value that fit in 'long' or 'int',
+and you have modern JVM and CPU that supports fast integer division,
+let's try **JarabraDix**.
+
+
 ## How to build ##
 
 * DoubDabC needs to use [Maven 3.0.1+](https://maven.apache.org/)
@@ -87,6 +94,7 @@ Just compile Java sources under `src/main/java/` if you don't use Maven.
 [PBCD]: https://en.wikipedia.org/wiki/Binary-coded_decimal#Packed_BCD "Packed Binary coded decimal"
 [BQCD]: https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal "Bi-quinary coded decimal"
 [LSFT]: https://en.wikipedia.org/wiki/Bitwise_operation#Bit_shifts "Left shift"
+[JDX]: https://github.com/olyutorskii/JarabraDix
 [MIT]: https://opensource.org/licenses/MIT
 
 
