@@ -425,6 +425,19 @@ public class BcdRegisterTest {
         assertEquals(10, precision);
         assertArrayEquals(new int[]{9,8,7,6,5,4,3,2,1,0}, result);
 
+
+        bs = new BcdRegister(9);
+
+        for(int ct = 0; ct < 29; ct++){
+            bs.pushLsb(1);
+        }
+
+        result = new int[9];
+        precision = bs.toIntArray(result, 0);
+
+        assertEquals(9, precision);
+        assertArrayEquals(new int[]{5, 3, 6, 8, 7, 0, 9, 1, 1}, result);
+
         return;
     }
 

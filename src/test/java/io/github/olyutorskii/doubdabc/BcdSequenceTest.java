@@ -345,6 +345,15 @@ public class BcdSequenceTest {
 
         bs.clear();
 
+        for(int ct = 0; ct < 29; ct++){
+            bs.pushLsb(1);
+        }
+
+        result = chseq.toString();
+        assertEquals("536870911", result);
+
+        bs.clear();
+
         result = chseq.toString();
         assertEquals("0", result);
 

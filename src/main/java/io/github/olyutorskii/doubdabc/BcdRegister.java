@@ -210,19 +210,17 @@ public class BcdRegister {
         int digitsCt = getPrecision();
         int addPos = digitsCt - 1;
 
-        for(int iVal : this.ibuf){
+        bufloop: for(int iVal : this.ibuf){
             for(int nblIdx = 0; nblIdx < PRIM_SLOTS; nblIdx++){
                 int shPos = nblIdx << 2;
                 //        = nblIdx * 4;
 
                 dst[offset + addPos] = (iVal >>> shPos) & NIBBLE_MASK;
 
-                if(addPos <= 0) break;
+                if(addPos <= 0) break bufloop;
 
                 addPos--;
             }
-
-            if(addPos <= 0) break;
         }
 
         return digitsCt;
