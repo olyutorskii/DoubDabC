@@ -6,11 +6,11 @@
 
 <!--
     Checkstyle modules
-    for Checkstyle 6.19(7.4) or later
+    for Checkstyle 6.18 or later
 
     [ http://checkstyle.sourceforge.net/ ]
 
-    Copyright(c) 2017 olyutorskii
+    Copyright(c) 2010 olyutorskii
 -->
 
 
@@ -82,6 +82,8 @@
 
         <property name="tabWidth" value="8"/>
         <property name="fileExtensions" value="java"/>
+
+        <module name="SuppressWarningsHolder" />
 
 
     <!-- Annotations -->
@@ -329,7 +331,7 @@
         <module name="OperatorWrap" />
         <module name="ParenPad" />
         <module name="SeparatorWrap" />
-        <module name="SingleSpaceSeparator" />
+        <!-- *6.19* module name="SingleSpaceSeparator" /-->
         <module name="TypecastParenPad" />
         <module name="WhitespaceAfter" >
             <property name="tokens" value="COMMA, SEMI,"/>

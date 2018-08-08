@@ -33,6 +33,10 @@
             <directory>${project.basedir}/src</directory>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/config</directory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
     </fileSets>
 
 </assembly>

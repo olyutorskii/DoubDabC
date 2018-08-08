@@ -6,11 +6,11 @@
 
 <!--
     Checkstyle suppressions
-    for Checkstyle 6.19(7.4) or later
+    for Checkstyle 6.19 or later
 
     [ http://checkstyle.sourceforge.net/ ]
 
-    Copyright(c) 2017 olyutorskii
+    Copyright(c) 2010 olyutorskii
 -->
 
 
@@ -26,6 +26,9 @@
 
     <!-- Imports -->
     <suppress files="" checks="ImportControl" />
+
+    <!-- Javadoc Comments -->
+    <suppress files="" checks="SummaryJavadocCheck" />
 
     <!-- Miscellaneous -->
     <suppress files="" checks="FinalParameters" />

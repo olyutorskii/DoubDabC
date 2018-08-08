@@ -4,6 +4,12 @@ DoubDabC Changelog
 ## WIP
 Released on 20XX-XX-XX
 
+## v2.101.6
+Released on 2018-08-08
+- BugFix: Missing copies when 8N+1 length decimal. Fixed #25
+- Move PMD & Checkstyle config files to folder.
+- Add Mersenne prime#32 (2^756839 -1) benchmark test.
+
 ## v2.101.4
 Released on 2017-06-22
 - Correspond to Maven 3.5
