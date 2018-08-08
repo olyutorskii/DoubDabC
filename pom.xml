@@ -93,10 +93,10 @@
 
         <jacoco-plugin.version>0.8.1</jacoco-plugin.version>
 
-        <checkstyle-plugin.version>2.17</checkstyle-plugin.version>
-        <checkstyleruntime.version>6.19</checkstyleruntime.version>
-        <checkstyle.config.location>${project.basedir}/checkstyle.xml</checkstyle.config.location>
-        <checkstyle.suppressions.location>${project.basedir}/checkstyle-suppressions.xml</checkstyle.suppressions.location>
+        <checkstyle-plugin.version>3.0.0</checkstyle-plugin.version>
+        <!-- checkstyleruntime.version>6.19</checkstyleruntime.version -->
+        <checkstyle.config.location>${project.basedir}/config/checkstyle/checkstyle.xml</checkstyle.config.location>
+        <checkstyle.suppressions.location>${project.basedir}/config/checkstyle/checkstyle-suppressions.xml</checkstyle.suppressions.location>
         <checkstyle.enable.rss>false</checkstyle.enable.rss>
 
         <pmd-plugin.version>3.10.0</pmd-plugin.version>
@@ -137,12 +137,12 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${checkstyle-plugin.version}</version>
                     <dependencies>
-                        <dependency>
+                        <!-- dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <!--artifactId>checkstyle-backport-jre6</artifactId-->
+                            <artifactId>checkstyle-backport-jre6</artifactId>
                             <version>${checkstyleruntime.version}</version>
-                        </dependency>
+                        </dependency -->
                     </dependencies>
                 </plugin>
 
