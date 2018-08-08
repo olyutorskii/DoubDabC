@@ -210,22 +210,20 @@ package io.github.olyutorskii.doubdabc;
 <span class="fc" id="L210">        int digitsCt = getPrecision();</span>
 <span class="fc" id="L211">        int addPos = digitsCt - 1;</span>
 
-<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        for(int iVal : this.ibuf){</span>
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        bufloop: for(int iVal : this.ibuf){</span>
 <span class="fc bfc" id="L214" title="All 2 branches covered.">            for(int nblIdx = 0; nblIdx &lt; PRIM_SLOTS; nblIdx++){</span>
 <span class="fc" id="L215">                int shPos = nblIdx &lt;&lt; 2;</span>
                 //        = nblIdx * 4;
 
 <span class="fc" id="L218">                dst[offset + addPos] = (iVal &gt;&gt;&gt; shPos) &amp; NIBBLE_MASK;</span>
 
-<span class="fc bfc" id="L220" title="All 2 branches covered.">                if(addPos &lt;= 0) break;</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                if(addPos &lt;= 0) break bufloop;</span>
 
 <span class="fc" id="L222">                addPos--;</span>
             }
-
-<span class="fc bfc" id="L225" title="All 2 branches covered.">            if(addPos &lt;= 0) break;</span>
         }
 
-<span class="fc" id="L228">        return digitsCt;</span>
+<span class="fc" id="L226">        return digitsCt;</span>
     }
 
     /**
@@ -238,12 +236,12 @@ package io.github.olyutorskii.doubdabc;
      */
     public boolean pushLsb(boolean carryOver){
         int pushInt;
-<span class="fc bfc" id="L241" title="All 2 branches covered.">        if(carryOver) pushInt = MSB_PRIMMASK;</span>
-<span class="fc" id="L242">        else          pushInt = 0;</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">        if(carryOver) pushInt = MSB_PRIMMASK;</span>
+<span class="fc" id="L240">        else          pushInt = 0;</span>
 
-<span class="fc" id="L244">        boolean result = pushLsb(pushInt);</span>
+<span class="fc" id="L242">        boolean result = pushLsb(pushInt);</span>
 
-<span class="fc" id="L246">        return result;</span>
+<span class="fc" id="L244">        return result;</span>
     }
 
     /**
@@ -255,25 +253,25 @@ package io.github.olyutorskii.doubdabc;
      * @return true if MSB overflow
      */
     public boolean pushLsb(int carryOver){
-<span class="fc" id="L258">        int lastMsbTest = carryOver;</span>
+<span class="fc" id="L256">        int lastMsbTest = carryOver;</span>
 
-<span class="fc" id="L260">        int buflen = this.ibuf.length;</span>
-<span class="fc bfc" id="L261" title="All 2 branches covered.">        for(int idx = 0; idx &lt; buflen; idx++){</span>
-<span class="fc" id="L262">            int oldVal = this.ibuf[idx];</span>
+<span class="fc" id="L258">        int buflen = this.ibuf.length;</span>
+<span class="fc bfc" id="L259" title="All 2 branches covered.">        for(int idx = 0; idx &lt; buflen; idx++){</span>
+<span class="fc" id="L260">            int oldVal = this.ibuf[idx];</span>
 
-<span class="fc" id="L264">            int fixVal = BcdUtils.toBiQuinary(oldVal);</span>
-<span class="fc" id="L265">            int newVal = fixVal &lt;&lt; 1;</span>
-<span class="fc bfc" id="L266" title="All 2 branches covered.">            if(lastMsbTest != 0) newVal |= LSB_PRIMMASK;</span>
+<span class="fc" id="L262">            int fixVal = BcdUtils.toBiQuinary(oldVal);</span>
+<span class="fc" id="L263">            int newVal = fixVal &lt;&lt; 1;</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">            if(lastMsbTest != 0) newVal |= LSB_PRIMMASK;</span>
 
-<span class="fc" id="L268">            this.ibuf[idx] = newVal;</span>
-<span class="fc" id="L269">            lastMsbTest = fixVal &amp; MSB_PRIMMASK;</span>
+<span class="fc" id="L266">            this.ibuf[idx] = newVal;</span>
+<span class="fc" id="L267">            lastMsbTest = fixVal &amp; MSB_PRIMMASK;</span>
         }
 
-<span class="fc" id="L272">        this.precision = -1;   // unknown precision</span>
-<span class="fc bfc" id="L273" title="All 2 branches covered.">        boolean result =</span>
+<span class="fc" id="L270">        this.precision = -1;   // unknown precision</span>
+<span class="fc bfc" id="L271" title="All 2 branches covered.">        boolean result =</span>
                 lastMsbTest != 0;
 
-<span class="fc" id="L276">        return result;</span>
+<span class="fc" id="L274">        return result;</span>
     }
 
     /**
@@ -290,16 +288,16 @@ package io.github.olyutorskii.doubdabc;
      * @return decimal precision.
      */
     public int getPrecision(){
-<span class="fc bfc" id="L293" title="All 2 branches covered.">        if(this.precision &gt; 0){</span>
-<span class="fc" id="L294">            return this.precision;</span>
+<span class="fc bfc" id="L291" title="All 2 branches covered.">        if(this.precision &gt; 0){</span>
+<span class="fc" id="L292">            return this.precision;</span>
         }
 
-<span class="fc" id="L297">        int result = calcPrecision();</span>
-<span class="fc bfc" id="L298" title="All 2 branches covered.">        if(result == 0) result = 1;</span>
+<span class="fc" id="L295">        int result = calcPrecision();</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">        if(result == 0) result = 1;</span>
 
-<span class="fc" id="L300">        this.precision = result;</span>
+<span class="fc" id="L298">        this.precision = result;</span>
 
-<span class="fc" id="L302">        return result;</span>
+<span class="fc" id="L300">        return result;</span>
     }
 
     /**
@@ -314,21 +312,21 @@ package io.github.olyutorskii.doubdabc;
      * @return decimal precision.
      */
     private int calcPrecision(){
-<span class="fc" id="L317">        int result = this.maxDigits;</span>
+<span class="fc" id="L315">        int result = this.maxDigits;</span>
 
-<span class="fc" id="L319">        int idxMax = this.ibuf.length - 1;</span>
-<span class="fc bfc" id="L320" title="All 2 branches covered.">        for(int iIdx = idxMax; iIdx &gt;= 0; iIdx--){</span>
-<span class="fc" id="L321">            int iVal = this.ibuf[iIdx];</span>
+<span class="fc" id="L317">        int idxMax = this.ibuf.length - 1;</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        for(int iIdx = idxMax; iIdx &gt;= 0; iIdx--){</span>
+<span class="fc" id="L319">            int iVal = this.ibuf[iIdx];</span>
 
-<span class="fc" id="L323">            int clz = BcdUtils.clzNibble(iVal);</span>
-<span class="fc" id="L324">            result -= clz;</span>
+<span class="fc" id="L321">            int clz = BcdUtils.clzNibble(iVal);</span>
+<span class="fc" id="L322">            result -= clz;</span>
 
-<span class="fc bfc" id="L326" title="All 2 branches covered.">            if(clz != PRIM_SLOTS){</span>
-<span class="fc" id="L327">                break;</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">            if(clz != PRIM_SLOTS){</span>
+<span class="fc" id="L325">                break;</span>
             }
         }
 
-<span class="fc" id="L331">        return result;</span>
+<span class="fc" id="L329">        return result;</span>
     }
 
     /**
@@ -339,33 +337,33 @@ package io.github.olyutorskii.doubdabc;
      */
     @Override
     public String toString(){
-<span class="fc" id="L342">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L340">        StringBuilder sb = new StringBuilder();</span>
 
-<span class="fc" id="L344">        boolean dumped = false;</span>
-<span class="fc" id="L345">        int validCols = getPrecision();</span>
-<span class="fc bfc" id="L346" title="All 2 branches covered.">        for(int colCt = validCols - 1; colCt &gt;= 0; colCt--){</span>
-<span class="fc" id="L347">            int iIdx   = colCt &gt;&gt;&gt; PRIMIDX_SHIFT;</span>
+<span class="fc" id="L342">        boolean dumped = false;</span>
+<span class="fc" id="L343">        int validCols = getPrecision();</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">        for(int colCt = validCols - 1; colCt &gt;= 0; colCt--){</span>
+<span class="fc" id="L345">            int iIdx   = colCt &gt;&gt;&gt; PRIMIDX_SHIFT;</span>
             //         = colCt / 8;
-<span class="fc" id="L349">            int nblIdx = colCt &amp; NBLIDX_MASK;</span>
+<span class="fc" id="L347">            int nblIdx = colCt &amp; NBLIDX_MASK;</span>
             //         = colCt % 8;
 
-<span class="fc" id="L352">            int iVal = this.ibuf[iIdx];</span>
-<span class="fc" id="L353">            int shiftWidth = nblIdx &lt;&lt; 2;</span>
+<span class="fc" id="L350">            int iVal = this.ibuf[iIdx];</span>
+<span class="fc" id="L351">            int shiftWidth = nblIdx &lt;&lt; 2;</span>
             //             = nblIdx * 4;
 
-<span class="fc" id="L356">            iVal &gt;&gt;&gt;= shiftWidth;</span>
-<span class="fc" id="L357">            int nibble = iVal &amp; NIBBLE_MASK;</span>
+<span class="fc" id="L354">            iVal &gt;&gt;&gt;= shiftWidth;</span>
+<span class="fc" id="L355">            int nibble = iVal &amp; NIBBLE_MASK;</span>
 
-<span class="fc bfc" id="L359" title="All 2 branches covered.">            if(dumped){</span>
-<span class="fc" id="L360">                sb.append(SP);</span>
+<span class="fc bfc" id="L357" title="All 2 branches covered.">            if(dumped){</span>
+<span class="fc" id="L358">                sb.append(SP);</span>
             }
 
-<span class="fc" id="L363">            dumpNibble(sb, nibble);</span>
-<span class="fc" id="L364">            dumped = true;</span>
+<span class="fc" id="L361">            dumpNibble(sb, nibble);</span>
+<span class="fc" id="L362">            dumped = true;</span>
         }
 
-<span class="fc" id="L367">        String result = sb.toString();</span>
-<span class="fc" id="L368">        return result;</span>
+<span class="fc" id="L365">        String result = sb.toString();</span>
+<span class="fc" id="L366">        return result;</span>
     }
 
     /**
@@ -377,30 +375,30 @@ package io.github.olyutorskii.doubdabc;
      * @param nibble BCD nibble value. (0 =&amp;lt; nibble &amp;lt; 10)
      */
     private void dumpNibble(StringBuilder sb, int nibble){
-<span class="fc" id="L380">        int b3 = (nibble &gt;&gt; 3) &amp; LSB_PRIMMASK;</span>
-<span class="fc" id="L381">        int b2 = (nibble &gt;&gt; 2) &amp; LSB_PRIMMASK;</span>
-<span class="fc" id="L382">        int b1 = (nibble &gt;&gt; 1) &amp; LSB_PRIMMASK;</span>
-<span class="fc" id="L383">        int b0 =  nibble       &amp; LSB_PRIMMASK;</span>
+<span class="fc" id="L378">        int b3 = (nibble &gt;&gt; 3) &amp; LSB_PRIMMASK;</span>
+<span class="fc" id="L379">        int b2 = (nibble &gt;&gt; 2) &amp; LSB_PRIMMASK;</span>
+<span class="fc" id="L380">        int b1 = (nibble &gt;&gt; 1) &amp; LSB_PRIMMASK;</span>
+<span class="fc" id="L381">        int b0 =  nibble       &amp; LSB_PRIMMASK;</span>
 
-<span class="fc" id="L385">        char c3 = HEXCH_TBL[b3];</span>
-<span class="fc" id="L386">        char c2 = HEXCH_TBL[b2];</span>
-<span class="fc" id="L387">        char c1 = HEXCH_TBL[b1];</span>
-<span class="fc" id="L388">        char c0 = HEXCH_TBL[b0];</span>
+<span class="fc" id="L383">        char c3 = HEXCH_TBL[b3];</span>
+<span class="fc" id="L384">        char c2 = HEXCH_TBL[b2];</span>
+<span class="fc" id="L385">        char c1 = HEXCH_TBL[b1];</span>
+<span class="fc" id="L386">        char c0 = HEXCH_TBL[b0];</span>
 
-<span class="fc" id="L390">        sb.append(c3);</span>
-<span class="fc" id="L391">        sb.append(c2);</span>
-<span class="fc" id="L392">        sb.append(c1);</span>
-<span class="fc" id="L393">        sb.append(c0);</span>
+<span class="fc" id="L388">        sb.append(c3);</span>
+<span class="fc" id="L389">        sb.append(c2);</span>
+<span class="fc" id="L390">        sb.append(c1);</span>
+<span class="fc" id="L391">        sb.append(c0);</span>
 
-<span class="pc bpc" id="L395" title="2 of 4 branches missed.">        assert nibble &lt; 16;</span>
-<span class="fc" id="L396">        char decCh = HEXCH_TBL[nibble];</span>
+<span class="pc bpc" id="L393" title="2 of 4 branches missed.">        assert nibble &lt; 16;</span>
+<span class="fc" id="L394">        char decCh = HEXCH_TBL[nibble];</span>
 
-<span class="fc" id="L398">        sb.append(CH_OPEN);</span>
-<span class="fc" id="L399">        sb.append(decCh);</span>
-<span class="fc" id="L400">        sb.append(CH_CLOSE);</span>
+<span class="fc" id="L396">        sb.append(CH_OPEN);</span>
+<span class="fc" id="L397">        sb.append(decCh);</span>
+<span class="fc" id="L398">        sb.append(CH_CLOSE);</span>
 
-<span class="fc" id="L402">        return;</span>
+<span class="fc" id="L400">        return;</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

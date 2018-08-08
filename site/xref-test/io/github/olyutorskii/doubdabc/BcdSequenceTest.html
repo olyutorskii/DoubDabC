@@ -353,15 +353,24 @@
 <a class="jxr_linenumber" name="L345" href="#L345">345</a> 
 <a class="jxr_linenumber" name="L346" href="#L346">346</a>         bs.clear();
 <a class="jxr_linenumber" name="L347" href="#L347">347</a> 
-<a class="jxr_linenumber" name="L348" href="#L348">348</a>         result = chseq.toString();
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>         assertEquals(<span class="jxr_string">"0"</span>, result);
-<a class="jxr_linenumber" name="L350" href="#L350">350</a> 
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>         <strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>     }
-<a class="jxr_linenumber" name="L353" href="#L353">353</a> 
-<a class="jxr_linenumber" name="L354" href="#L354">354</a> }
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>         <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> ct = 0; ct &lt; 29; ct++){
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>             bs.pushLsb(1);
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>         }
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> 
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         result = chseq.toString();
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>         assertEquals(<span class="jxr_string">"536870911"</span>, result);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> 
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>         bs.clear();
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>         result = chseq.toString();
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>         assertEquals(<span class="jxr_string">"0"</span>, result);
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> 
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>         <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>     }
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> 
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017 <a href="https://github.com/olyutorskii/DoubDabC">DoubDabC partners</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2018 <a href="https://github.com/olyutorskii/DoubDabC">DoubDabC partners</a>. All rights reserved.</div>
 </body>
 </html>

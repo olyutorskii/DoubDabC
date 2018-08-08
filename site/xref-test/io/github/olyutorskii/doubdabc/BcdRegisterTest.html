@@ -433,36 +433,49 @@
 <a class="jxr_linenumber" name="L425" href="#L425">425</a>         assertEquals(10, precision);
 <a class="jxr_linenumber" name="L426" href="#L426">426</a>         assertArrayEquals(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[]{9,8,7,6,5,4,3,2,1,0}, result);
 <a class="jxr_linenumber" name="L427" href="#L427">427</a> 
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>         <strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>     }
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> 
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>         bs = <strong class="jxr_keyword">new</strong> BcdRegister(9);
 <a class="jxr_linenumber" name="L430" href="#L430">430</a> 
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>     @Test
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMersennePrime(){
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>         System.out.println(<span class="jxr_string">"MersennePrime"</span>);
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>         <strong class="jxr_keyword">for</strong>(<strong class="jxr_keyword">int</strong> ct = 0; ct &lt; 29; ct++){
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>             bs.pushLsb(1);
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>         }
 <a class="jxr_linenumber" name="L434" href="#L434">434</a> 
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>         BcdRegister bs;
-<a class="jxr_linenumber" name="L436" href="#L436">436</a> 
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>         bs = <strong class="jxr_keyword">new</strong> BcdRegister(8);
-<a class="jxr_linenumber" name="L438" href="#L438">438</a>         assertEquals(8, bs.getMaxDigits());
-<a class="jxr_linenumber" name="L439" href="#L439">439</a> 
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>         TestValue.pushMersenne44(bs);
-<a class="jxr_linenumber" name="L441" href="#L441">441</a>         assertEquals(8, bs.getPrecision());
-<a class="jxr_linenumber" name="L442" href="#L442">442</a> 
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>         assertEquals(1, bs.getDigit(0));
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>         assertEquals(7, bs.getDigit(1));
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>         assertEquals(8, bs.getDigit(2));
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>         assertEquals(7, bs.getDigit(3));
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>         assertEquals(6, bs.getDigit(4));
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>         assertEquals(9, bs.getDigit(5));
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>         assertEquals(3, bs.getDigit(6));
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>         assertEquals(5, bs.getDigit(7));
-<a class="jxr_linenumber" name="L451" href="#L451">451</a> 
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>         <strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>     }
-<a class="jxr_linenumber" name="L454" href="#L454">454</a> 
-<a class="jxr_linenumber" name="L455" href="#L455">455</a> }
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>         result = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[9];
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>         precision = bs.toIntArray(result, 0);
+<a class="jxr_linenumber" name="L437" href="#L437">437</a> 
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>         assertEquals(9, precision);
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>         assertArrayEquals(<strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">int</strong>[]{5, 3, 6, 8, 7, 0, 9, 1, 1}, result);
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>         <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>     }
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> 
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>     @Test
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMersennePrime(){
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>         System.out.println(<span class="jxr_string">"MersennePrime"</span>);
+<a class="jxr_linenumber" name="L447" href="#L447">447</a> 
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         BcdRegister bs;
+<a class="jxr_linenumber" name="L449" href="#L449">449</a> 
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>         bs = <strong class="jxr_keyword">new</strong> BcdRegister(8);
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         assertEquals(8, bs.getMaxDigits());
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> 
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>         TestValue.pushMersenne44(bs);
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>         assertEquals(8, bs.getPrecision());
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> 
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         assertEquals(1, bs.getDigit(0));
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         assertEquals(7, bs.getDigit(1));
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>         assertEquals(8, bs.getDigit(2));
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>         assertEquals(7, bs.getDigit(3));
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         assertEquals(6, bs.getDigit(4));
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>         assertEquals(9, bs.getDigit(5));
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>         assertEquals(3, bs.getDigit(6));
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>         assertEquals(5, bs.getDigit(7));
+<a class="jxr_linenumber" name="L464" href="#L464">464</a> 
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>     }
+<a class="jxr_linenumber" name="L467" href="#L467">467</a> 
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017 <a href="https://github.com/olyutorskii/DoubDabC">DoubDabC partners</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2018 <a href="https://github.com/olyutorskii/DoubDabC">DoubDabC partners</a>. All rights reserved.</div>
 </body>
 </html>

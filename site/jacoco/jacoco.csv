@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 DoubDabC,io.github.olyutorskii.doubdabc,BitFeeder,11,154,3,21,3,42,3,15,1,5
-DoubDabC,io.github.olyutorskii.doubdabc,BcdArrays,11,157,3,23,3,42,3,13,1,2
-DoubDabC,io.github.olyutorskii.doubdabc,BcdUtils,15,377,5,33,3,81,5,20,1,5
 DoubDabC,io.github.olyutorskii.doubdabc,BcdSequence,0,223,0,14,0,52,0,19,0,12
-DoubDabC,io.github.olyutorskii.doubdabc,BcdRegister,10,473,6,36,0,105,6,29,0,14
+DoubDabC,io.github.olyutorskii.doubdabc,BcdUtils,15,377,5,33,3,81,5,20,1,5
+DoubDabC,io.github.olyutorskii.doubdabc,BcdRegister,10,470,6,34,0,104,6,28,0,14
+DoubDabC,io.github.olyutorskii.doubdabc,BcdArrays,11,157,3,23,3,42,3,13,1,2
