@@ -87,11 +87,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <site.locales>en</site.locales>
-        <javadoc.locale>en</javadoc.locale>
+        <locale>en</locale>
+        <site.locales>${locale}</site.locales>
+        <javadoc.locale>${locale}</javadoc.locale>
         <findbugs.jvmArgs>-Duser.language=en</findbugs.jvmArgs>
 
-        <jacoco-plugin.version>0.8.2</jacoco-plugin.version>
+        <!-- Walk around: JDK 11 javadoc + Maven -->
+        <detectJavaApiLink>false</detectJavaApiLink>
+
+        <surefire-plugin.version>3.0.0-M3</surefire-plugin.version>
+        <jacoco-plugin.version>0.8.3</jacoco-plugin.version>
 
         <checkstyle-plugin.version>3.0.0</checkstyle-plugin.version>
         <checkstyleruntime.version>8.18</checkstyleruntime.version>
@@ -229,7 +234,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>${surefire-plugin.version}</version>
                 <configuration>
                     <enableAssertions>true</enableAssertions>
                 </configuration>
@@ -279,7 +284,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.1</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -347,7 +352,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.1</version>
                 <configuration>
                     <descriptors>
                         <descriptor>src/assembly/src.xml</descriptor>
@@ -420,15 +425,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.0</version>
                 <configuration>
                     <author>false</author>
                     <notimestamp>true</notimestamp>
                     <quiet>true</quiet>
                     <show>protected</show>
-                    <locale>${javadoc.locale}</locale>
                     <header>${project.name} ${project.version} API</header>
                     <version>true</version>
+                    <locale>${javadoc.locale}</locale>
+                    <!-- for JDK11 javadoc -->
+                    <additionalJOption>-J-Duser.language=${javadoc.locale}</additionalJOption>
                 </configuration>
                 <reportSets>
                     <reportSet>
@@ -448,7 +455,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>${surefire-plugin.version}</version>
             </plugin>
 
             <plugin>
