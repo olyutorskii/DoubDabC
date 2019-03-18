@@ -65,8 +65,8 @@ let's try **JarabraDix**.
 
 ## How to build ##
 
-* DoubDabC needs to use [Maven 3.0.1+](https://maven.apache.org/)
-and JDK 1.7+ to be built.
+* DoubDabC needs to use [Maven 3.3.9+](https://maven.apache.org/)
+and JDK 1.8+ to be built.
 
 * DoubDabC runtime does not depend on any other library at all.
 Just compile Java sources under `src/main/java/` if you don't use Maven.
