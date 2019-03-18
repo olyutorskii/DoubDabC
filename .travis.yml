@@ -12,7 +12,6 @@ jdk:
   - openjdk10
   - openjdk9
   - openjdk8
-  - openjdk7
 
 cache:
  directories:
