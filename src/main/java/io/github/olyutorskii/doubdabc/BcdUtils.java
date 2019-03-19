@@ -42,21 +42,17 @@ public final class BcdUtils {
         // build lookup table for Packed-BCD to Bi-quinary conversion
         BQ_TBL = new int[256];
 
+        int[] bqline = new int[]{
+            0x00, 0x01, 0x02, 0x03, 0x04,
+            0x08, 0x09, 0x0a, 0x0b, 0x0c,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        };
+
         int idx = 0;
-        for(int highDec = 0; highDec < 16; highDec++){
-            int highBq;
-            if     (highDec >= 10) highBq = 0x0;
-            else if(highDec >=  5) highBq = highDec + 3;
-            else                   highBq = highDec;
-
-            for(int lowDec = 0; lowDec < 16; lowDec++){
-                int lowBq;
-                if     (lowDec >= 10) lowBq = 0x0;
-                else if(lowDec >=  5) lowBq = lowDec + 3;
-                else                  lowBq = lowDec;
-
-                int bqNblNbl = (highBq << BCD_BITSIZE) | lowBq;
-
+        for(int highDec : bqline){
+            int highSft = highDec << BCD_BITSIZE;
+            for(int lowDec : bqline){
+                int bqNblNbl = highSft | lowDec;
                 BQ_TBL[idx++] = bqNblNbl;
             }
         }

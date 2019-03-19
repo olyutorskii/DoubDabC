@@ -5,10 +5,13 @@ language: java
 sudo: false
 
 jdk:
+  - oraclejdk11
   - oraclejdk9
   - oraclejdk8
+  - openjdk11
+  - openjdk10
+  - openjdk9
   - openjdk8
-  - openjdk7
 
 cache:
  directories:
