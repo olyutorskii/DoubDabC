@@ -4,6 +4,10 @@ DoubDabC Changelog
 ## WIP
 Released on 20XX-XX-XX
 
+## v2.101.8
+Released on 2019-03-19
+- responding to checkstyle security issue CVE-2019-9658
+
 ## v2.101.6
 Released on 2018-08-08
 - BugFix: Missing copies when 8N+1 length decimal. Fixed #25
