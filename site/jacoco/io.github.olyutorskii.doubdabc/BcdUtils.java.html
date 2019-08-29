@@ -42,35 +42,31 @@ package io.github.olyutorskii.doubdabc;
         // build lookup table for Packed-BCD to Bi-quinary conversion
 <span class="fc" id="L43">        BQ_TBL = new int[256];</span>
 
-<span class="fc" id="L45">        int idx = 0;</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        for(int highDec = 0; highDec &lt; 16; highDec++){</span>
-            int highBq;
-<span class="fc bfc" id="L48" title="All 2 branches covered.">            if     (highDec &gt;= 10) highBq = 0x0;</span>
-<span class="fc bfc" id="L49" title="All 2 branches covered.">            else if(highDec &gt;=  5) highBq = highDec + 3;</span>
-<span class="fc" id="L50">            else                   highBq = highDec;</span>
+<span class="fc" id="L45">        int[] bqline = new int[]{</span>
+            0x00, 0x01, 0x02, 0x03, 0x04,
+            0x08, 0x09, 0x0a, 0x0b, 0x0c,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        };
 
-<span class="fc bfc" id="L52" title="All 2 branches covered.">            for(int lowDec = 0; lowDec &lt; 16; lowDec++){</span>
-                int lowBq;
-<span class="fc bfc" id="L54" title="All 2 branches covered.">                if     (lowDec &gt;= 10) lowBq = 0x0;</span>
-<span class="fc bfc" id="L55" title="All 2 branches covered.">                else if(lowDec &gt;=  5) lowBq = lowDec + 3;</span>
-<span class="fc" id="L56">                else                  lowBq = lowDec;</span>
-
-<span class="fc" id="L58">                int bqNblNbl = (highBq &lt;&lt; BCD_BITSIZE) | lowBq;</span>
-
-<span class="fc" id="L60">                BQ_TBL[idx++] = bqNblNbl;</span>
+<span class="fc" id="L51">        int idx = 0;</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        for(int highDec : bqline){</span>
+<span class="fc" id="L53">            int highSft = highDec &lt;&lt; BCD_BITSIZE;</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            for(int lowDec : bqline){</span>
+<span class="fc" id="L55">                int bqNblNbl = highSft | lowDec;</span>
+<span class="fc" id="L56">                BQ_TBL[idx++] = bqNblNbl;</span>
             }
         }
 
-<span class="pc bpc" id="L64" title="2 of 4 branches missed.">        assert idx == BQ_TBL.length;</span>
-<span class="fc" id="L65">    }</span>
+<span class="pc bpc" id="L60" title="2 of 4 branches missed.">        assert idx == BQ_TBL.length;</span>
+<span class="fc" id="L61">    }</span>
 
 
     /**
      * Hiden constructor.
      */
-<span class="nc" id="L71">    private BcdUtils(){</span>
-<span class="nc bnc" id="L72" title="All 2 branches missed.">        assert false;</span>
-<span class="nc" id="L73">    }</span>
+<span class="nc" id="L67">    private BcdUtils(){</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        assert false;</span>
+<span class="nc" id="L69">    }</span>
 
 
     /**
@@ -88,21 +84,21 @@ package io.github.olyutorskii.doubdabc;
      * @return modified value
      */
     public static int toBiQuinary(int iVal){
-<span class="fc" id="L91">        int idx3 = iVal &gt;&gt;&gt; 24;</span>
-<span class="fc" id="L92">        int idx2 = iVal &gt;&gt;&gt; 16 &amp; BYTE_MASK;</span>
-<span class="fc" id="L93">        int idx1 = iVal &gt;&gt;&gt;  8 &amp; BYTE_MASK;</span>
-<span class="fc" id="L94">        int idx0 = iVal        &amp; BYTE_MASK;</span>
+<span class="fc" id="L87">        int idx3 = iVal &gt;&gt;&gt; 24;</span>
+<span class="fc" id="L88">        int idx2 = iVal &gt;&gt;&gt; 16 &amp; BYTE_MASK;</span>
+<span class="fc" id="L89">        int idx1 = iVal &gt;&gt;&gt;  8 &amp; BYTE_MASK;</span>
+<span class="fc" id="L90">        int idx0 = iVal        &amp; BYTE_MASK;</span>
 
-<span class="fc" id="L96">        int b3 = BQ_TBL[idx3];</span>
-<span class="fc" id="L97">        int b2 = BQ_TBL[idx2];</span>
-<span class="fc" id="L98">        int b1 = BQ_TBL[idx1];</span>
-<span class="fc" id="L99">        int b0 = BQ_TBL[idx0];</span>
+<span class="fc" id="L92">        int b3 = BQ_TBL[idx3];</span>
+<span class="fc" id="L93">        int b2 = BQ_TBL[idx2];</span>
+<span class="fc" id="L94">        int b1 = BQ_TBL[idx1];</span>
+<span class="fc" id="L95">        int b0 = BQ_TBL[idx0];</span>
 
-<span class="fc" id="L101">        int result =</span>
+<span class="fc" id="L97">        int result =</span>
                   ((b3 &lt;&lt; BYTE_BITSIZE) | b2) &lt;&lt; 16
                 | ((b1 &lt;&lt; BYTE_BITSIZE) | b0);
 
-<span class="fc" id="L105">        return result;</span>
+<span class="fc" id="L101">        return result;</span>
     }
 
     /**
@@ -124,38 +120,38 @@ package io.github.olyutorskii.doubdabc;
 
         int bVal;
 
-<span class="fc" id="L127">        bVal = (int) (lVal &gt;&gt;&gt; 56);</span>
-<span class="fc" id="L128">        result = BQ_TBL[bVal];</span>
+<span class="fc" id="L123">        bVal = (int) (lVal &gt;&gt;&gt; 56);</span>
+<span class="fc" id="L124">        result = BQ_TBL[bVal];</span>
 
-<span class="fc" id="L130">        bVal = (int) ((lVal &gt;&gt;&gt; 48) &amp; BYTE_MASK);</span>
+<span class="fc" id="L126">        bVal = (int) ((lVal &gt;&gt;&gt; 48) &amp; BYTE_MASK);</span>
+<span class="fc" id="L127">        result &lt;&lt;= BYTE_BITSIZE;</span>
+<span class="fc" id="L128">        result |= BQ_TBL[bVal];</span>
+
+<span class="fc" id="L130">        bVal = (int) ((lVal &gt;&gt;&gt; 40) &amp; BYTE_MASK);</span>
 <span class="fc" id="L131">        result &lt;&lt;= BYTE_BITSIZE;</span>
 <span class="fc" id="L132">        result |= BQ_TBL[bVal];</span>
 
-<span class="fc" id="L134">        bVal = (int) ((lVal &gt;&gt;&gt; 40) &amp; BYTE_MASK);</span>
+<span class="fc" id="L134">        bVal = (int) ((lVal &gt;&gt;&gt; 32) &amp; BYTE_MASK);</span>
 <span class="fc" id="L135">        result &lt;&lt;= BYTE_BITSIZE;</span>
 <span class="fc" id="L136">        result |= BQ_TBL[bVal];</span>
 
-<span class="fc" id="L138">        bVal = (int) ((lVal &gt;&gt;&gt; 32) &amp; BYTE_MASK);</span>
+<span class="fc" id="L138">        bVal = (int) ((lVal &gt;&gt;&gt; 24) &amp; BYTE_MASK);</span>
 <span class="fc" id="L139">        result &lt;&lt;= BYTE_BITSIZE;</span>
 <span class="fc" id="L140">        result |= BQ_TBL[bVal];</span>
 
-<span class="fc" id="L142">        bVal = (int) ((lVal &gt;&gt;&gt; 24) &amp; BYTE_MASK);</span>
+<span class="fc" id="L142">        bVal = (int) ((lVal &gt;&gt;&gt; 16) &amp; BYTE_MASK);</span>
 <span class="fc" id="L143">        result &lt;&lt;= BYTE_BITSIZE;</span>
 <span class="fc" id="L144">        result |= BQ_TBL[bVal];</span>
 
-<span class="fc" id="L146">        bVal = (int) ((lVal &gt;&gt;&gt; 16) &amp; BYTE_MASK);</span>
+<span class="fc" id="L146">        bVal = (int) ((lVal &gt;&gt;&gt; 8) &amp; BYTE_MASK);</span>
 <span class="fc" id="L147">        result &lt;&lt;= BYTE_BITSIZE;</span>
 <span class="fc" id="L148">        result |= BQ_TBL[bVal];</span>
 
-<span class="fc" id="L150">        bVal = (int) ((lVal &gt;&gt;&gt; 8) &amp; BYTE_MASK);</span>
+<span class="fc" id="L150">        bVal = (int) (lVal &amp; BYTE_MASK);</span>
 <span class="fc" id="L151">        result &lt;&lt;= BYTE_BITSIZE;</span>
 <span class="fc" id="L152">        result |= BQ_TBL[bVal];</span>
 
-<span class="fc" id="L154">        bVal = (int) (lVal &amp; BYTE_MASK);</span>
-<span class="fc" id="L155">        result &lt;&lt;= BYTE_BITSIZE;</span>
-<span class="fc" id="L156">        result |= BQ_TBL[bVal];</span>
-
-<span class="fc" id="L158">        return result;</span>
+<span class="fc" id="L154">        return result;</span>
     }
 
     /**
@@ -175,34 +171,34 @@ package io.github.olyutorskii.doubdabc;
      * @return Zero nibbles
      */
     public static int clzNibble(int iVal){
-<span class="fc bfc" id="L178" title="All 2 branches covered.">        if(iVal == 0){</span>
-<span class="fc" id="L179">            return INT_SLOTS;</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if(iVal == 0){</span>
+<span class="fc" id="L175">            return INT_SLOTS;</span>
         }
 
         int b2;
-<span class="fc bfc" id="L183" title="All 2 branches covered.">        if((iVal &amp; 0xff_ff_00_00) == 0){</span>
-<span class="fc" id="L184">            b2 = 0b0100;</span>
-<span class="fc" id="L185">            iVal &lt;&lt;= 16;</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if((iVal &amp; 0xff_ff_00_00) == 0){</span>
+<span class="fc" id="L180">            b2 = 0b0100;</span>
+<span class="fc" id="L181">            iVal &lt;&lt;= 16;</span>
         }else{
-<span class="fc" id="L187">            b2 = 0b0000;</span>
+<span class="fc" id="L183">            b2 = 0b0000;</span>
         }
 
         int b1;
-<span class="fc bfc" id="L191" title="All 2 branches covered.">        if((iVal &amp; 0xff_00_00_00) == 0){</span>
-<span class="fc" id="L192">            b1 = 0b0010;</span>
-<span class="fc" id="L193">            iVal &lt;&lt;= 8;</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        if((iVal &amp; 0xff_00_00_00) == 0){</span>
+<span class="fc" id="L188">            b1 = 0b0010;</span>
+<span class="fc" id="L189">            iVal &lt;&lt;= 8;</span>
         }else{
-<span class="fc" id="L195">            b1 = 0b0000;</span>
+<span class="fc" id="L191">            b1 = 0b0000;</span>
         }
 
         int b0;
-<span class="fc bfc" id="L199" title="All 2 branches covered.">        if((iVal &amp; 0xf0_00_00_00) == 0){</span>
-<span class="fc" id="L200">            b0 = 0b0001;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if((iVal &amp; 0xf0_00_00_00) == 0){</span>
+<span class="fc" id="L196">            b0 = 0b0001;</span>
         }else{
-<span class="fc" id="L202">            b0 = 0b0000;</span>
+<span class="fc" id="L198">            b0 = 0b0000;</span>
         }
 
-<span class="fc" id="L205">        return b2 | b1 | b0;</span>
+<span class="fc" id="L201">        return b2 | b1 | b0;</span>
     }
 
     /**
@@ -222,43 +218,43 @@ package io.github.olyutorskii.doubdabc;
      * @return Zero nibbles
      */
     public static int clzNibble(long lVal){
-<span class="fc bfc" id="L225" title="All 2 branches covered.">        if(lVal == 0){</span>
-<span class="fc" id="L226">            return LONG_SLOTS;</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if(lVal == 0){</span>
+<span class="fc" id="L222">            return LONG_SLOTS;</span>
         }
 
         int b3;
-<span class="fc bfc" id="L230" title="All 2 branches covered.">        if((lVal &amp; 0xff_ff_ff_ff_00_00_00_00L) == 0){</span>
-<span class="fc" id="L231">            b3 = 0b1000;</span>
-<span class="fc" id="L232">            lVal &lt;&lt;= 32;</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        if((lVal &amp; 0xff_ff_ff_ff_00_00_00_00L) == 0){</span>
+<span class="fc" id="L227">            b3 = 0b1000;</span>
+<span class="fc" id="L228">            lVal &lt;&lt;= 32;</span>
         }else{
-<span class="fc" id="L234">            b3 = 0b0000;</span>
+<span class="fc" id="L230">            b3 = 0b0000;</span>
         }
 
         int b2;
-<span class="fc bfc" id="L238" title="All 2 branches covered.">        if((lVal &amp; 0xff_ff_00_00_00_00_00_00L) == 0){</span>
-<span class="fc" id="L239">            b2 = 0b0100;</span>
-<span class="fc" id="L240">            lVal &lt;&lt;= 16;</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        if((lVal &amp; 0xff_ff_00_00_00_00_00_00L) == 0){</span>
+<span class="fc" id="L235">            b2 = 0b0100;</span>
+<span class="fc" id="L236">            lVal &lt;&lt;= 16;</span>
         }else{
-<span class="fc" id="L242">            b2 = 0b0000;</span>
+<span class="fc" id="L238">            b2 = 0b0000;</span>
         }
 
         int b1;
-<span class="fc bfc" id="L246" title="All 2 branches covered.">        if((lVal &amp; 0xff_00_00_00_00_00_00_00L) == 0){</span>
-<span class="fc" id="L247">            b1 = 0b0010;</span>
-<span class="fc" id="L248">            lVal &lt;&lt;= 8;</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        if((lVal &amp; 0xff_00_00_00_00_00_00_00L) == 0){</span>
+<span class="fc" id="L243">            b1 = 0b0010;</span>
+<span class="fc" id="L244">            lVal &lt;&lt;= 8;</span>
         }else{
-<span class="fc" id="L250">            b1 = 0b0000;</span>
+<span class="fc" id="L246">            b1 = 0b0000;</span>
         }
 
         int b0;
-<span class="fc bfc" id="L254" title="All 2 branches covered.">        if((lVal &amp; 0xf0_00_00_00_00_00_00_00L) == 0){</span>
-<span class="fc" id="L255">            b0 = 0b0001;</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">        if((lVal &amp; 0xf0_00_00_00_00_00_00_00L) == 0){</span>
+<span class="fc" id="L251">            b0 = 0b0001;</span>
         }else{
-<span class="fc" id="L257">            b0 = 0b0000;</span>
+<span class="fc" id="L253">            b0 = 0b0000;</span>
         }
 
-<span class="fc" id="L260">        return (b3 | b2) | (b1 | b0);</span>
+<span class="fc" id="L256">        return (b3 | b2) | (b1 | b0);</span>
     }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>

@@ -21,7 +21,7 @@
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;Any value on register was cleared before feeding.</em>
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../io/github/olyutorskii/doubdabc/BitFeeder.html">BitFeeder</a> {
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a name="BitFeeder" href="../../../../io/github/olyutorskii/doubdabc/BitFeeder.html#BitFeeder">BitFeeder</a> {
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong>  MSB_INTMASK  = 0b1  &lt;&lt; (Integer.SIZE - 1);
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> MSB_LONGMASK = 0b1L &lt;&lt; (Long.SIZE    - 1);
@@ -30,7 +30,7 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment">     * Hidden constructor.</em>
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">private</strong> <a href="../../../../io/github/olyutorskii/doubdabc/BitFeeder.html">BitFeeder</a>(){
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">private</strong> <a name="BitFeeder" href="../../../../io/github/olyutorskii/doubdabc/BitFeeder.html#BitFeeder">BitFeeder</a>(){
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>          assert false;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      }
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">     * @param iVal 32bit integer</em>
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">     * @return true if MSB overflow</em>
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedUInt32(<a href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html">BcdRegister</a> bs, <strong class="jxr_keyword">int</strong> iVal){
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedUInt32(<a name="BcdRegister" href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html#BcdRegister">BcdRegister</a> bs, <strong class="jxr_keyword">int</strong> iVal){
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          bs.clear();
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>          <strong class="jxr_keyword">boolean</strong> skipping = <strong class="jxr_keyword">true</strong>;
@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">     * @param lVal 64bit integer</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     * @return true if MSB overflow</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedUInt64(<a href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html">BcdRegister</a> bs, <strong class="jxr_keyword">long</strong> lVal){
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedUInt64(<a name="BcdRegister" href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html#BcdRegister">BcdRegister</a> bs, <strong class="jxr_keyword">long</strong> lVal){
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          bs.clear();
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          <strong class="jxr_keyword">boolean</strong> skipping = <strong class="jxr_keyword">true</strong>;
@@ -113,7 +113,7 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a> <em class="jxr_javadoccomment">     * @param bigInt big integer</em>
 <a class="jxr_linenumber" name="L106" href="#L106">106</a> <em class="jxr_javadoccomment">     * @return true if MSB overflow</em>
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedBigInteger(<a href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html">BcdRegister</a> bs, BigInteger bigInt){
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedBigInteger(<a name="BcdRegister" href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html#BcdRegister">BcdRegister</a> bs, BigInteger bigInt){
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>         bs.clear();
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> 
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">boolean</strong> result = false;
@@ -139,7 +139,7 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">     * @param bitSet bit set</em>
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     * @return true if MSB overflow</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedBitSet(<a href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html">BcdRegister</a> bs, BitSet bitSet){
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> feedBitSet(<a name="BcdRegister" href="../../../../io/github/olyutorskii/doubdabc/BcdRegister.html#BcdRegister">BcdRegister</a> bs, BitSet bitSet){
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>         bs.clear();
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>         <strong class="jxr_keyword">int</strong> msbPos = bitSet.length() - 1;
@@ -157,6 +157,6 @@
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2018 <a href="https://github.com/olyutorskii/DoubDabC">DoubDabC partners</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2019 <a href="https://github.com/olyutorskii/DoubDabC">DoubDabC partners</a>. All rights reserved.</div>
 </body>
 </html>
