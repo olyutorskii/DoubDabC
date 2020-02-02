@@ -99,7 +99,7 @@
         <jacoco-plugin.version>0.8.3</jacoco-plugin.version>
 
         <checkstyle-plugin.version>3.0.0</checkstyle-plugin.version>
-        <checkstyleruntime.version>8.18</checkstyleruntime.version>
+        <checkstyleruntime.version>8.29</checkstyleruntime.version>
         <checkstyle.config.location>${project.basedir}/config/checkstyle/checkstyle.xml</checkstyle.config.location>
         <checkstyle.suppressions.location>${project.basedir}/config/checkstyle/checkstyle-suppressions.xml</checkstyle.suppressions.location>
         <checkstyle.enable.rss>false</checkstyle.enable.rss>
