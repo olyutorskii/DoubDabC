@@ -4,6 +4,10 @@ DoubDabC Changelog
 ## WIP
 Released on 20XX-XX-XX
 
+## v2.101.10
+Released on 2020-02-02
+- responding to checkstyle security issue GHSA-763g-fqq7-48wg
+
 ## v2.101.8
 Released on 2019-03-19
 - responding to checkstyle security issue CVE-2019-9658
