@@ -6,7 +6,7 @@
 
 <!--
     Checkstyle modules
-    for Checkstyle 8.29 or later
+    for Checkstyle 8.30 or later
 
     [ https://checkstyle.org/ ]
 
@@ -151,6 +151,7 @@
     <!-- Coding -->
 
         <module name="ArrayTrailingComma" />
+        <module name="AvoidDoubleBraceInitialization" />
         <module name="AvoidInlineConditionals" />
         <module name="AvoidNoArgumentSuperConstructorCall" />
         <module name="CovariantEquals" />

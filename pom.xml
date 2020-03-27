@@ -245,6 +245,13 @@
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
                     <version>4.0.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>4.0.1</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
 
             </plugins>
@@ -404,7 +411,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
                     <rulesets>
-                        <ruleset>${project.basedir}/config/pmd/pmdrules.xml</ruleset>
+                        <ruleset>config/pmd/pmdrules.xml</ruleset>
                     </rulesets>
                 </configuration>
             </plugin>
