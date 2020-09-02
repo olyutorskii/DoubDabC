@@ -6,7 +6,7 @@
 
 <!--
     Checkstyle modules
-    for Checkstyle 8.29 or later
+    for Checkstyle 8.36 or later
 
     [ https://checkstyle.org/ ]
 
@@ -151,6 +151,7 @@
     <!-- Coding -->
 
         <module name="ArrayTrailingComma" />
+        <module name="AvoidDoubleBraceInitialization" />
         <module name="AvoidInlineConditionals" />
         <module name="AvoidNoArgumentSuperConstructorCall" />
         <module name="CovariantEquals" />
@@ -205,6 +206,7 @@
         <module name="SuperClone" />
         <module name="SuperFinalize" />
         <module name="UnnecessaryParentheses" />
+        <module name="UnnecessarySemicolonAfterOuterTypeDeclaration" />
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration" />
         <module name="UnnecessarySemicolonInEnumeration" />
         <module name="UnnecessarySemicolonInTryWithResources" />
@@ -230,6 +232,7 @@
         <module name="JavadocBlockTagLocation" />
         <module name="JavadocContentLocationCheck" />
         <module name="JavadocMethod" />
+        <module name="JavadocMissingWhitespaceAfterAsterisk" />
         <module name="JavadocParagraph" />
         <module name="JavadocStyle">
             <property
@@ -277,6 +280,7 @@
         <module name="Indentation">
             <property name="caseIndent" value="0" />
         </module>
+        <module name="NoCodeInFile" />
         <module name="OuterTypeFilename" />
         <module name="TodoComment">
             <property name="format" value="TODO" />
@@ -301,6 +305,7 @@
         <module name="CatchParameterName" />
         <module name="ClassTypeParameterName" />
         <module name="ConstantName" />
+        <module name="IllegalIdentifierName" />
         <module name="InterfaceTypeParameterName" />
         <module name="LambdaParameterName" />
         <module name="LocalFinalVariableName" />
@@ -310,6 +315,8 @@
         <module name="MethodTypeParameterName" />
         <module name="PackageName" />
         <module name="ParameterName" />
+        <module name="PatternVariableName" />
+        <module name="RecordTypeParameterName" />
         <module name="StaticVariableName" />
         <module name="TypeName" />
 
@@ -340,6 +347,7 @@
         <module name="MethodLength" />
         <module name="OuterTypeNumber" />
         <module name="ParameterNumber" />
+        <module name="RecordComponentNumber" />
 
 
     <!-- Whitespace -->
