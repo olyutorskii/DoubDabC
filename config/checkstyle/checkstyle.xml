@@ -6,7 +6,7 @@
 
 <!--
     Checkstyle modules
-    for Checkstyle 8.33 or later
+    for Checkstyle 8.36 or later
 
     [ https://checkstyle.org/ ]
 
@@ -305,6 +305,7 @@
         <module name="CatchParameterName" />
         <module name="ClassTypeParameterName" />
         <module name="ConstantName" />
+        <module name="IllegalIdentifierName" />
         <module name="InterfaceTypeParameterName" />
         <module name="LambdaParameterName" />
         <module name="LocalFinalVariableName" />
@@ -314,6 +315,8 @@
         <module name="MethodTypeParameterName" />
         <module name="PackageName" />
         <module name="ParameterName" />
+        <module name="PatternVariableName" />
+        <module name="RecordTypeParameterName" />
         <module name="StaticVariableName" />
         <module name="TypeName" />
 
@@ -344,6 +347,7 @@
         <module name="MethodLength" />
         <module name="OuterTypeNumber" />
         <module name="ParameterNumber" />
+        <module name="RecordComponentNumber" />
 
 
     <!-- Whitespace -->
