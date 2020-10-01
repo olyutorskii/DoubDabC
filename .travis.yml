@@ -6,6 +6,7 @@ sudo: false
 
 jdk:
   - oraclejdk11
+  - openjdk15
   - openjdk14
   - openjdk13
   - openjdk12
