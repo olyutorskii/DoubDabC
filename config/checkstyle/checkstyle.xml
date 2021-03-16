@@ -6,7 +6,7 @@
 
 <!--
     Checkstyle modules
-    for Checkstyle 8.37 or later
+    for Checkstyle 8.40 or later
 
     [ https://checkstyle.org/ ]
 
@@ -179,6 +179,7 @@
         <module name="IllegalType" />
         <module name="InnerAssignment" />
         <module name="MagicNumber" />
+        <module name="MatchXpath" />
         <module name="MissingCtor" />
         <module name="MissingSwitchDefault" />
         <module name="ModifiedControlVariable" />
@@ -232,6 +233,7 @@
         <module name="JavadocBlockTagLocation" />
         <module name="JavadocContentLocationCheck" />
         <module name="JavadocMethod" />
+        <module name="JavadocMissingLeadingAsterisk" />
         <module name="JavadocMissingWhitespaceAfterAsterisk" />
         <module name="JavadocParagraph" />
         <module name="JavadocStyle">
@@ -316,6 +318,7 @@
         <module name="PackageName" />
         <module name="ParameterName" />
         <module name="PatternVariableName" />
+        <module name="RecordComponentName" />
         <module name="RecordTypeParameterName" />
         <module name="StaticVariableName" />
         <module name="TypeName" />
