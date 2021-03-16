@@ -6,7 +6,7 @@
 
 <!--
     Checkstyle modules
-    for Checkstyle 8.36 or later
+    for Checkstyle 8.37 or later
 
     [ https://checkstyle.org/ ]
 
@@ -20,7 +20,7 @@
     <property name="localeCountry" value="JP" />
     <property name="localeLanguage" value="en" />
     <!--property name="localeLanguage" value="ja" /-->
-    <property name="fileExtensions" value="java, properties, xml, md, txt" />
+    <property name="fileExtensions" value="java, properties, xml, xsd, md, txt" />
     <property name="severity" value="error" />
 
 
@@ -54,7 +54,7 @@
     <!-- Miscellaneous -->
 
     <module name="NewlineAtEndOfFile">
-        <property name="fileExtensions" value="java, properties, xml, md, txt" />
+        <property name="fileExtensions" value="java, properties, xml, xsd, md, txt" />
     </module>
     <module name="OrderedProperties" />
     <module name="Translation" />
@@ -81,7 +81,7 @@
     <module name="FileLength" />
     <module name="LineLength">
         <property name="fileExtensions" value="java" />
-        <property name="max" value="78" />
+        <property name="max" value="100" />
     </module>
 
 
@@ -343,6 +343,7 @@
 
         <module name="AnonInnerLength" />
         <module name="ExecutableStatementCount" />
+        <module name="LambdaBodyLength" />
         <module name="MethodCount" />
         <module name="MethodLength" />
         <module name="OuterTypeNumber" />
@@ -355,19 +356,7 @@
         <module name="EmptyForInitializerPad" />
         <module name="EmptyForIteratorPad" />
         <module name="EmptyLineSeparator">
-            <property
-                name="tokens"
-                value="PACKAGE_DEF,
-                       IMPORT,
-                       CLASS_DEF,
-                       INTERFACE_DEF,
-                       ENUM_DEF,
-                       STATIC_INIT,
-                       INSTANCE_INIT,
-                       METHOD_DEF,
-                       CTOR_DEF,
-                       "
-            />
+            <property name="allowNoEmptyLineBetweenFields" value="true" />
         </module>
         <module name="GenericWhitespace" />
         <module name="MethodParamPad" />
@@ -381,25 +370,8 @@
         <module name="SeparatorWrap" />
         <module name="SingleSpaceSeparator" />
         <module name="TypecastParenPad" />
-        <module name="WhitespaceAfter" >
-            <property name="tokens" value="COMMA, SEMI," />
-        </module>
-        <module name="WhitespaceAround">
-            <property
-                name="tokens"
-                value="ASSIGN,
-                       LAND, LOR,
-                       BAND, BOR, BXOR, BSR,
-                       BAND_ASSIGN, BOR_ASSIGN, BXOR_ASSIGN, BSR_ASSIGN,
-                       SL, SR,
-                       SL_ASSIGN, SR_ASSIGN,
-                       MINUS, STAR, DIV, MOD,
-                       PLUS_ASSIGN, MINUS_ASSIGN,
-                       STAR_ASSIGN, DIV_ASSIGN, MOD_ASSIGN,
-                       EQUAL, NOT_EQUAL, GT, GE, LT, LE,
-                       "
-            />
-        </module>
+        <module name="WhitespaceAfter" />
+        <module name="WhitespaceAround" />
 
 
     </module>
