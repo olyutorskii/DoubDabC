@@ -45,7 +45,7 @@ public final class BcdArrays {
      * @return output length
      */
     public static int int2ArabicArray(final int iVal,
-                                        final char[] cbuf, final int offset) {
+                                       final char[] cbuf, final int offset) {
         int iHigh = 0b0;
         int iLow  = 0b0;
 
