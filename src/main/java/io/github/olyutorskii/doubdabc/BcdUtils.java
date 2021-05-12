@@ -38,20 +38,20 @@ public final class BcdUtils {
 
     private static final int[] BQ_TBL;
 
-    static{
+    static {
         // build lookup table for Packed-BCD to Bi-quinary conversion
         BQ_TBL = new int[256];
 
         int[] bqline = new int[]{
             0x00, 0x01, 0x02, 0x03, 0x04,
             0x08, 0x09, 0x0a, 0x0b, 0x0c,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         };
 
         int idx = 0;
-        for(int highDec : bqline){
+        for (int highDec : bqline) {
             int highSft = highDec << BCD_BITSIZE;
-            for(int lowDec : bqline){
+            for (int lowDec : bqline) {
                 int bqNblNbl = highSft | lowDec;
                 BQ_TBL[idx++] = bqNblNbl;
             }
@@ -64,7 +64,7 @@ public final class BcdUtils {
     /**
      * Hiden constructor.
      */
-    private BcdUtils(){
+    private BcdUtils() {
         assert false;
     }
 
@@ -83,7 +83,7 @@ public final class BcdUtils {
      * @param iVal int value
      * @return modified value
      */
-    public static int toBiQuinary(int iVal){
+    public static int toBiQuinary(int iVal) {
         int idx3 = iVal >>> 24;
         int idx2 = iVal >>> 16 & BYTE_MASK;
         int idx1 = iVal >>>  8 & BYTE_MASK;
@@ -170,31 +170,31 @@ public final class BcdUtils {
      * @param iVal int value
      * @return Zero nibbles
      */
-    public static int clzNibble(int iVal){
-        if(iVal == 0){
+    public static int clzNibble(int iVal) {
+        if (iVal == 0) {
             return INT_SLOTS;
         }
 
         int b2;
-        if((iVal & 0xff_ff_00_00) == 0){
+        if ((iVal & 0xff_ff_00_00) == 0) {
             b2 = 0b0100;
             iVal <<= 16;
-        }else{
+        } else {
             b2 = 0b0000;
         }
 
         int b1;
-        if((iVal & 0xff_00_00_00) == 0){
+        if ((iVal & 0xff_00_00_00) == 0) {
             b1 = 0b0010;
             iVal <<= 8;
-        }else{
+        } else {
             b1 = 0b0000;
         }
 
         int b0;
-        if((iVal & 0xf0_00_00_00) == 0){
+        if ((iVal & 0xf0_00_00_00) == 0) {
             b0 = 0b0001;
-        }else{
+        } else {
             b0 = 0b0000;
         }
 
@@ -217,39 +217,39 @@ public final class BcdUtils {
      * @param lVal long value
      * @return Zero nibbles
      */
-    public static int clzNibble(long lVal){
-        if(lVal == 0){
+    public static int clzNibble(long lVal) {
+        if (lVal == 0) {
             return LONG_SLOTS;
         }
 
         int b3;
-        if((lVal & 0xff_ff_ff_ff_00_00_00_00L) == 0){
+        if ((lVal & 0xff_ff_ff_ff_00_00_00_00L) == 0) {
             b3 = 0b1000;
             lVal <<= 32;
-        }else{
+        } else {
             b3 = 0b0000;
         }
 
         int b2;
-        if((lVal & 0xff_ff_00_00_00_00_00_00L) == 0){
+        if ((lVal & 0xff_ff_00_00_00_00_00_00L) == 0) {
             b2 = 0b0100;
             lVal <<= 16;
-        }else{
+        } else {
             b2 = 0b0000;
         }
 
         int b1;
-        if((lVal & 0xff_00_00_00_00_00_00_00L) == 0){
+        if ((lVal & 0xff_00_00_00_00_00_00_00L) == 0) {
             b1 = 0b0010;
             lVal <<= 8;
-        }else{
+        } else {
             b1 = 0b0000;
         }
 
         int b0;
-        if((lVal & 0xf0_00_00_00_00_00_00_00L) == 0){
+        if ((lVal & 0xf0_00_00_00_00_00_00_00L) == 0) {
             b0 = 0b0001;
-        }else{
+        } else {
             b0 = 0b0000;
         }
 
