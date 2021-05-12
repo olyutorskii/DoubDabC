@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.101.12] - 2021-05-12
+
 ### Added
 - Add GitHub Actions (JavaCI and CodeQL).
 
@@ -103,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial Release
 
 
-[Unreleased]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.10...HEAD
+[Unreleased]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.12...HEAD
+[2.101.12]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.10...v2.101.12
 [2.101.10]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.8...v2.101.10
 [2.101.8]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.6...v2.101.8
 [2.101.6]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.4...v2.101.6
