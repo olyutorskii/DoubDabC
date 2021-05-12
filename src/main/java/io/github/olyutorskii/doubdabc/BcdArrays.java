@@ -24,7 +24,7 @@ public final class BcdArrays {
     /**
      * Hidden constructor.
      */
-    private BcdArrays(){
+    private BcdArrays() {
         assert false;
     }
 
@@ -45,7 +45,7 @@ public final class BcdArrays {
      * @return output length
      */
     public static int int2ArabicArray(final int iVal,
-                                        final char[] cbuf, final int offset){
+                                       final char[] cbuf, final int offset) {
         int iHigh = 0b0;
         int iLow  = 0b0;
 
@@ -53,12 +53,12 @@ public final class BcdArrays {
         boolean noHalfCarry = true;
         int sig = 0;
 
-        for(int bitCt = 0; bitCt < Integer.SIZE; bitCt++){
+        for (int bitCt = 0; bitCt < Integer.SIZE; bitCt++) {
             final int scanMask = MSB_INTMASK >>> bitCt;
             final int bitAppear = iVal & scanMask;
 
-            if(skipLeading){
-                if(bitAppear == 0b0) continue;
+            if (skipLeading) {
+                if (bitAppear == 0b0) continue;
                 skipLeading = false;
             }
             sig++;
@@ -69,29 +69,29 @@ public final class BcdArrays {
             bqVal = BcdUtils.toBiQuinary(iLow);
             shiftedBcd = bqVal << 1;
 
-            if(bitAppear == 0b0){
+            if (bitAppear == 0b0) {
                 iLow = shiftedBcd;
-            }else{
+            } else {
                 iLow = shiftedBcd | LSB_INTMASK;
             }
 
             // through iHigh
             // if iLow has 8-bcd "67108863"(2^26-1) or lower
-            if(sig < 27) continue;
+            if (sig < 27) continue;
 
             int halfCarry = bqVal & MSB_INTMASK;
 
-            if(noHalfCarry){
-                if(halfCarry == 0b0) continue;
+            if (noHalfCarry) {
+                if (halfCarry == 0b0) continue;
                 noHalfCarry = false;
             }
 
             bqVal = BcdUtils.toBiQuinary(iHigh);
             shiftedBcd = bqVal << 1;
 
-            if(halfCarry == 0b0){
+            if (halfCarry == 0b0) {
                 iHigh = shiftedBcd;
-            }else{
+            } else {
                 iHigh = shiftedBcd | LSB_INTMASK;
             }
         }
@@ -99,23 +99,23 @@ public final class BcdArrays {
         int cidx = offset;
         final int clzLow;
 
-        if(iHigh == 0b0){
+        if (iHigh == 0b0) {
             clzLow = BcdUtils.clzNibble(iLow);
-        }else{
+        } else {
             clzLow = 0;
 
             final int clzHigh = BcdUtils.clzNibble(iHigh);
 
-            for(int bcdCt = clzHigh; bcdCt < INT_SLOTS; bcdCt++){
+            for (int bcdCt = clzHigh; bcdCt < INT_SLOTS; bcdCt++) {
                 final int nibble = (iHigh >>> ((7 - bcdCt) << 2)) & BCD_MASK;
-                final char decimalCh = (char)(nibble | ARABICUC_MASK);
+                final char decimalCh = (char) (nibble | ARABICUC_MASK);
                 cbuf[cidx++] = decimalCh;
             }
         }
 
-        for(int bcdCt = clzLow; bcdCt < INT_SLOTS; bcdCt++){
+        for (int bcdCt = clzLow; bcdCt < INT_SLOTS; bcdCt++) {
             final int nibble = (iLow >>> ((7 - bcdCt) << 2)) & BCD_MASK;
-            final char decimalCh = (char)(nibble | ARABICUC_MASK);
+            final char decimalCh = (char) (nibble | ARABICUC_MASK);
             cbuf[cidx++] = decimalCh;
         }
 

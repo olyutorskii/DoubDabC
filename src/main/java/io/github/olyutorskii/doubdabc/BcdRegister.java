@@ -75,7 +75,7 @@ public class BcdRegister {
         'A', 'B', 'C', 'D', 'E', 'F',
     };
 
-    static{
+    static {
         assert 0b1 << PRIMIDX_SHIFT == PRIM_SLOTS;
         assert (-1 & NBLIDX_MASK) == PRIM_SLOTS - 1;
         assert HEXCH_TBL.length == 0b1 << BcdUtils.BCD_BITSIZE;
@@ -96,10 +96,10 @@ public class BcdRegister {
      * @param maxDigits decimal digits to store result.
      * @throws IllegalArgumentException not positive digits.
      */
-    public BcdRegister(int maxDigits) throws IllegalArgumentException{
+    public BcdRegister(int maxDigits) throws IllegalArgumentException {
         super();
 
-        if(maxDigits <= 0) throw new IllegalArgumentException();
+        if (maxDigits <= 0) throw new IllegalArgumentException();
 
         this.maxDigits = fittingContainer(maxDigits);
         this.ibuf = new int[this.maxDigits / PRIM_SLOTS];
@@ -112,7 +112,7 @@ public class BcdRegister {
     /**
      * Constructor for decimals with unsigned int32.
      */
-    public BcdRegister(){
+    public BcdRegister() {
         this(MAX_COL_UINT32);
         return;
     }
@@ -124,7 +124,7 @@ public class BcdRegister {
      * @param digits decimal digits
      * @return rounded value
      */
-    private static int fittingContainer(int digits){
+    private static int fittingContainer(int digits) {
         int result;
 
         result = digits;
@@ -139,9 +139,9 @@ public class BcdRegister {
     /**
      * Clear all decimal digits to Zero.
      */
-    public void clear(){
+    public void clear() {
         int buflen = this.ibuf.length;
-        for(int idx = 0; idx < buflen; idx++){
+        for (int idx = 0; idx < buflen; idx++) {
             this.ibuf[idx] = 0;
         }
 
@@ -157,7 +157,7 @@ public class BcdRegister {
      *
      * @return digits holder width
      */
-    public int getMaxDigits(){
+    public int getMaxDigits() {
         return this.maxDigits;
     }
 
@@ -168,7 +168,7 @@ public class BcdRegister {
      * @return decimal value from 0 to 9
      * @throws IndexOutOfBoundsException invalid position.
      */
-    public int getDigit(int digitPos) throws IndexOutOfBoundsException{
+    public int getDigit(int digitPos) throws IndexOutOfBoundsException {
         int iIdx;
         int iMod;
 
@@ -206,18 +206,18 @@ public class BcdRegister {
      * @throws IndexOutOfBoundsException too small array or negative offset.
      */
     public int toIntArray(int[] dst, int offset)
-            throws IndexOutOfBoundsException{
+            throws IndexOutOfBoundsException {
         int digitsCt = getPrecision();
         int addPos = digitsCt - 1;
 
-        bufloop: for(int iVal : this.ibuf){
-            for(int nblIdx = 0; nblIdx < PRIM_SLOTS; nblIdx++){
+        bufloop: for (int iVal : this.ibuf) {
+            for (int nblIdx = 0; nblIdx < PRIM_SLOTS; nblIdx++) {
                 int shPos = nblIdx << 2;
                 //        = nblIdx * 4;
 
                 dst[offset + addPos] = (iVal >>> shPos) & NIBBLE_MASK;
 
-                if(addPos <= 0) break bufloop;
+                if (addPos <= 0) break bufloop;
 
                 addPos--;
             }
@@ -234,10 +234,10 @@ public class BcdRegister {
      * @param carryOver LSB is 1 if true.
      * @return true if MSB overflow
      */
-    public boolean pushLsb(boolean carryOver){
+    public boolean pushLsb(boolean carryOver) {
         int pushInt;
-        if(carryOver) pushInt = MSB_PRIMMASK;
-        else          pushInt = 0;
+        if (carryOver) pushInt = MSB_PRIMMASK;
+        else           pushInt = 0;
 
         boolean result = pushLsb(pushInt);
 
@@ -252,16 +252,16 @@ public class BcdRegister {
      * @param carryOver LSB is 1 if non-zero.
      * @return true if MSB overflow
      */
-    public boolean pushLsb(int carryOver){
+    public boolean pushLsb(int carryOver) {
         int lastMsbTest = carryOver;
 
         int buflen = this.ibuf.length;
-        for(int idx = 0; idx < buflen; idx++){
+        for (int idx = 0; idx < buflen; idx++) {
             int oldVal = this.ibuf[idx];
 
             int fixVal = BcdUtils.toBiQuinary(oldVal);
             int newVal = fixVal << 1;
-            if(lastMsbTest != 0) newVal |= LSB_PRIMMASK;
+            if (lastMsbTest != 0) newVal |= LSB_PRIMMASK;
 
             this.ibuf[idx] = newVal;
             lastMsbTest = fixVal & MSB_PRIMMASK;
@@ -287,13 +287,13 @@ public class BcdRegister {
      *
      * @return decimal precision.
      */
-    public int getPrecision(){
-        if(this.precision > 0){
+    public int getPrecision() {
+        if (this.precision > 0) {
             return this.precision;
         }
 
         int result = calcPrecision();
-        if(result == 0) result = 1;
+        if (result == 0) result = 1;
 
         this.precision = result;
 
@@ -311,17 +311,17 @@ public class BcdRegister {
      *
      * @return decimal precision.
      */
-    private int calcPrecision(){
+    private int calcPrecision() {
         int result = this.maxDigits;
 
         int idxMax = this.ibuf.length - 1;
-        for(int iIdx = idxMax; iIdx >= 0; iIdx--){
+        for (int iIdx = idxMax; iIdx >= 0; iIdx--) {
             int iVal = this.ibuf[iIdx];
 
             int clz = BcdUtils.clzNibble(iVal);
             result -= clz;
 
-            if(clz != PRIM_SLOTS){
+            if (clz != PRIM_SLOTS) {
                 break;
             }
         }
@@ -336,12 +336,12 @@ public class BcdRegister {
      * @return {@inheritDoc}
      */
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
 
         boolean dumped = false;
         int validCols = getPrecision();
-        for(int colCt = validCols - 1; colCt >= 0; colCt--){
+        for (int colCt = validCols - 1; colCt >= 0; colCt--) {
             int iIdx   = colCt >>> PRIMIDX_SHIFT;
             //         = colCt / 8;
             int nblIdx = colCt & NBLIDX_MASK;
@@ -354,7 +354,7 @@ public class BcdRegister {
             iVal >>>= shiftWidth;
             int nibble = iVal & NIBBLE_MASK;
 
-            if(dumped){
+            if (dumped) {
                 sb.append(SP);
             }
 
@@ -374,7 +374,7 @@ public class BcdRegister {
      * @param sb output
      * @param nibble BCD nibble value. (0 =&lt; nibble &lt; 10)
      */
-    private void dumpNibble(StringBuilder sb, int nibble){
+    private void dumpNibble(StringBuilder sb, int nibble) {
         int b3 = (nibble >> 3) & LSB_PRIMMASK;
         int b2 = (nibble >> 2) & LSB_PRIMMASK;
         int b1 = (nibble >> 1) & LSB_PRIMMASK;
