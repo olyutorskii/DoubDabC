@@ -1,6 +1,7 @@
 # DoubDabC #
 
-[![Build Status](https://travis-ci.org/olyutorskii/DoubDabC.svg?branch=master)](https://travis-ci.org/olyutorskii/DoubDabC)
+![Java CI with Maven](https://github.com/olyutorskii/DoubDabC/workflows/Java%20CI%20with%20Maven/badge.svg)
+![CodeQL](https://github.com/olyutorskii/DoubDabC/workflows/CodeQL/badge.svg)
 
 -----------------------------------------------------------------------
 

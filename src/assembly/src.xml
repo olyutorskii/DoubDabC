@@ -7,6 +7,9 @@
   http://maven.apache.org/xsd/assembly-2.0.0.xsd"
 >
 
+<!--
+    for maven-assembly-plugin
+-->
 
     <id>src</id>
 

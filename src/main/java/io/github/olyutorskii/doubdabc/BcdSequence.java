@@ -71,9 +71,9 @@ public class BcdSequence implements CharSequence{
      * @param cBuf output
      * @return digits length
      * @throws BufferOverflowException
-     * If buffer's current position is not smaller than its limit
+     *     If buffer's current position is not smaller than its limit
      * @throws ReadOnlyBufferException
-     * If buffer is read-only
+     *     If buffer is read-only
      */
     public int flushDigitTo(CharBuffer cBuf)
             throws BufferOverflowException, ReadOnlyBufferException{
@@ -138,7 +138,7 @@ public class BcdSequence implements CharSequence{
      * @param index digit position starting 0
      * @return digit character ('0' to '9')
      * @throws IndexOutOfBoundsException
-     * Argument is negative, or, not less than <code>length()</code>
+     *     Argument is negative, or, not less than <code>length()</code>
      */
     @Override
     public char charAt(int index) throws IndexOutOfBoundsException{

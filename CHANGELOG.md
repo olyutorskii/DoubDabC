@@ -1,52 +1,106 @@
 DoubDabC Changelog
 ===================
 
-## WIP
-Released on 20XX-XX-XX
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.101.8
-Released on 2019-03-19
+
+## [Unreleased]
+
+
+## [2.101.10] - 2020-02-02
+
+### Security
+- responding to checkstyle security issue GHSA-763g-fqq7-48wg
+
+
+## [2.101.8] - 2019-03-19
+
+### Security
 - responding to checkstyle security issue CVE-2019-9658
 
-## v2.101.6
-Released on 2018-08-08
-- BugFix: Missing copies when 8N+1 length decimal. Fixed #25
-- Move PMD & Checkstyle config files to folder.
+
+## [2.101.6] - 2018-08-08
+
+### Added
 - Add Mersenne prime#32 (2^756839 -1) benchmark test.
 
-## v2.101.4
-Released on 2017-06-22
-- Correspond to Maven 3.5
+### Changed
+- Move PMD & Checkstyle config files to folder.
+
+### Fixed
+- BugFix: Missing copies when 8N+1 length decimal. Fixed #25
+
+
+## [2.101.4] - 2017-06-22
+
+### Added
 - add JarabraDix info to README
 
-## v2.101.2
-Released on 2017-04-24
-- Merge DecimalText and DecimalOut to BcdSequence
-- Extended Writer class removed. See JarabraDix new project.
-- Split BcdUtils class from BcdRegister
+### Changed
+- Correspond to Maven 3.5
+
+
+## [2.101.2] - 2017-04-24
+
+### Added
 - Add BcdArrays
 
-## v1.103.2
-Released on 2017-03-22
+### Changed
+- Merge DecimalText and DecimalOut to BcdSequence
+- Split BcdUtils class from BcdRegister
+
+### Removed
+- Extended Writer class removed. See JarabraDix new project.
+
+
+## [1.103.2] - 2017-03-22
+
+### Added
 - Add DecimalWriter which supports print(int) #16
+
+### Removed
 - Remove overblown terms on perfomance #20
 
-## v1.102.6
-Released on 2017-02-19
-- Speed-up Arabic-num converting
+
+## [1.102.6] - 2017-02-19
+
+### Added
 - Add .travis.yml for Travis CI #18
 - Add header to Javadoc pages
 
-## v1.102.4
-Released on 2017-02-02
-- Speed-up converting
+### Changed
+- Speed-up Arabic-num converting
+
+
+## [1.102.4] - 2017-02-02
+
+### Added
 - Add static code analysis report plugin. (checkstyle,PMD,FindBugs)
 - Add code coverage report plugin. (Jacoco)
 - Add SCM info to POM. #13
 - Add CHANGELOG.md #14
 
-## v1.101.2
-Released on 2017-01-03
+### Changed
+- Speed-up converting
+
+
+## [1.102.2] - 2017-01-03
+
+### Added
 - Initial Release
+
+
+[Unreleased]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.10...HEAD
+[2.101.10]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.8...v2.101.10
+[2.101.8]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.6...v2.101.8
+[2.101.6]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.4...v2.101.6
+[2.101.4]: https://github.com/olyutorskii/DoubDabC/compare/v2.101.2...v2.101.4
+[2.101.2]: https://github.com/olyutorskii/DoubDabC/compare/v1.103.2...v2.101.2
+[1.103.2]: https://github.com/olyutorskii/DoubDabC/compare/v1.102.6...v1.103.2
+[1.102.6]: https://github.com/olyutorskii/DoubDabC/compare/v1.102.4...v1.102.6
+[1.102.4]: https://github.com/olyutorskii/DoubDabC/compare/v1.102.2...v1.102.4
+[1.102.2]: https://github.com/olyutorskii/DoubDabC/releases/tag/v1.102.2
+
 
 --- EOF ---
