@@ -22,7 +22,7 @@ public final class BitFeeder {
     /**
      * Hidden constructor.
      */
-    private BitFeeder(){
+    private BitFeeder() {
         assert false;
     }
 
@@ -37,7 +37,7 @@ public final class BitFeeder {
      * @param iVal 32bit integer
      * @return true if MSB overflow
      */
-    public static boolean feedUInt32(BcdRegister bs, int iVal){
+    public static boolean feedUInt32(BcdRegister bs, int iVal) {
         bs.clear();
 
         boolean skipping = true;
@@ -67,25 +67,25 @@ public final class BitFeeder {
      * @param lVal 64bit integer
      * @return true if MSB overflow
      */
-    public static boolean feedUInt64(BcdRegister bs, long lVal){
+    public static boolean feedUInt64(BcdRegister bs, long lVal) {
         bs.clear();
 
         boolean skipping = true;
         boolean result = false;
 
-        for(int ct = 0; ct < Long.SIZE; ct++){
+        for (int ct = 0; ct < Long.SIZE; ct++) {
             long scanMask = MSB_LONGMASK >>> ct;
             long bitScanned = lVal & scanMask;
 
-            if(skipping){
-                if(bitScanned == 0b0L) continue;
+            if (skipping) {
+                if (bitScanned == 0b0L) continue;
                 skipping = false;
             }
 
             int newLsbInt;
-            if(bitScanned == 0L){
+            if (bitScanned == 0L) {
                 newLsbInt = 0;
-            }else{
+            } else {
                 newLsbInt = 1;
             }
 
@@ -105,17 +105,17 @@ public final class BitFeeder {
      * @param bigInt big integer
      * @return true if MSB overflow
      */
-    public static boolean feedBigInteger(BcdRegister bs, BigInteger bigInt){
+    public static boolean feedBigInteger(BcdRegister bs, BigInteger bigInt) {
         bs.clear();
 
         boolean result = false;
 
         int sign = bigInt.signum();
-        if(sign < 0) result |= bs.pushLsb(true);
+        if (sign < 0) result |= bs.pushLsb(true);
 
         int msbPos = bigInt.bitLength() - 1;
 
-        for(int bitIndex = msbPos; bitIndex >= 0; bitIndex--){
+        for (int bitIndex = msbPos; bitIndex >= 0; bitIndex--) {
             boolean newLsb = bigInt.testBit(bitIndex);
             result |= bs.pushLsb(newLsb);
         }
@@ -131,14 +131,14 @@ public final class BitFeeder {
      * @param bitSet bit set
      * @return true if MSB overflow
      */
-    public static boolean feedBitSet(BcdRegister bs, BitSet bitSet){
+    public static boolean feedBitSet(BcdRegister bs, BitSet bitSet) {
         bs.clear();
 
         int msbPos = bitSet.length() - 1;
 
         boolean result = false;
 
-        for(int bitIndex = msbPos; bitIndex >= 0; bitIndex--){
+        for (int bitIndex = msbPos; bitIndex >= 0; bitIndex--) {
             boolean newLsb = bitSet.get(bitIndex);
             result |= bs.pushLsb(newLsb);
         }

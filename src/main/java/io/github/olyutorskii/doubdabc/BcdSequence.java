@@ -18,7 +18,7 @@ import java.nio.ReadOnlyBufferException;
  *
  * <p>There is some API for character-output classes.
  */
-public class BcdSequence implements CharSequence{
+public class BcdSequence implements CharSequence {
 
     private static final int ARABIC_UC_MASK = 0b0011_0000;
 
@@ -34,7 +34,7 @@ public class BcdSequence implements CharSequence{
      * @param decimal BCD register
      * @throws NullPointerException argument is null
      */
-    public BcdSequence(BcdRegister decimal) throws NullPointerException{
+    public BcdSequence(BcdRegister decimal) throws NullPointerException {
         super();
 
         this.decimal = decimal;
@@ -54,10 +54,10 @@ public class BcdSequence implements CharSequence{
      * @return digits length
      * @throws IOException If an I/O error occurs
      */
-    public int flushDigitTo(Appendable app) throws IOException{
+    public int flushDigitTo(Appendable app) throws IOException {
         int length = buildChar();
 
-        for(int idx = 0; idx < length; idx++){
+        for (int idx = 0; idx < length; idx++) {
             char decimalCh = this.charBuf[idx];
             app.append(decimalCh);
         }
@@ -76,7 +76,7 @@ public class BcdSequence implements CharSequence{
      *     If buffer is read-only
      */
     public int flushDigitTo(CharBuffer cBuf)
-            throws BufferOverflowException, ReadOnlyBufferException{
+            throws BufferOverflowException, ReadOnlyBufferException {
         int length = buildChar();
         cBuf.put(this.charBuf, 0, length);
         return length;
@@ -89,7 +89,7 @@ public class BcdSequence implements CharSequence{
      * @return digits length
      * @throws IOException If an I/O error occurs
      */
-    public int flushDigitTo(Writer writer) throws IOException{
+    public int flushDigitTo(Writer writer) throws IOException {
         int length = buildChar();
         writer.write(this.charBuf, 0, length);
         return length;
@@ -101,7 +101,7 @@ public class BcdSequence implements CharSequence{
      * @param buf output
      * @return digits length
      */
-    public int flushDigitTo(StringBuffer buf){
+    public int flushDigitTo(StringBuffer buf) {
         int length = buildChar();
         buf.append(this.charBuf, 0, length);
         return length;
@@ -113,7 +113,7 @@ public class BcdSequence implements CharSequence{
      * @param buf output
      * @return digits length
      */
-    public int flushDigitTo(StringBuilder buf){
+    public int flushDigitTo(StringBuilder buf) {
         int length = buildChar();
         buf.append(this.charBuf, 0, length);
         return length;
@@ -127,7 +127,7 @@ public class BcdSequence implements CharSequence{
      * @return digits columns
      */
     @Override
-    public int length(){
+    public int length() {
         int result = this.decimal.getPrecision();
         return result;
     }
@@ -141,17 +141,18 @@ public class BcdSequence implements CharSequence{
      *     Argument is negative, or, not less than <code>length()</code>
      */
     @Override
-    public char charAt(int index) throws IndexOutOfBoundsException{
+    public char charAt(int index) throws IndexOutOfBoundsException {
         int precision = this.decimal.getPrecision();
 
-        if(index < 0 || precision <= index)
+        if (index < 0 || precision <= index) {
             throw new IndexOutOfBoundsException();
+        }
 
         int digitPos = precision - index - 1;
         int digit = this.decimal.getDigit(digitPos);
 
         // map [0 - 9](int) to ['0' - '9'](char)
-        char result = (char)( digit | ARABIC_UC_MASK );
+        char result = (char) ( digit | ARABIC_UC_MASK );
 
         return result;
     }
@@ -169,11 +170,11 @@ public class BcdSequence implements CharSequence{
      */
     @Override
     public CharSequence subSequence(int start, int end)
-            throws IndexOutOfBoundsException{
-        if(start < 0 || end < start) throw new IndexOutOfBoundsException();
+            throws IndexOutOfBoundsException {
+        if (start < 0 || end < start) throw new IndexOutOfBoundsException();
 
         int precision = this.decimal.getPrecision();
-        if(end > precision) throw new IndexOutOfBoundsException();
+        if (end > precision) throw new IndexOutOfBoundsException();
 
         copyChar(start, end);
         String result = new String(this.charBuf, start, end - start);
@@ -187,7 +188,7 @@ public class BcdSequence implements CharSequence{
      * @return fixed string
      */
     @Override
-    public String toString(){
+    public String toString() {
         int precision = this.decimal.getPrecision();
         buildChar();
         String result = new String(this.charBuf, 0, precision);
@@ -198,7 +199,7 @@ public class BcdSequence implements CharSequence{
      * Build char array data.
      * @return digits length
      */
-    private int buildChar(){
+    private int buildChar() {
         int precision = this.decimal.getPrecision();
         int result = copyChar(0, precision);
         return result;
@@ -210,15 +211,15 @@ public class BcdSequence implements CharSequence{
      * @param end end
      * @return digits length
      */
-    private int copyChar(int start, int end){
+    private int copyChar(int start, int end) {
         int length = end - start;
         this.decimal.toIntArray(this.intBuf, 0);
 
-        for(int idx = start; idx < end; idx++){
+        for (int idx = start; idx < end; idx++) {
             int digit = this.intBuf[idx];
 
             // map [0 - 9](int) to ['0' - '9'](char)
-            char decimalCh = (char)( digit | ARABIC_UC_MASK );
+            char decimalCh = (char) ( digit | ARABIC_UC_MASK );
 
             this.charBuf[idx] = decimalCh;
         }
