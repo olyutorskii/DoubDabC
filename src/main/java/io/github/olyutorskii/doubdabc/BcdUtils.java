@@ -36,16 +36,14 @@ public final class BcdUtils {
     private static final int INT_SLOTS  = Integer.SIZE / BCD_BITSIZE;
     private static final int LONG_SLOTS = Long.SIZE    / BCD_BITSIZE;
 
-    private static final int[] BQ_TBL;
+    private static final int[] BQ_TBL = new int[256];
 
     static {
         // build lookup table for Packed-BCD to Bi-quinary conversion
-        BQ_TBL = new int[256];
-
         int[] bqline = new int[]{
-            0x00, 0x01, 0x02, 0x03, 0x04,
-            0x08, 0x09, 0x0a, 0x0b, 0x0c,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0b0_000, 0b0_001, 0b0_010, 0b0_011, 0b0_100,
+            0b1_000, 0b1_001, 0b1_010, 0b1_011, 0b1_100,
+            0, 0, 0, 0, 0, 0,
         };
 
         int idx = 0;
