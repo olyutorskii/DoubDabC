@@ -1,4 +1,8 @@
-##### Git ignore pattern   https://git-scm.com/docs/gitignore
+##### Git ignore pattern
+## See https://git-scm.com/docs/gitignore
+## See https://docs.github.com/en/free-pro-team@latest/github/using-git/ignoring-files
+## See https://github.com/github/gitignore
+## See https://www.toptal.com/developers/gitignore
 
 
 ### Unix
@@ -20,7 +24,8 @@ __MACOSX
 ### Windows
 
 Thumbs.db
-desktop.ini
+[Dd]esktop.ini
+*.lnk
 
 
 ### JDK
@@ -62,6 +67,11 @@ hs_err_pid*
 *.iws
 *.iml
 *.ipr
+
+
+### Visual Studio Code
+
+/.vscode/
 
 
 ### EOF ###

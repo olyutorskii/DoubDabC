@@ -23,7 +23,6 @@
 
     <rule ref="category/java/codestyle.xml" >
         <exclude name="CommentDefaultAccessModifier" />
-        <exclude name="DefaultPackage" />
         <exclude name="LocalVariableCouldBeFinal" />
         <exclude name="MethodArgumentCouldBeFinal" />
         <exclude name="OnlyOneReturn" />
@@ -31,6 +30,7 @@
         <exclude name="UnnecessaryLocalBeforeReturn" />
         <exclude name="UnnecessaryModifier" />
         <exclude name="UnnecessaryReturn" />
+        <exclude name="UseUnderscoresInNumericLiterals" />
     </rule>
     <rule ref="category/java/codestyle.xml/ControlStatementBraces" >
         <properties>
