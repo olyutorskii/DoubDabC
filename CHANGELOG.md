@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.101.14] - 2022-10-11
+
+### Added
+- Add Javadoc API publishing workflow for GitHub Actions.
+- Add manual trigger for GitHub Actions.
+
+### Changed
+- Modify JavaCI actions trigger for GitHub Actions.
+- Workaround MJAVADOC-700 issue.
+
+
 ## [2.101.12] - 2021-05-12
 
 ### Added
