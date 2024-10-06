@@ -369,7 +369,7 @@ public class BcdRegister {
     /**
      * Dump nibble.
      *
-     * <p>nibble 5 -> 0101[5]
+     * <p>nibble 5 -&gt; 0101[5]
      *
      * @param sb output
      * @param nibble BCD nibble value. (0 =&lt; nibble &lt; 10)
