@@ -197,6 +197,7 @@ public class BcdSequence implements CharSequence {
 
     /**
      * Build char array data.
+     *
      * @return digits length
      */
     private int buildChar() {
@@ -207,6 +208,7 @@ public class BcdSequence implements CharSequence {
 
     /**
      * Build ranged char array data.
+     *
      * @param start start
      * @param end end
      * @return digits length

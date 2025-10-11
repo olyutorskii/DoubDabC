@@ -16,13 +16,13 @@ package io.github.olyutorskii.doubdabc;
  * <p>Each decimal digit overlaps Packed-BCD and Bi-quinary coded decimal.
  *
  * @see <a target="_blank"
- * href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
- * Binary-coded decimal (Wikipedia)
- * </a>
+ *     href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
+ *     Binary-coded decimal (Wikipedia)
+ *     </a>
  * @see <a target="_blank"
- * href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
- * Bi-quinary coded decimal (Wikipedia)
- * </a>
+ *     href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
+ *     Bi-quinary coded decimal (Wikipedia)
+ *     </a>
  */
 public final class BcdUtils {
 
@@ -40,7 +40,7 @@ public final class BcdUtils {
 
     static {
         // build lookup table for Packed-BCD to Bi-quinary conversion
-        int[] bqline = new int[]{
+        int[] bqline = {
             0b0_000, 0b0_001, 0b0_010, 0b0_011, 0b0_100,
             0b1_000, 0b1_001, 0b1_010, 0b1_011, 0b1_100,
             0, 0, 0, 0, 0, 0,

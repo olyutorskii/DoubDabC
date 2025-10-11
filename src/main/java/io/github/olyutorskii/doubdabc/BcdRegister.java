@@ -24,17 +24,17 @@ package io.github.olyutorskii.doubdabc;
  * <p>Signed(negative) decimal value is not supported.
  *
  * @see <a target="_blank"
- * href="https://en.wikipedia.org/wiki/Double_dabble">
- * Double dabble (Wikipedia)
- * </a>
+ *     href="https://en.wikipedia.org/wiki/Double_dabble">
+ *     Double dabble (Wikipedia)
+ *     </a>
  * @see <a target="_blank"
- * href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
- * Binary-coded decimal (Wikipedia)
- * </a>
+ *     href="https://en.wikipedia.org/wiki/Binary-coded_decimal">
+ *     Binary-coded decimal (Wikipedia)
+ *     </a>
  * @see <a target="_blank"
- * href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
- * Bi-quinary coded decimal (Wikipedia)
- * </a>
+ *     href="https://en.wikipedia.org/wiki/Bi-quinary_coded_decimal">
+ *     Bi-quinary coded decimal (Wikipedia)
+ *     </a>
  */
 public class BcdRegister {
 
