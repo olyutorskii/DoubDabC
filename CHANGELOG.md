@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Update Jacoco, SpotBugs, and PMD for JDK25
+- Update Checkstyle
+- Update Maven plugins
 
 
 ## [2.101.16] - 2024-10-06
