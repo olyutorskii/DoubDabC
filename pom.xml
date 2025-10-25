@@ -92,6 +92,9 @@
         <locale>en</locale>
         <spotbugs.jvmArgs>-Duser.language=en</spotbugs.jvmArgs>
 
+        <!-- for "-J-Duser.language=" compiler option -->
+        <maven.compiler.fork>true</maven.compiler.fork>
+
         <show>protected</show>
 
         <checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
@@ -112,7 +115,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.14.0</version>
+            <version>6.0.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -166,7 +169,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.13</version>
+                    <version>0.8.14</version>
                 </plugin>
 
                 <plugin>
@@ -231,7 +234,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>12.0.0</version>
+                            <version>12.1.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -239,7 +242,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.27.0</version>
+                    <version>3.28.0</version>
                     <dependencies>
                         <dependency>
                             <groupId>net.sourceforge.pmd</groupId>
@@ -257,12 +260,12 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>4.9.6.0</version>
+                    <version>4.9.8.1</version>
                     <dependencies>
                         <dependency>
                             <groupId>com.github.spotbugs</groupId>
                             <artifactId>spotbugs</artifactId>
-                            <version>4.9.6</version>
+                            <version>4.9.8</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -330,6 +333,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerArgs>
+                        <arg>-J-Duser.language=en</arg>
                         <arg>-Xlint</arg>
                     </compilerArgs>
                     <showWarnings>true</showWarnings>
@@ -538,7 +542,7 @@
         <profile>
             <id>jdk9later</id>
             <activation>
-                <jdk>[9</jdk>
+                <jdk>[9,)</jdk>
             </activation>
             <properties>
                 <!-- -release option(javac) require JDK9+ -->
@@ -550,7 +554,7 @@
         <profile>
             <id>jdk11later</id>
             <activation>
-                <jdk>[11</jdk>
+                <jdk>[11,)</jdk>
             </activation>
             <reporting>
                 <plugins>
@@ -565,11 +569,27 @@
             </reporting>
         </profile>
 
+        <!-- before JDK17 -->
+        <profile>
+            <id>jdk17before</id>
+            <activation>
+                <jdk>(,17)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter</artifactId>
+                    <version>5.14.0</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+
         <!-- JDK17 or later -->
         <profile>
             <id>jdk17later</id>
             <activation>
-                <jdk>[17</jdk>
+                <jdk>[17,)</jdk>
             </activation>
             <reporting>
                 <plugins>
