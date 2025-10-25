@@ -27,10 +27,10 @@
         <exclude name="MethodArgumentCouldBeFinal" />
         <exclude name="OnlyOneReturn" />
         <exclude name="ShortVariable" />
-        <exclude name="UnnecessaryLocalBeforeReturn" />
         <exclude name="UnnecessaryModifier" />
         <exclude name="UnnecessaryReturn" />
         <exclude name="UseUnderscoresInNumericLiterals" />
+        <exclude name="VariableCanBeInlined" />
     </rule>
     <rule ref="category/java/codestyle.xml/ControlStatementBraces" >
         <properties>
@@ -61,6 +61,12 @@
     <rule ref="category/java/errorprone.xml" >
         <exclude name="AvoidLiteralsInIfCondition" />
         <exclude name="NonSerializableClass" />
+    </rule>
+
+    <rule ref="category/java/errorprone.xml/AssignmentInOperand" >
+        <properties>
+            <property name="allowIncrementDecrement" value="true"/>
+        </properties>
     </rule>
 
     <rule ref="category/java/multithreading.xml" />
