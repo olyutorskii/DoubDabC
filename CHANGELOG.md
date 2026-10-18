@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- Update Jacoco, SpotBugs, and PMD for JDK25
+- Update Jacoco, SpotBugs, and PMD for JDK27
 - Update Checkstyle
 - Update Maven plugins
 - Update GitHub workflows
